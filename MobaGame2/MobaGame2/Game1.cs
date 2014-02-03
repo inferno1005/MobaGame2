@@ -10,40 +10,65 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 
-public class GameEntity
-{
-    public Vector2 position;
-    public int height;
-    public int width;
-    public Texture2D texture;
-    public bool visible;
-    public Rectangle rect
-    {
-        get { return new Rectangle((int)position.X, (int)position.Y, (int)width, (int)height); }
-    }
-}
-public class Attributes
-{
-    public double health;
-    public double mana;
-    public double healthRegen;
-    public double manaRegen;
-    public double range;
-    public double coolDown;
-    public double armor;
-    public double magicResist;
-    public double attackDamage;
-    public double attackSpeed;
-}
-public class Champ :GameEntity
-{
-}
-
-
 
 
 namespace MobaGame2
 {
+
+    public class GameEntity
+    {
+        public Vector2 position;
+        public int height;
+        public int width;
+        public Texture2D texture;
+        public string texturename;
+        public bool visible;
+        public Rectangle rect
+        {
+            get { return new Rectangle((int)position.X, (int)position.Y, (int)width, (int)height); }
+        }
+
+    }
+    public class Attributes
+    {
+        public double health;
+        public double mana;
+        public double healthRegen;
+        public double manaRegen;
+        public double range;
+        public double coolDown;
+        public double armor;
+        public double magicResist;
+        public double attackDamage;
+        public double attackSpeed;
+        public int gold;
+        public int goldpersec;
+    }
+    public class Champ : GameEntity
+    {
+        public string Name;
+        public Attribute attribute;
+    }
+    public class FiddleSticks : Champ
+    {
+        public FiddleSticks()
+        {
+            Name = "Fiddle Sticks";
+            texturename = "FiddlesticksSquare";
+        }
+    }
+    public class Player
+    {
+        public string name;
+        public int kills;
+        public int deaths;
+        public int assists;
+        public Champ champ;
+    }
+
+
+
+
     /// <summary>
     /// This is the main type for your game
     /// </summary>
@@ -51,7 +76,7 @@ namespace MobaGame2
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
+        Player player1;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -67,6 +92,9 @@ namespace MobaGame2
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            player1 = new Player();
+            player1.champ = new FiddleSticks();
+
 
             base.Initialize();
         }
@@ -81,6 +109,9 @@ namespace MobaGame2
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            player1.champ.texture = Content.Load<Texture2D>("FiddlesticksSquare");
+
+
         }
 
         /// <summary>
@@ -117,6 +148,9 @@ namespace MobaGame2
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            spriteBatch.Draw(player1.champ.texture, player1.champ.position, Color.White);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
