@@ -29,6 +29,12 @@ namespace MobaGame2
         }
 
     }
+    public class Camera
+    {
+        public Vector2 position;
+        public int height;
+        public int width;
+    }
     public class Attributes
     {
         public double health;
@@ -76,7 +82,13 @@ namespace MobaGame2
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Camera camera;
         Player player1;
+        MouseState ms;
+        SpriteFont font1;
+
+
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -94,6 +106,10 @@ namespace MobaGame2
             // TODO: Add your initialization logic here
             player1 = new Player();
             player1.champ = new FiddleSticks();
+            camera = new Camera();
+
+
+            //font
 
 
             base.Initialize();
@@ -111,6 +127,7 @@ namespace MobaGame2
             // TODO: use this.Content to load your game content here
             player1.champ.texture = Content.Load<Texture2D>("FiddlesticksSquare");
 
+            font1 = Content.Load<SpriteFont>("DefaultFont");
 
         }
 
@@ -135,6 +152,7 @@ namespace MobaGame2
                 this.Exit();
 
             // TODO: Add your update logic here
+            ms = Mouse.GetState();
 
             base.Update(gameTime);
         }
@@ -150,6 +168,11 @@ namespace MobaGame2
             // TODO: Add your drawing code here
             spriteBatch.Begin();
             spriteBatch.Draw(player1.champ.texture, player1.champ.position, Color.White);
+            spriteBatch.End();
+
+
+            spriteBatch.Begin();
+            spriteBatch.DrawString(font1,(camera.position.X-ms.X).ToString() + " " +(camera.position.Y-ms.Y).ToString(),new Vector2(0,0),Color.White);
             spriteBatch.End();
 
             base.Draw(gameTime);
