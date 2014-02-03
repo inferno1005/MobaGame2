@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MobaGame2", "MobaGame2\MobaGame2\MobaGame2.csproj", "{64D220E4-7027-4E62-B1B9-58C21FDB808A}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "MobaGame2Content", "MobaGame2\MobaGame2Content\MobaGame2Content.contentproj", "{86038D6B-1F53-4C72-81AD-881B1886B30E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{64D220E4-7027-4E62-B1B9-58C21FDB808A}.Debug|x86.ActiveCfg = Debug|x86
+		{64D220E4-7027-4E62-B1B9-58C21FDB808A}.Debug|x86.Build.0 = Debug|x86
+		{64D220E4-7027-4E62-B1B9-58C21FDB808A}.Release|x86.ActiveCfg = Release|x86
+		{64D220E4-7027-4E62-B1B9-58C21FDB808A}.Release|x86.Build.0 = Release|x86
+		{86038D6B-1F53-4C72-81AD-881B1886B30E}.Debug|x86.ActiveCfg = Debug|x86
+		{86038D6B-1F53-4C72-81AD-881B1886B30E}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
