@@ -17,8 +17,12 @@ namespace MobaGame2
 
     public class GameEntity
     {
-        public Vector2 position;
-        public int height;
+        public Vector2 position;        //current position
+        public Vector2 direction;       //direction from position to destination
+        public Vector2 destination;     //current destination
+        public float speed;             //how fast
+        public double distance;         //distance from poisition to destination
+        public int height; 
         public int width;
         public Texture2D texture;
         public string texturename;
@@ -27,6 +31,31 @@ namespace MobaGame2
         {
             get { return new Rectangle((int)position.X, (int)position.Y, (int)width, (int)height); }
         }
+
+
+        public Vector2 Move(Vector2 mouseloc)
+        {
+            destination = mouseloc;
+
+            Vector2 direction =mouseloc- this.position;
+
+            distance=Math.Sqrt( Math.Pow((this.position.X-mouseloc.X),2)+ Math.Pow((this.position.Y-mouseloc.Y),2));
+
+            if (direction == Vector2.Zero)
+                return Vector2.Zero;
+            else
+                return Vector2.Normalize(direction);
+        }
+        public void Update()
+        {
+            if (distance > 0)
+            {
+                distance--;
+                position += speed * direction;
+            }
+        }
+
+
 
     }
     public class Camera
@@ -54,13 +83,16 @@ namespace MobaGame2
     {
         public string Name;
         public Attribute attribute;
+
+
     }
     public class FiddleSticks : Champ
     {
         public FiddleSticks()
         {
-            Name = "Fiddle Sticks";
-            texturename = "FiddlesticksSquare";
+            this.Name = "Fiddle Sticks";
+            this.texturename = "FiddlesticksSquare";
+            this.speed = 1;
         }
     }
     public class Player
@@ -72,9 +104,6 @@ namespace MobaGame2
         public Champ champ;
     }
 
-
-
-
     /// <summary>
     /// This is the main type for your game
     /// </summary>
@@ -84,8 +113,16 @@ namespace MobaGame2
         SpriteBatch spriteBatch;
         Camera camera;
         Player player1;
+
+        //controls
         MouseState ms;
+        KeyboardState kb;
         SpriteFont font1;
+
+        //buffer
+        String buffer;
+
+        bool rightbuttonpressed;
 
 
 
@@ -125,7 +162,7 @@ namespace MobaGame2
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            player1.champ.texture = Content.Load<Texture2D>("FiddlesticksSquare");
+            player1.champ.texture = Content.Load<Texture2D>(player1.champ.texturename);
 
             font1 = Content.Load<SpriteFont>("DefaultFont");
 
@@ -147,12 +184,32 @@ namespace MobaGame2
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+
+            ms = Mouse.GetState();
+            kb=Keyboard.GetState();
+
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
+
+            if (ms.RightButton == ButtonState.Pressed)
+            {
+                player1.champ.direction=player1.champ.Move(new Vector2(ms.X, ms.Y));
+                buffer = "Right Button Pressed!";
+                rightbuttonpressed = true;
+            }
+            if (ms.RightButton == ButtonState.Released)
+            {
+                buffer = "";
+                rightbuttonpressed = false;
+            }
+
+
+            player1.champ.Update();
+
+
             // TODO: Add your update logic here
-            ms = Mouse.GetState();
 
             base.Update(gameTime);
         }
@@ -172,7 +229,7 @@ namespace MobaGame2
 
 
             spriteBatch.Begin();
-            spriteBatch.DrawString(font1,(camera.position.X-ms.X).ToString() + " " +(camera.position.Y-ms.Y).ToString(),new Vector2(0,0),Color.White);
+            spriteBatch.DrawString(font1,(camera.position.X-ms.X).ToString() + " " +(camera.position.Y-ms.Y).ToString() + buffer,new Vector2(0,0),Color.White);
             spriteBatch.End();
 
             base.Draw(gameTime);
