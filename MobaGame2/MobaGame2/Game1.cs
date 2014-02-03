@@ -27,6 +27,7 @@ namespace MobaGame2
         public Texture2D texture;
         public string texturename;
         public bool visible;
+        public bool clickable;
         public Rectangle rect
         {
             get { return new Rectangle((int)position.X, (int)position.Y, (int)width, (int)height); }
@@ -64,6 +65,17 @@ namespace MobaGame2
         public int height;
         public int width;
     }
+    public class Map : GameEntity
+    {
+        public Map()
+        {
+            this.clickable = true;
+            this.height = 300;
+            this.width= 300;
+        }
+
+
+    }
     public class Attributes
     {
         public double health;
@@ -93,6 +105,8 @@ namespace MobaGame2
             this.Name = "Fiddle Sticks";
             this.texturename = "FiddlesticksSquare";
             this.speed = 1;
+            this.height = 64;
+            this.width= 64;
         }
     }
     public class Player
@@ -113,6 +127,7 @@ namespace MobaGame2
         SpriteBatch spriteBatch;
         Camera camera;
         Player player1;
+        Map map;
 
         //controls
         MouseState ms;
@@ -144,6 +159,7 @@ namespace MobaGame2
             player1 = new Player();
             player1.champ = new FiddleSticks();
             camera = new Camera();
+            map = new Map();
 
 
             //font
@@ -222,15 +238,31 @@ namespace MobaGame2
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+
+
             // TODO: Add your drawing code here
+
+            //draw map
             spriteBatch.Begin();
-            spriteBatch.Draw(player1.champ.texture, player1.champ.position, Color.White);
+            spriteBatch.Draw(player1.champ.texture, map.rect, Color.White);
             spriteBatch.End();
 
 
+
+
+            //draw champ
+            spriteBatch.Begin();
+            spriteBatch.Draw(player1.champ.texture, player1.champ.rect, Color.White);
+            spriteBatch.End();
+
+
+
+
+            #region debug
             spriteBatch.Begin();
             spriteBatch.DrawString(font1,(camera.position.X-ms.X).ToString() + " " +(camera.position.Y-ms.Y).ToString() + buffer,new Vector2(0,0),Color.White);
             spriteBatch.End();
+            #endregion
 
             base.Draw(gameTime);
         }
