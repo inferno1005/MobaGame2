@@ -47,13 +47,29 @@ namespace MobaGame2
             else
                 return Vector2.Normalize(direction);
         }
-        public void Update()
+        public void Update(GameEntity map)
         {
             if (distance > 0)
-            {
-                distance--;
-                position += speed * direction;
-            }
+                if (position.X >= map.position.X && position.X + width <= map.position.X + map.width)
+                    if (position.Y >= map.position.Y && position.Y + height <= map.position.Y + map.height)
+                    {
+                        distance--;
+                        position += speed * direction;
+                    }
+                    else
+                    {
+                        Console.WriteLine("trying to place back in the map\n");
+
+                        if (position.Y + height >= map.position.Y + map.height)
+                        {
+                            Console.WriteLine("y is to high setting to ");
+                            position.Y = map.height +height; //this is messed up
+                            Console.WriteLine(position.Y);
+                        }
+                    }
+
+
+
         }
 
 
@@ -64,14 +80,30 @@ namespace MobaGame2
         public Vector2 position;
         public int height;
         public int width;
+
+        public Camera(Vector2 pos, int h, int w)
+        {
+            this.height = h;
+            this.width = w;
+            this.position = pos;
+        }
     }
     public class Map : GameEntity
     {
         public Map()
         {
+            this.position = new Vector2(30, 30);
             this.clickable = true;
             this.height = 300;
-            this.width= 300;
+            this.width = 300;
+            texturename = "1x1";
+        }
+        public bool ClickWitinMap(Vector2 loc)
+        {
+            if (loc.X > position.X && loc.X < position.X + width)
+                if (loc.Y > position.Y && loc.Y < position.Y + height)
+                    return true;
+            return false;
         }
 
 
@@ -106,7 +138,8 @@ namespace MobaGame2
             this.texturename = "FiddlesticksSquare";
             this.speed = 1;
             this.height = 64;
-            this.width= 64;
+            this.width = 64;
+            position = new Vector2(40, 40);
         }
     }
     public class Player
@@ -123,8 +156,15 @@ namespace MobaGame2
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
+        //needed
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        //screen
+        int SCREENHEIGHT = 720;
+        int SCREENWIDTH = 1280;
+
+
         Camera camera;
         Player player1;
         Map map;
@@ -133,6 +173,7 @@ namespace MobaGame2
         MouseState ms;
         KeyboardState kb;
         SpriteFont font1;
+        Texture2D mouseTexture;
 
         //buffer
         String buffer;
@@ -155,10 +196,18 @@ namespace MobaGame2
         /// </summary>
         protected override void Initialize()
         {
+            graphics.PreferredBackBufferHeight = SCREENHEIGHT;
+            graphics.PreferredBackBufferWidth = SCREENWIDTH;
+            graphics.PreferMultiSampling = false;
+            graphics.ApplyChanges();
+
+
+
             // TODO: Add your initialization logic here
             player1 = new Player();
+            player1.name = "inferno1005";
             player1.champ = new FiddleSticks();
-            camera = new Camera();
+            camera = new Camera(new Vector2(0, 0), SCREENHEIGHT, SCREENWIDTH);
             map = new Map();
 
 
@@ -179,6 +228,8 @@ namespace MobaGame2
 
             // TODO: use this.Content to load your game content here
             player1.champ.texture = Content.Load<Texture2D>(player1.champ.texturename);
+            map.texture = Content.Load<Texture2D>(map.texturename);
+            mouseTexture = Content.Load<Texture2D>("pointer");
 
             font1 = Content.Load<SpriteFont>("DefaultFont");
 
@@ -202,7 +253,7 @@ namespace MobaGame2
         {
 
             ms = Mouse.GetState();
-            kb=Keyboard.GetState();
+            kb = Keyboard.GetState();
 
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
@@ -211,9 +262,12 @@ namespace MobaGame2
 
             if (ms.RightButton == ButtonState.Pressed)
             {
-                player1.champ.direction=player1.champ.Move(new Vector2(ms.X, ms.Y));
-                buffer = "Right Button Pressed!";
-                rightbuttonpressed = true;
+                if (map.ClickWitinMap(new Vector2(ms.X, ms.Y)))
+                {
+                    player1.champ.direction = player1.champ.Move(new Vector2(ms.X, ms.Y));
+                    buffer = "Right Button Pressed!";
+                    rightbuttonpressed = true;
+                }
             }
             if (ms.RightButton == ButtonState.Released)
             {
@@ -222,7 +276,7 @@ namespace MobaGame2
             }
 
 
-            player1.champ.Update();
+            player1.champ.Update(map);
 
 
             // TODO: Add your update logic here
@@ -241,26 +295,32 @@ namespace MobaGame2
 
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+
 
             //draw map
-            spriteBatch.Begin();
-            spriteBatch.Draw(player1.champ.texture, map.rect, Color.White);
-            spriteBatch.End();
+            spriteBatch.Draw(map.texture, map.rect, Color.White);
 
 
 
 
             //draw champ
-            spriteBatch.Begin();
             spriteBatch.Draw(player1.champ.texture, player1.champ.rect, Color.White);
+            //player name
+            spriteBatch.DrawString(font1, player1.name, player1.champ.position-new Vector2(0,30), Color.White);
+
+
+
+            //draw pointer to be drawn last
+            spriteBatch.Draw(mouseTexture, new Vector2(ms.X-5, ms.Y-5), Color.White);
             spriteBatch.End();
-
-
 
 
             #region debug
             spriteBatch.Begin();
-            spriteBatch.DrawString(font1,(camera.position.X-ms.X).ToString() + " " +(camera.position.Y-ms.Y).ToString() + buffer,new Vector2(0,0),Color.White);
+            spriteBatch.DrawString(font1, (camera.position.X - ms.X).ToString() + " " + (camera.position.Y - ms.Y).ToString() + buffer, new Vector2(0, 0), Color.White);
+            //spriteBatch.DrawString(font1, player1.champ.position.X.ToString() + " " + player1.champ.position.Y.ToString(), player1.champ.position-new Vector2(0,80), Color.White);
+            spriteBatch.DrawString(font1, (player1.champ.position.X +player1.champ.width).ToString()+ " " + (player1.champ.height+ player1.champ.position.Y).ToString(), player1.champ.position-new Vector2(0,80), Color.White);
             spriteBatch.End();
             #endregion
 
