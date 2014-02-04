@@ -44,6 +44,11 @@ namespace MobaGame2
             get { return new Rectangle((int)position.X, (int)position.Y, (int)width, (int)height); }
         }
 
+        public Rectangle WorldLocation(Camera camera)
+        {
+            return new Rectangle((int)(position.X-camera.position.X), (int)(position.Y-camera.position.Y), (int)width, (int)height); 
+        }
+
 
         public Vector2 Move(Vector2 mouseloc)
         {
@@ -109,6 +114,34 @@ namespace MobaGame2
             this.height = h;
             this.width = w;
             this.position = pos;
+        }
+
+        public void Move(Vector2 mouse)
+        {
+            //move right
+            if (mouse.X >  (width - 4))
+            {
+                position.X += 4;
+                Console.WriteLine("moving to right");
+            }
+            //move left 
+            if (mouse.X +position.X< position.X  + 4)
+            {
+                position.X -= 4;
+                Console.WriteLine("moving to left");
+            }
+            //move up
+            if (mouse.Y < 4)
+            {
+                position.Y -= 4;
+            }
+            //move up
+            if (mouse.Y > height - 4)
+            {
+                position.Y += 4;
+            }
+ 
+
         }
     }
     public class Map : GameEntity
@@ -222,6 +255,7 @@ namespace MobaGame2
             graphics.PreferredBackBufferHeight = SCREENHEIGHT;
             graphics.PreferredBackBufferWidth = SCREENWIDTH;
             graphics.PreferMultiSampling = false;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
 
@@ -283,11 +317,12 @@ namespace MobaGame2
                 this.Exit();
 
 
+            #region movement
             if (ms.RightButton == ButtonState.Pressed)
             {
-                if (map.ClickWitinMap(new Vector2(ms.X, ms.Y)))
+                if (map.ClickWitinMap(new Vector2(ms.X+camera.position.X, ms.Y+camera.position.Y)))
                 {
-                    player1.champ.direction = player1.champ.Move(new Vector2(ms.X, ms.Y));
+                    player1.champ.direction = player1.champ.Move(new Vector2(ms.X+camera.position.X, ms.Y+camera.position.Y));
                     buffer = "Right Button Pressed!";
                     rightbuttonpressed = true;
                 }
@@ -297,7 +332,15 @@ namespace MobaGame2
                 buffer = "";
                 rightbuttonpressed = false;
             }
+            #endregion
 
+
+            #region camera 
+
+            camera.Move(new Vector2(ms.X,ms.Y));
+
+
+            #endregion
 
             player1.champ.Update(map);
 
@@ -322,13 +365,13 @@ namespace MobaGame2
 
 
             //draw map
-            spriteBatch.Draw(map.texture, map.rect, Color.White);
+            spriteBatch.Draw(map.texture, map.WorldLocation(camera), Color.White);
 
 
 
 
             //draw champ
-            spriteBatch.Draw(player1.champ.texture, player1.champ.rect, Color.White);
+            spriteBatch.Draw(player1.champ.texture, player1.champ.WorldLocation(camera), Color.White);
             //player name
             spriteBatch.DrawString(font1, player1.name, player1.champ.position - new Vector2(0, 30), Color.White);
 
