@@ -1,3 +1,9 @@
+/* Todo fix moving when speed is >1, still broken.
+ * 
+ */
+
+
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,32 +61,37 @@ namespace MobaGame2
         }
         public void Update(GameEntity map)
         {
+            #region moving and map bounds
+            //if we have distance to move
             if (distance > 0)
+                //check if the champ is within the width of the map
                 if (position.X >= map.position.X && position.X + width <= map.position.X + map.width)
                 {
+                    //check if the champ is within the height of the map
                     if (position.Y >= map.position.Y && position.Y + height <= map.position.Y + map.height)
                     {
                         distance--;
                         position += speed * direction;
                     }
+                        //if not push him back in the map
                     else
                     {
 
                         if (position.Y + height >= map.position.Y + map.height)
-                            position.Y = map.height + map.position.Y - height; //this is messed up
+                            position.Y = map.height + map.position.Y - height; 
                         if (position.Y <= map.position.Y)
-                            position.Y = map.position.Y; //this is messed up
+                            position.Y = map.position.Y; 
                     }
                 }
+                        //if not push him back in the map
                 else
                 {
                     if (position.X + width >= map.position.X + map.width)
-                        position.X = map.width + map.position.X - width; //this is messed up
+                        position.X = map.width + map.position.X - width; 
                     if (position.X <= map.position.X)
-                        position.X = map.position.X; //this is messed up
+                        position.X = map.position.X;
                 }
-
-
+            #endregion 
 
         }
 
