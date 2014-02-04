@@ -70,7 +70,7 @@ namespace MobaGame2
                     //check if the champ is within the height of the map
                     if (position.Y >= map.position.Y && position.Y + height <= map.position.Y + map.height)
                     {
-                        distance--;
+                        distance-=speed;
                         position += speed * direction;
                     }
                         //if not push him back in the map
@@ -159,7 +159,7 @@ namespace MobaGame2
         {
             this.Name = "Fiddle Sticks";
             this.texturename = "FiddlesticksSquare";
-            this.speed = 1;
+            this.speed = 5;
             this.height = 64;
             this.width = 64;
             position = new Vector2(40, 40);
