@@ -18,6 +18,11 @@ namespace MobaGame2
     public class GameEntity
     {
         public Vector2 position;        //current position
+        public Vector2 center
+        {
+            get { return new Vector2(position.X + width / (float)2, position.Y + height / (float)2); }
+        }
+            //center of the icon
         public Vector2 direction;       //direction from position to destination
         public Vector2 destination;     //current destination
         public float speed;             //how fast
@@ -38,9 +43,10 @@ namespace MobaGame2
         {
             destination = mouseloc;
 
-            Vector2 direction =mouseloc- this.position;
+            //Vector2 direction =mouseloc- new Vector2(this.position.X+(width/(float)2),this.position.Y+(height/(float)2));
+            Vector2 direction = mouseloc - this.center;
 
-            distance=Math.Sqrt( Math.Pow((this.position.X-mouseloc.X),2)+ Math.Pow((this.position.Y-mouseloc.Y),2));
+            distance=Math.Sqrt( Math.Pow((this.center.X-mouseloc.X),2)+ Math.Pow((this.center.Y-mouseloc.Y),2));
 
             if (direction == Vector2.Zero)
                 return Vector2.Zero;
@@ -51,6 +57,7 @@ namespace MobaGame2
         {
             if (distance > 0)
                 if (position.X >= map.position.X && position.X + width <= map.position.X + map.width)
+                {
                     if (position.Y >= map.position.Y && position.Y + height <= map.position.Y + map.height)
                     {
                         distance--;
@@ -58,15 +65,20 @@ namespace MobaGame2
                     }
                     else
                     {
-                        Console.WriteLine("trying to place back in the map\n");
 
                         if (position.Y + height >= map.position.Y + map.height)
-                        {
-                            Console.WriteLine("y is to high setting to ");
-                            position.Y = map.height +height; //this is messed up
-                            Console.WriteLine(position.Y);
-                        }
+                            position.Y = map.height + map.position.Y - height; //this is messed up
+                        if (position.Y <= map.position.Y)
+                            position.Y = map.position.Y; //this is messed up
                     }
+                }
+                else
+                {
+                    if (position.X + width >= map.position.X + map.width)
+                        position.X = map.width + map.position.X - width; //this is messed up
+                    if (position.X <= map.position.X)
+                        position.X = map.position.X; //this is messed up
+                }
 
 
 
@@ -307,12 +319,12 @@ namespace MobaGame2
             //draw champ
             spriteBatch.Draw(player1.champ.texture, player1.champ.rect, Color.White);
             //player name
-            spriteBatch.DrawString(font1, player1.name, player1.champ.position-new Vector2(0,30), Color.White);
+            spriteBatch.DrawString(font1, player1.name, player1.champ.position - new Vector2(0, 30), Color.White);
 
 
 
             //draw pointer to be drawn last
-            spriteBatch.Draw(mouseTexture, new Vector2(ms.X-5, ms.Y-5), Color.White);
+            spriteBatch.Draw(mouseTexture, new Vector2(ms.X - 5, ms.Y - 5), Color.White);
             spriteBatch.End();
 
 
@@ -320,7 +332,7 @@ namespace MobaGame2
             spriteBatch.Begin();
             spriteBatch.DrawString(font1, (camera.position.X - ms.X).ToString() + " " + (camera.position.Y - ms.Y).ToString() + buffer, new Vector2(0, 0), Color.White);
             //spriteBatch.DrawString(font1, player1.champ.position.X.ToString() + " " + player1.champ.position.Y.ToString(), player1.champ.position-new Vector2(0,80), Color.White);
-            spriteBatch.DrawString(font1, (player1.champ.position.X +player1.champ.width).ToString()+ " " + (player1.champ.height+ player1.champ.position.Y).ToString(), player1.champ.position-new Vector2(0,80), Color.White);
+            spriteBatch.DrawString(font1, (player1.champ.position.X + player1.champ.width).ToString() + " " + (player1.champ.height + player1.champ.position.Y).ToString(), player1.champ.position - new Vector2(0, 80), Color.White);
             spriteBatch.End();
             #endregion
 
