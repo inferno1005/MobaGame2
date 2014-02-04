@@ -1,9 +1,3 @@
-/* Todo fix moving when speed is >1, still broken.
- * 
- */
-
-
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,29 +33,33 @@ namespace MobaGame2
         public string texturename;
         public bool visible;
         public bool clickable;
+        //returns a rectangle the shape of this object
         public Rectangle rect
         {
             get { return new Rectangle((int)position.X, (int)position.Y, (int)width, (int)height); }
         }
 
+        //returns a rectangle for drawing sprite in the worlds location
         public Rectangle RectWorldLocation(Camera camera)
         {
-            return new Rectangle((int)(position.X-camera.position.X), (int)(position.Y-camera.position.Y), (int)width, (int)height); 
+            return new Rectangle((int)(position.X - camera.position.X), (int)(position.Y - camera.position.Y), (int)width, (int)height);
         }
+        
+        //returns a vector2 for drawing strings in the worlds location}
         public Vector2 WorldLocation(Camera camera)
         {
             return new Vector2(position.X - camera.position.X, position.Y - camera.position.Y);
         }
 
 
-        public Vector2 Move(Vector2 mouseloc)
+        public Vector2 Move(Vector2 target)
         {
-            destination = mouseloc;
+            destination = target;
 
             //Vector2 direction =mouseloc- new Vector2(this.position.X+(width/(float)2),this.position.Y+(height/(float)2));
-            Vector2 direction = mouseloc - this.center;
+            Vector2 direction = target - this.center;
 
-            distance=Math.Sqrt( Math.Pow((this.center.X-mouseloc.X),2)+ Math.Pow((this.center.Y-mouseloc.Y),2));
+            distance=Math.Sqrt( Math.Pow((this.center.X-target.X),2)+ Math.Pow((this.center.Y-target.Y),2));
 
             if (direction == Vector2.Zero)
                 return Vector2.Zero;
@@ -79,8 +77,15 @@ namespace MobaGame2
                     //check if the champ is within the height of the map
                     if (position.Y >= map.position.Y && position.Y + height <= map.position.Y + map.height)
                     {
+
+
+
                         distance-=speed;
                         position += speed * direction;
+
+
+
+
                     }
                         //if not push him back in the map
                     else
@@ -107,17 +112,24 @@ namespace MobaGame2
 
 
     }
+
+
+    /*
+     *  Should really make this use a 3d camera so we can zoom in and out, or make a hack for it
+     */
     public class Camera
     {
         public Vector2 position;
         public int height;
         public int width;
+        public int speed;
 
-        public Camera(Vector2 pos, int h, int w)
+        public Camera(Vector2 pos, int h, int w,int s)
         {
             this.height = h;
             this.width = w;
             this.position = pos;
+            this.speed = s;
         }
 
         public void Move(Vector2 mouse)
@@ -125,24 +137,24 @@ namespace MobaGame2
             //move right
             if (mouse.X >  (width - 4))
             {
-                position.X += 4;
+                position.X += speed;
                 Console.WriteLine("moving to right");
             }
             //move left 
             if (mouse.X +position.X< position.X  + 4)
             {
-                position.X -= 4;
+                position.X -= speed;
                 Console.WriteLine("moving to left");
             }
             //move up
             if (mouse.Y < 4)
             {
-                position.Y -= 4;
+                position.Y -= speed;
             }
             //move up
             if (mouse.Y > height - 4)
             {
-                position.Y += 4;
+                position.Y += speed;
             }
  
 
@@ -197,8 +209,8 @@ namespace MobaGame2
             this.Name = "Fiddle Sticks";
             this.texturename = "FiddlesticksSquare";
             this.speed = 5;
-            this.height = 64;
-            this.width = 64;
+            this.height = 48;
+            this.width = 48; 
             position = new Vector2(40, 40);
         }
     }
@@ -248,19 +260,16 @@ namespace MobaGame2
             Content.RootDirectory = "Content";
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
         protected override void Initialize()
         {
+
+            #region graphics setup
             graphics.PreferredBackBufferHeight = SCREENHEIGHT;
             graphics.PreferredBackBufferWidth = SCREENWIDTH;
             graphics.PreferMultiSampling = false;
             graphics.IsFullScreen = true;
             graphics.ApplyChanges();
+            #endregion
 
 
 
@@ -268,48 +277,39 @@ namespace MobaGame2
             player1 = new Player();
             player1.name = "inferno1005";
             player1.champ = new FiddleSticks();
-            camera = new Camera(new Vector2(0, 0), SCREENHEIGHT, SCREENWIDTH);
+
+            camera = new Camera(new Vector2(0, 0), SCREENHEIGHT, SCREENWIDTH,8);
+
             map = new Map();
 
-
-            //font
 
 
             base.Initialize();
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            #region textures
             player1.champ.texture = Content.Load<Texture2D>(player1.champ.texturename);
             map.texture = Content.Load<Texture2D>(map.texturename);
             mouseTexture = Content.Load<Texture2D>("pointer");
+            #endregion
 
+            #region fonts
             font1 = Content.Load<SpriteFont>("DefaultFont");
+            #endregion
 
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
 
@@ -321,7 +321,7 @@ namespace MobaGame2
                 this.Exit();
 
 
-            #region movement
+            #region controls 
             if (ms.RightButton == ButtonState.Pressed)
             {
                 if (map.ClickWitinMap(new Vector2(ms.X+camera.position.X, ms.Y+camera.position.Y)))
@@ -346,6 +346,7 @@ namespace MobaGame2
 
             #endregion
 
+            //
             player1.champ.Update(map);
 
 
@@ -354,10 +355,6 @@ namespace MobaGame2
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -381,17 +378,22 @@ namespace MobaGame2
 
 
 
-            //draw pointer to be drawn last
+            //draw pointer to be drawn last so its over top everything
             spriteBatch.Draw(mouseTexture, new Vector2(ms.X - 5, ms.Y - 5), Color.White);
+
+
+
             spriteBatch.End();
 
 
             #region debug
+            /*
             spriteBatch.Begin();
             spriteBatch.DrawString(font1, (camera.position.X - ms.X).ToString() + " " + (camera.position.Y - ms.Y).ToString() + buffer, new Vector2(0, 0), Color.White);
             //spriteBatch.DrawString(font1, player1.champ.position.X.ToString() + " " + player1.champ.position.Y.ToString(), player1.champ.position-new Vector2(0,80), Color.White);
             spriteBatch.DrawString(font1, (player1.champ.position.X + player1.champ.width).ToString() + " " + (player1.champ.height + player1.champ.position.Y).ToString(), (player1.champ.WorldLocation(camera))- new Vector2(0, 80), Color.White);
             spriteBatch.End();
+             */
             #endregion
 
             base.Draw(gameTime);
