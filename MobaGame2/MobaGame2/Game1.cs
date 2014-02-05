@@ -1,3 +1,11 @@
+
+/*
+ *  Todo 
+ *  make the 2d camera using the new method in bookmarks, research gametime so the game is consistent.
+ */
+
+
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +46,7 @@ namespace MobaGame2
         {
             get { return new Rectangle((int)position.X, (int)position.Y, (int)width, (int)height); }
         }
+
 
         //returns a rectangle for drawing sprite in the worlds location
         public Rectangle RectWorldLocation(Camera camera)
@@ -114,9 +123,6 @@ namespace MobaGame2
     }
 
 
-    /*
-     *  Should really make this use a 3d camera so we can zoom in and out, or make a hack for it
-     */
     public class Camera
     {
         public Vector2 position;
@@ -168,7 +174,7 @@ namespace MobaGame2
             this.clickable = true;
             this.height = 800;
             this.width = 1300;
-            texturename = "1x1";
+            texturename = "seamless_ground";
         }
         public bool ClickWitinMap(Vector2 loc)
         {
@@ -200,7 +206,18 @@ namespace MobaGame2
         public string Name;
         public Attribute attribute;
 
-
+    }
+    public class Minion : Champ
+    {
+        public Minion()
+        {
+            this.Name = "Minion";
+            this.texturename = "Minion";
+            this.speed = 1;
+            this.height = 30;
+            this.width= 30;
+            this.position = new Vector2(80, 80);
+        }
     }
     public class FiddleSticks : Champ
     {
@@ -211,7 +228,7 @@ namespace MobaGame2
             this.speed = 5;
             this.height = 48;
             this.width = 48; 
-            position = new Vector2(40, 40);
+            this.position = new Vector2(40, 40);
         }
     }
     public class Player
@@ -237,8 +254,11 @@ namespace MobaGame2
         int SCREENWIDTH = 1280;
 
 
+        //game objects
         Camera camera;
         Player player1;
+        Minion minion;
+
         Map map;
 
         //controls
@@ -267,8 +287,9 @@ namespace MobaGame2
             graphics.PreferredBackBufferHeight = SCREENHEIGHT;
             graphics.PreferredBackBufferWidth = SCREENWIDTH;
             graphics.PreferMultiSampling = false;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.ApplyChanges();
+            this.Window.Title = "Moba";
             #endregion
 
 
@@ -277,6 +298,9 @@ namespace MobaGame2
             player1 = new Player();
             player1.name = "inferno1005";
             player1.champ = new FiddleSticks();
+
+
+            minion = new Minion();
 
             camera = new Camera(new Vector2(0, 0), SCREENHEIGHT, SCREENWIDTH,8);
 
@@ -295,6 +319,7 @@ namespace MobaGame2
             // TODO: use this.Content to load your game content here
             #region textures
             player1.champ.texture = Content.Load<Texture2D>(player1.champ.texturename);
+            minion.texture = Content.Load<Texture2D>(minion.texturename);
             map.texture = Content.Load<Texture2D>(map.texturename);
             mouseTexture = Content.Load<Texture2D>("pointer");
             #endregion
@@ -362,12 +387,16 @@ namespace MobaGame2
 
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin();
+            //GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
+           //spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.Opaque, SamplerState.LinearWrap, DepthStencilState.Default, RasterizerState.CullNone);
 
 
+
+           spriteBatch.Begin();
             //draw map
             spriteBatch.Draw(map.texture, map.RectWorldLocation(camera), Color.White);
 
+            //spriteBatch.End();
 
 
 
@@ -376,6 +405,10 @@ namespace MobaGame2
             //player name
             spriteBatch.DrawString(font1, player1.name, player1.champ.WorldLocation(camera)- new Vector2(0, 30), Color.White);
 
+            //draw minion 
+            spriteBatch.Draw(minion.texture, minion.RectWorldLocation(camera), Color.White);
+            //name
+            //spriteBatch.DrawString(font1, minion.Name, minion.WorldLocation(camera)- new Vector2(0, 30), Color.White);
 
 
             //draw pointer to be drawn last so its over top everything
