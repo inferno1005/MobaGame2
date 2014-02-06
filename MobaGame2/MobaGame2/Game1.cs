@@ -48,6 +48,7 @@ namespace MobaGame2
         }
 
 
+        /*
         //returns a rectangle for drawing sprite in the worlds location
         public Rectangle RectWorldLocation(Camera camera)
         {
@@ -59,6 +60,7 @@ namespace MobaGame2
         {
             return new Vector2(position.X - camera.position.X, position.Y - camera.position.Y);
         }
+        */
 
 
         public Vector2 Move(Vector2 target)
@@ -126,6 +128,9 @@ namespace MobaGame2
     public class Camera
     {
         public Vector2 position;
+        public Matrix transform;
+        public float zoom;
+        public float rotation;
         public int height;
         public int width;
         public int speed;
@@ -136,9 +141,22 @@ namespace MobaGame2
             this.width = w;
             this.position = pos;
             this.speed = s;
+            this.zoom = 1;
+            this.rotation = 0;
         }
 
-        public void Move(Vector2 mouse)
+        public Matrix calc_transformation(int height,int width)
+        {
+            transform=
+                Matrix.CreateTranslation(new Vector3(-position.X,-position.Y,0))*
+                Matrix.CreateRotationZ(rotation) *
+                Matrix.CreateScale(new Vector3(zoom,zoom,1)) *
+                Matrix.CreateTranslation(new Vector3(width*0.5f , height*0.5f,0)) ;
+
+            return transform;
+        }
+
+        public void ScreenBorderMove(Vector2 mouse)
         {
             //move right
             if (mouse.X >  (width - 4))
@@ -365,8 +383,12 @@ namespace MobaGame2
 
 
             #region camera 
+            if(Keyboard.GetState().IsKeyDown(Keys.Down))
+            {
+                camera.zoom++;
+            }
 
-            camera.Move(new Vector2(ms.X,ms.Y));
+            camera.ScreenBorderMove(new Vector2(ms.X,ms.Y));
 
 
             #endregion
@@ -392,41 +414,56 @@ namespace MobaGame2
 
 
 
-           spriteBatch.Begin();
+            //draw based off camera location
+           spriteBatch.Begin(
+               //SpriteSortMode.BackToFront,
+               SpriteSortMode.Immediate,
+               BlendState.AlphaBlend,
+               null,
+               null,
+               null,
+               null,
+               //camera.calc_transformation(SCREENHEIGHT,SCREENWIDTH)
+               camera.calc_transformation(1,1)
+               );
             //draw map
-            spriteBatch.Draw(map.texture, map.RectWorldLocation(camera), Color.White);
+            spriteBatch.Draw(map.texture, map.rect, Color.White);
 
             //spriteBatch.End();
 
 
 
             //draw champ
-            spriteBatch.Draw(player1.champ.texture, player1.champ.RectWorldLocation(camera), Color.White);
+            spriteBatch.Draw(player1.champ.texture, player1.champ.rect, Color.White);
+
             //player name
-            spriteBatch.DrawString(font1, player1.name, player1.champ.WorldLocation(camera)- new Vector2(0, 30), Color.White);
+            spriteBatch.DrawString(font1, player1.name, player1.champ.position- new Vector2(0, 30), Color.White);
 
             //draw minion 
-            spriteBatch.Draw(minion.texture, minion.RectWorldLocation(camera), Color.White);
-            //name
-            //spriteBatch.DrawString(font1, minion.Name, minion.WorldLocation(camera)- new Vector2(0, 30), Color.White);
+            spriteBatch.Draw(minion.texture, minion.rect, Color.White);
 
+            //name
+            spriteBatch.DrawString(font1, minion.Name, minion.position- new Vector2(0, 30), Color.White);
+
+            spriteBatch.End();
+            spriteBatch.Begin();
 
             //draw pointer to be drawn last so its over top everything
             spriteBatch.Draw(mouseTexture, new Vector2(ms.X - 5, ms.Y - 5), Color.White);
 
 
 
-            spriteBatch.End();
+            //spriteBatch.End();
 
 
             #region debug
-            /*
-            spriteBatch.Begin();
+            //spriteBatch.Begin();
             spriteBatch.DrawString(font1, (camera.position.X - ms.X).ToString() + " " + (camera.position.Y - ms.Y).ToString() + buffer, new Vector2(0, 0), Color.White);
             //spriteBatch.DrawString(font1, player1.champ.position.X.ToString() + " " + player1.champ.position.Y.ToString(), player1.champ.position-new Vector2(0,80), Color.White);
-            spriteBatch.DrawString(font1, (player1.champ.position.X + player1.champ.width).ToString() + " " + (player1.champ.height + player1.champ.position.Y).ToString(), (player1.champ.WorldLocation(camera))- new Vector2(0, 80), Color.White);
+            spriteBatch.DrawString(font1,
+                (player1.champ.position.X ).ToString() + " " + (  player1.champ.position.Y).ToString(),
+                (player1.champ.position- new Vector2(0, 80)), Color.White);
             spriteBatch.End();
-             */
             #endregion
 
             base.Draw(gameTime);
