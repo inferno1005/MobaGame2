@@ -1,7 +1,8 @@
 
 /*
  *  Todo 
- *  make the 2d camera using the new method in bookmarks, research gametime so the game is consistent.
+ *   research gametime so the game is consistent
+ *   add targeting game ents 
  */
 
 
@@ -23,46 +24,65 @@ using Microsoft.Xna.Framework.Media;
 namespace MobaGame2
 {
 
+    static class Input
+    {
+        private static KeyboardState keyboardState, lastkeyboardState;
+        private static MouseState mouseState, lastmousesState;
+
+        public static Vector2 MousePosition
+        { get { return new Vector2(mouseState.X, mouseState.Y); } }
+
+        public static void Update()
+        {
+            lastkeyboardState = keyboardState;
+            lastmousesState = mouseState;
+
+            keyboardState = Keyboard.GetState();
+            mouseState = Mouse.GetState();
+        }
+        public static bool KeyPressed(Keys key)
+        {
+            return lastkeyboardState.IsKeyUp(key) && keyboardState.IsKeyDown(key);
+        }
+        public static bool RightMouseButton()
+        {
+            return lastmousesState.RightButton == ButtonState.Pressed && mouseState.RightButton == ButtonState.Released;
+        }
+
+        public static bool LeftMouseButton()
+        {
+            return lastmousesState.LeftButton== ButtonState.Pressed && mouseState.LeftButton== ButtonState.Released;
+        }
+    }
+
     public class GameEntity
     {
         public Vector2 position;        //current position
-        public Vector2 center
-        {
-            get { return new Vector2(position.X + width / (float)2, position.Y + height / (float)2); }
-        }
-            //center of the icon
+        public Vector2 center           //center of the icon
+        { get { return new Vector2(position.X + width / (float)2, position.Y + height / (float)2); } }
+
         public Vector2 direction;       //direction from position to destination
         public Vector2 destination;     //current destination
         public float speed;             //how fast
         public double distance;         //distance from poisition to destination
+
         public int height; 
         public int width;
+
+        //drawing
         public Texture2D texture;
         public string texturename;
+        public Color color;
+
+        //options
         public bool visible;
         public bool clickable;
+
         //returns a rectangle the shape of this object
         public Rectangle rect
-        {
-            get { return new Rectangle((int)position.X, (int)position.Y, (int)width, (int)height); }
-        }
+        { get { return new Rectangle((int)position.X, (int)position.Y, (int)width, (int)height); } }
 
-
-        /*
-        //returns a rectangle for drawing sprite in the worlds location
-        public Rectangle RectWorldLocation(Camera camera)
-        {
-            return new Rectangle((int)(position.X - camera.position.X), (int)(position.Y - camera.position.Y), (int)width, (int)height);
-        }
-        
-        //returns a vector2 for drawing strings in the worlds location}
-        public Vector2 WorldLocation(Camera camera)
-        {
-            return new Vector2(position.X - camera.position.X, position.Y - camera.position.Y);
-        }
-        */
-
-
+        //Finds the direction the object needs to move to goto the target location
         public Vector2 Move(Vector2 target)
         {
             destination = target;
@@ -77,52 +97,54 @@ namespace MobaGame2
             else
                 return Vector2.Normalize(direction);
         }
-        public void Update(GameEntity map)
+
+        //check to see if a is fully within b
+        public bool Bounds(Rectangle a,Rectangle b)
+        {
+            if (a.X >= b.X && a.X + a.Width <= b.X + b.Width)
+                if (a.Y >= b.Y && a.Y + a.Height <= b.Y + b.Height)
+                    return true;
+            return false;
+        }
+
+
+
+
+        public void Update(Rectangle map)
         {
             #region moving and map bounds
             //if we have distance to move
             if (distance > 0)
-                //check if the champ is within the width of the map
-                if (position.X >= map.position.X && position.X + width <= map.position.X + map.width)
+                //check bounds
+                if(Bounds(this.rect,map))
                 {
-                    //check if the champ is within the height of the map
-                    if (position.Y >= map.position.Y && position.Y + height <= map.position.Y + map.height)
-                    {
-
-
-
                         distance-=speed;
                         position += speed * direction;
-
-
-
-
-                    }
-                        //if not push him back in the map
-                    else
-                    {
-
-                        if (position.Y + height >= map.position.Y + map.height)
-                            position.Y = map.height + map.position.Y - height; 
-                        if (position.Y <= map.position.Y)
-                            position.Y = map.position.Y; 
-                    }
                 }
-                        //if not push him back in the map
+                //if not push him back in the map
                 else
                 {
-                    if (position.X + width >= map.position.X + map.width)
-                        position.X = map.width + map.position.X - width; 
-                    if (position.X <= map.position.X)
-                        position.X = map.position.X;
+                        if (position.Y + height >= map.Y + map.Height)
+                            position.Y = map.Height + map.Y - height; 
+                        if (position.Y <= map.Y)
+                            position.Y = map.Y;
+                        if (position.X + width >= map.X + map.Width)
+                            position.X = map.Width + map.X - width;
+                        if (position.X <= map.X)
+                            position.X = map.X;
                 }
             #endregion 
+
+
+
+
 
         }
 
 
 
     }
+
 
 
     public class Camera
@@ -135,7 +157,7 @@ namespace MobaGame2
         public int width;
         public int speed;
 
-        public Camera(Vector2 pos, int h, int w,int s)
+        public Camera(Vector2 pos, int h, int w, int s)
         {
             this.height = h;
             this.width = w;
@@ -145,13 +167,13 @@ namespace MobaGame2
             this.rotation = 0;
         }
 
-        public Matrix calc_transformation(int height,int width)
+        public Matrix calc_transformation(int height, int width)
         {
-            transform=
-                Matrix.CreateTranslation(new Vector3(-position.X,-position.Y,0))*
+            transform =
+                Matrix.CreateTranslation(new Vector3(-position.X, -position.Y, 0)) *
                 Matrix.CreateRotationZ(rotation) *
-                Matrix.CreateScale(new Vector3(zoom,zoom,1)) *
-                Matrix.CreateTranslation(new Vector3(width*0.5f , height*0.5f,0)) ;
+                Matrix.CreateScale(new Vector3(zoom, zoom, 1)) *
+                Matrix.CreateTranslation(new Vector3(width * 0.5f, height * 0.5f, 0));
 
             return transform;
         }
@@ -159,13 +181,13 @@ namespace MobaGame2
         public void ScreenBorderMove(Vector2 mouse)
         {
             //move right
-            if (mouse.X >  (width - 4))
+            if (mouse.X > (width - 4))
             {
                 position.X += speed;
                 Console.WriteLine("moving to right");
             }
             //move left 
-            if (mouse.X +position.X< position.X  + 4)
+            if (mouse.X + position.X < position.X + 4)
             {
                 position.X -= speed;
                 Console.WriteLine("moving to left");
@@ -180,7 +202,7 @@ namespace MobaGame2
             {
                 position.Y += speed;
             }
- 
+
 
         }
 
@@ -230,6 +252,11 @@ namespace MobaGame2
         public string Name;
         public Attribute attribute;
 
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(this.texture, this.rect, Color.White);
+        }
+
     }
     public class Minion : Champ
     {
@@ -239,7 +266,7 @@ namespace MobaGame2
             this.texturename = "Minion";
             this.speed = 1;
             this.height = 30;
-            this.width= 30;
+            this.width = 30;
             this.position = new Vector2(80, 80);
         }
     }
@@ -251,7 +278,7 @@ namespace MobaGame2
             this.texturename = "FiddlesticksSquare";
             this.speed = 5;
             this.height = 48;
-            this.width = 48; 
+            this.width = 48;
             this.position = new Vector2(40, 40);
         }
     }
@@ -262,6 +289,14 @@ namespace MobaGame2
         public int deaths;
         public int assists;
         public Champ champ;
+
+        public void Draw(SpriteBatch spritebatch, SpriteFont font)
+        {
+            //player name
+            spritebatch.DrawString(font, this.name, this.champ.position - new Vector2(0, 30), Color.White);
+            //draw champ
+            champ.Draw(spritebatch);
+        }
     }
 
     /// <summary>
@@ -286,8 +321,8 @@ namespace MobaGame2
         Map map;
 
         //controls
-        MouseState ms;
-        KeyboardState kb;
+
+
         SpriteFont font1;
         Texture2D mouseTexture;
 
@@ -326,7 +361,7 @@ namespace MobaGame2
 
             minion = new Minion();
 
-            camera = new Camera(new Vector2(0, 0), SCREENHEIGHT, SCREENWIDTH,8);
+            camera = new Camera(new Vector2(0, 0), SCREENHEIGHT, SCREENWIDTH, 8);
 
             map = new Map();
 
@@ -361,26 +396,20 @@ namespace MobaGame2
 
         protected override void Update(GameTime gameTime)
         {
-
-            ms = Mouse.GetState();
-            kb = Keyboard.GetState();
-
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
+            Input.Update();
 
 
-            #region controls 
-            if (ms.RightButton == ButtonState.Pressed)
+            #region controls
+            if (Input.RightMouseButton())
             {
-                if (map.ClickWitinMap(new Vector2(ms.X+camera.position.X, ms.Y+camera.position.Y)))
+                if (map.ClickWitinMap(Input.MousePosition - camera.position))
                 {
-                    player1.champ.direction = player1.champ.Move(new Vector2(ms.X+camera.position.X, ms.Y+camera.position.Y));
+                    player1.champ.direction = player1.champ.Move(Input.MousePosition + camera.position);
                     buffer = "Right Button Pressed!";
                     rightbuttonpressed = true;
                 }
             }
-            if (ms.RightButton == ButtonState.Released)
+            if (Input.RightMouseButton())
             {
                 buffer = "";
                 rightbuttonpressed = false;
@@ -388,23 +417,25 @@ namespace MobaGame2
             #endregion
 
 
-            #region camera 
-            if(Keyboard.GetState().IsKeyDown(Keys.Down))
+            #region camera
+            /*
+            if(Input.KeyPressed(Keys.Down))
             {
                 camera.zoom+=.05f;
             }
-            if(Keyboard.GetState().IsKeyDown(Keys.Up))
+            if(Input.KeyPressed(Keys.Up))
             {
                 camera.zoom-=.05f;
             }
+             */
 
-            camera.ScreenBorderMove(new Vector2(ms.X,ms.Y));
+            camera.ScreenBorderMove(Input.MousePosition);
 
 
             #endregion
 
             //
-            player1.champ.Update(map);
+            player1.champ.Update(map.rect);
 
 
             // TODO: Add your update logic here
@@ -416,26 +447,18 @@ namespace MobaGame2
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-
-
-            // TODO: Add your drawing code here
-            //GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
-           //spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.Opaque, SamplerState.LinearWrap, DepthStencilState.Default, RasterizerState.CullNone);
-
-
-
             //draw based off camera location
-           spriteBatch.Begin(
-               //SpriteSortMode.BackToFront,
-               SpriteSortMode.Immediate,
-               BlendState.AlphaBlend,
-               null,
-               null,
-               null,
-               null,
-               //camera.calc_transformation(SCREENHEIGHT,SCREENWIDTH)
-               camera.calc_transformation(1,1)
-               );
+            spriteBatch.Begin(
+                //SpriteSortMode.BackToFront,
+                SpriteSortMode.Immediate,
+                BlendState.AlphaBlend,
+                null,
+                null,
+                null,
+                null,
+                //camera.calc_transformation(SCREENHEIGHT,SCREENWIDTH)
+                camera.calc_transformation(1, 1)
+                );
             //draw map
             spriteBatch.Draw(map.texture, map.rect, Color.White);
 
@@ -443,37 +466,34 @@ namespace MobaGame2
 
 
 
-            //draw champ
-            spriteBatch.Draw(player1.champ.texture, player1.champ.rect, Color.White);
-
-            //player name
-            spriteBatch.DrawString(font1, player1.name, player1.champ.position- new Vector2(0, 30), Color.White);
+            player1.Draw(spriteBatch, font1);
 
             //draw minion 
-            spriteBatch.Draw(minion.texture, minion.rect, Color.White);
-
-            //name
-            spriteBatch.DrawString(font1, minion.Name, minion.position- new Vector2(0, 30), Color.White);
+            minion.Draw(spriteBatch);
 
             spriteBatch.End();
+
+
             spriteBatch.Begin();
 
             //draw pointer to be drawn last so its over top everything
-            spriteBatch.Draw(mouseTexture, new Vector2(ms.X - 5, ms.Y - 5), Color.White);
+            spriteBatch.Draw(mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
 
 
 
-            //spriteBatch.End();
+            spriteBatch.End();
 
 
             #region debug
+            /*
             //spriteBatch.Begin();
-            spriteBatch.DrawString(font1, (camera.position.X - ms.X).ToString() + " " + (camera.position.Y - ms.Y).ToString() + buffer, new Vector2(0, 0), Color.White);
+            spriteBatch.DrawString(font1, (camera.position.X - (Input.MousePosition).X).ToString() + " " + (camera.position.Y - (Input.MousePosition).Y).ToString() + buffer, new Vector2(0, 0), Color.White);
             //spriteBatch.DrawString(font1, player1.champ.position.X.ToString() + " " + player1.champ.position.Y.ToString(), player1.champ.position-new Vector2(0,80), Color.White);
             spriteBatch.DrawString(font1,
                 (player1.champ.position.X ).ToString() + " " + (  player1.champ.position.Y).ToString(),
                 (player1.champ.position- new Vector2(0, 80)), Color.White);
             spriteBatch.End();
+             */
             #endregion
 
             base.Draw(gameTime);
