@@ -183,6 +183,12 @@ namespace MobaGame2
  
 
         }
+
+        public Vector2 mouseToWorld(Vector2 mouse)
+        {
+
+            return new Vector2(0, 0);
+        }
     }
     public class Map : GameEntity
     {
@@ -385,7 +391,11 @@ namespace MobaGame2
             #region camera 
             if(Keyboard.GetState().IsKeyDown(Keys.Down))
             {
-                camera.zoom++;
+                camera.zoom+=.05f;
+            }
+            if(Keyboard.GetState().IsKeyDown(Keys.Up))
+            {
+                camera.zoom-=.05f;
             }
 
             camera.ScreenBorderMove(new Vector2(ms.X,ms.Y));
