@@ -44,7 +44,7 @@ namespace MobaGame2
         { return lastkeyboardState.IsKeyUp(key) && keyboardState.IsKeyDown(key); }
 
         public static bool RightMouseButton()
-        { return lastmousesState.RightButton == ButtonState.Pressed && mouseState.RightButton == ButtonState.Released; }
+        { return lastmousesState.RightButton == ButtonState.Pressed && mouseState.RightButton == ButtonState.Released; } 
 
         public static bool LeftMouseButton()
         { return lastmousesState.LeftButton== ButtonState.Pressed && mouseState.LeftButton== ButtonState.Released; }
@@ -114,13 +114,14 @@ namespace MobaGame2
         public void Update(Rectangle map)
         {
             #region moving and map bounds
-            //work on this
-            if (focus != null && range < this.Distance())
+            //if no focus or within range
+            if (focus != null && range < (distance=this.Distance()))
             {
                 direction = CalcDirection(focus.center);
             }
+
             //if we have distance to move
-            if (distance > 0)
+            if (distance > 0 && range <distance)
                 //check bounds
                 if(Bounds(this.rect,map))
                 {
@@ -143,6 +144,7 @@ namespace MobaGame2
 
         }
 
+
         public bool ClickedOn(Vector2 loc)
         {
             if (loc.X > position.X && loc.X < position.X + width)
@@ -155,7 +157,8 @@ namespace MobaGame2
         public void FocusObject(GameEntity f)
         {
             focus = f;
-            direction=CalcDirection(f.center);
+            if(focus!=null)
+                direction = CalcDirection(f.center);
         }
     }
 
@@ -269,7 +272,7 @@ namespace MobaGame2
             this.speed = 5;
             this.height = 48;
             this.width = 48;
-            this.range = 5;
+            this.range = 250;
             this.position = new Vector2(40, 40);
         }
     }
@@ -413,7 +416,6 @@ namespace MobaGame2
                         }
                     }
                 }
- 
 
 
                 if(!foundobject)
@@ -434,6 +436,8 @@ namespace MobaGame2
                     if (map.ClickedOn(Input.MousePosition - camera.position))
                     {
                         players[0].champ.direction = players[0].champ.CalcDirection(Input.MousePosition + camera.position);
+                        players[0].champ.FocusObject(null);
+
                     }
 
 
