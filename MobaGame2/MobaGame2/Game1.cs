@@ -75,7 +75,7 @@ namespace MobaGame2
         public bool clickable;
 
         //focus
-        GameEntity focus;
+        public GameEntity focus;
 
         //returns a rectangle the shape of this object
         public Rectangle rect
@@ -293,6 +293,15 @@ namespace MobaGame2
             this.height = 32;
             this.width = 32;
             this.position = new Vector2(80, 80);
+            this.range = 200;
+            this.speed = 1;
+        }
+        public void Agro(GameEntity target)
+        {
+            if (range > Vector2.Distance(this.position, target.position))
+            {
+                FocusObject(target);
+            }
         }
     }
 
@@ -501,6 +510,14 @@ namespace MobaGame2
             foreach(var player in players)
                 player.champ.Update(map.rect);
 
+            foreach(var minion in minions)
+            {
+                foreach (var player in players)
+                {
+                    minion.Agro(player.champ);
+                }
+                minion.Update(map.rect);
+            }
 
             // TODO: Add your update logic here
 
