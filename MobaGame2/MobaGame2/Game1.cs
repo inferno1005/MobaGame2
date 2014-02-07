@@ -83,7 +83,7 @@ namespace MobaGame2
         { get { return new Rectangle((int)position.X, (int)position.Y, (int)width, (int)height); } }
 
         //Finds the direction the object needs to move to goto the target location
-        public Vector2 Move(Vector2 target)
+        public Vector2 CalcDirection(Vector2 target)
         {
             destination = target;
 
@@ -106,9 +106,6 @@ namespace MobaGame2
                     return true;
             return false;
         }
-
-
-
 
         public void Update(Rectangle map)
         {
@@ -135,17 +132,17 @@ namespace MobaGame2
                 }
             #endregion 
 
-
-
-
-
         }
 
 
-
+        public bool ClickedOn(Vector2 loc)
+        {
+            if (loc.X > position.X && loc.X < position.X + width)
+                if (loc.Y > position.Y && loc.Y < position.Y + height)
+                    return true;
+            return false;
+        }
     }
-
-
 
     public class Camera
     {
@@ -182,36 +179,19 @@ namespace MobaGame2
         {
             //move right
             if (mouse.X > (width - 4))
-            {
                 position.X += speed;
-                Console.WriteLine("moving to right");
-            }
             //move left 
             if (mouse.X + position.X < position.X + 4)
-            {
                 position.X -= speed;
-                Console.WriteLine("moving to left");
-            }
             //move up
             if (mouse.Y < 4)
-            {
                 position.Y -= speed;
-            }
             //move up
             if (mouse.Y > height - 4)
-            {
                 position.Y += speed;
-            }
-
-
-        }
-
-        public Vector2 mouseToWorld(Vector2 mouse)
-        {
-
-            return new Vector2(0, 0);
         }
     }
+
     public class Map : GameEntity
     {
         public Map()
@@ -222,16 +202,8 @@ namespace MobaGame2
             this.width = 1300;
             texturename = "seamless_ground";
         }
-        public bool ClickWitinMap(Vector2 loc)
-        {
-            if (loc.X > position.X && loc.X < position.X + width)
-                if (loc.Y > position.Y && loc.Y < position.Y + height)
-                    return true;
-            return false;
-        }
-
-
     }
+
     public class Attributes
     {
         public double health;
@@ -247,6 +219,7 @@ namespace MobaGame2
         public int gold;
         public int goldpersec;
     }
+
     public class Champ : GameEntity
     {
         public string Name;
@@ -258,6 +231,7 @@ namespace MobaGame2
         }
 
     }
+
     public class Minion : Champ
     {
         public Minion()
@@ -270,6 +244,7 @@ namespace MobaGame2
             this.position = new Vector2(80, 80);
         }
     }
+
     public class FiddleSticks : Champ
     {
         public FiddleSticks()
@@ -282,6 +257,7 @@ namespace MobaGame2
             this.position = new Vector2(40, 40);
         }
     }
+
     public class Player
     {
         public string name;
@@ -299,9 +275,6 @@ namespace MobaGame2
         }
     }
 
-    /// <summary>
-    /// This is the main type for your game
-    /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         //needed
@@ -315,8 +288,10 @@ namespace MobaGame2
 
         //game objects
         Camera camera;
-        Player player1;
-        Minion minion;
+
+        List<Player> players;
+        List<Minion> minions;
+        List<GameEntity> entities;
 
         Map map;
 
@@ -329,7 +304,6 @@ namespace MobaGame2
         //buffer
         String buffer;
 
-        bool rightbuttonpressed;
 
 
 
@@ -354,12 +328,13 @@ namespace MobaGame2
 
 
             // TODO: Add your initialization logic here
-            player1 = new Player();
-            player1.name = "inferno1005";
-            player1.champ = new FiddleSticks();
+            players= new List<Player>();
+            players.Add(new Player());
+            players[0].name = "inferno1005";
+            players[0].champ = new FiddleSticks();
 
-
-            minion = new Minion();
+            minions= new List<Minion>();
+            minions.Add(new Minion());
 
             camera = new Camera(new Vector2(0, 0), SCREENHEIGHT, SCREENWIDTH, 8);
 
@@ -377,8 +352,12 @@ namespace MobaGame2
 
             // TODO: use this.Content to load your game content here
             #region textures
-            player1.champ.texture = Content.Load<Texture2D>(player1.champ.texturename);
-            minion.texture = Content.Load<Texture2D>(minion.texturename);
+            foreach(var Player in players)
+                Player.champ.texture = Content.Load<Texture2D>(Player.champ.texturename);
+
+            foreach (var Minion in minions)
+                Minion.texture = Content.Load<Texture2D>(Minion.texturename);
+
             map.texture = Content.Load<Texture2D>(map.texturename);
             mouseTexture = Content.Load<Texture2D>("pointer");
             #endregion
@@ -397,22 +376,53 @@ namespace MobaGame2
         protected override void Update(GameTime gameTime)
         {
             Input.Update();
+            bool foundobject;
 
 
             #region controls
+            //right button selects and targets, if not on anything but map, moves there
             if (Input.RightMouseButton())
             {
-                if (map.ClickWitinMap(Input.MousePosition - camera.position))
+                foundobject = false;
+
+                //prefer plays over other objects, because they can kill you!
+                foreach (var player in players)
                 {
-                    player1.champ.direction = player1.champ.Move(Input.MousePosition + camera.position);
-                    buffer = "Right Button Pressed!";
-                    rightbuttonpressed = true;
+                    if (!foundobject)
+                    {
+                        if (player.champ.ClickedOn(Input.MousePosition - camera.position))
+                        {
+                            foundobject = true;
+                            //focus this player
+                        }
+                    }
                 }
-            }
-            if (Input.RightMouseButton())
-            {
-                buffer = "";
-                rightbuttonpressed = false;
+ 
+
+
+                if(!foundobject)
+                    foreach (var minion in minions)
+                    {
+                        if (!foundobject)
+                            if (minion.ClickedOn(Input.MousePosition - camera.position))
+                            {
+                                foundobject = true;
+                                //focus this minion 
+                                players[0].champ.direction = Vector2.Zero;
+                            }
+
+                    }
+
+
+                if (!foundobject)
+                    if (map.ClickedOn(Input.MousePosition - camera.position))
+                    {
+                        players[0].champ.direction = players[0].champ.CalcDirection(Input.MousePosition + camera.position);
+                    }
+
+
+
+
             }
             #endregion
 
@@ -435,7 +445,8 @@ namespace MobaGame2
             #endregion
 
             //
-            player1.champ.Update(map.rect);
+            foreach(var player in players)
+                player.champ.Update(map.rect);
 
 
             // TODO: Add your update logic here
@@ -466,10 +477,12 @@ namespace MobaGame2
 
 
 
-            player1.Draw(spriteBatch, font1);
+            foreach(var player in players)
+                player.Draw(spriteBatch, font1);
 
             //draw minion 
-            minion.Draw(spriteBatch);
+            foreach(var minion in minions)
+                minion.Draw(spriteBatch);
 
             spriteBatch.End();
 
