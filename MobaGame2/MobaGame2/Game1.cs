@@ -41,30 +41,26 @@ namespace MobaGame2
             mouseState = Mouse.GetState();
         }
         public static bool KeyPressed(Keys key)
-        {
-            return lastkeyboardState.IsKeyUp(key) && keyboardState.IsKeyDown(key);
-        }
+        { return lastkeyboardState.IsKeyUp(key) && keyboardState.IsKeyDown(key); }
+
         public static bool RightMouseButton()
-        {
-            return lastmousesState.RightButton == ButtonState.Pressed && mouseState.RightButton == ButtonState.Released;
-        }
+        { return lastmousesState.RightButton == ButtonState.Pressed && mouseState.RightButton == ButtonState.Released; }
 
         public static bool LeftMouseButton()
-        {
-            return lastmousesState.LeftButton== ButtonState.Pressed && mouseState.LeftButton== ButtonState.Released;
-        }
+        { return lastmousesState.LeftButton== ButtonState.Pressed && mouseState.LeftButton== ButtonState.Released; }
     }
 
     public class GameEntity
     {
         public Vector2 position;        //current position
         public Vector2 center           //center of the icon
-        { get { return new Vector2(position.X + width / (float)2, position.Y + height / (float)2); } }
+        { get { return new Vector2(position.X + (width / (float)2), position.Y + (height / (float)2)); } }
 
         public Vector2 direction;       //direction from position to destination
         public Vector2 destination;     //current destination
         public float speed;             //how fast
         public double distance;         //distance from poisition to destination
+        public double range;
 
         public int height; 
         public int width;
@@ -77,6 +73,9 @@ namespace MobaGame2
         //options
         public bool visible;
         public bool clickable;
+
+        //focus
+        GameEntity focus;
 
         //returns a rectangle the shape of this object
         public Rectangle rect
@@ -98,6 +97,11 @@ namespace MobaGame2
                 return Vector2.Normalize(direction);
         }
 
+        public double Distance()
+        {
+            return Vector2.Distance(focus.position, this.position);
+        }
+
         //check to see if a is fully within b
         public bool Bounds(Rectangle a,Rectangle b)
         {
@@ -110,6 +114,11 @@ namespace MobaGame2
         public void Update(Rectangle map)
         {
             #region moving and map bounds
+            //work on this
+            if (focus != null && range < this.Distance())
+            {
+                direction = CalcDirection(focus.center);
+            }
             //if we have distance to move
             if (distance > 0)
                 //check bounds
@@ -134,13 +143,19 @@ namespace MobaGame2
 
         }
 
-
         public bool ClickedOn(Vector2 loc)
         {
             if (loc.X > position.X && loc.X < position.X + width)
                 if (loc.Y > position.Y && loc.Y < position.Y + height)
                     return true;
             return false;
+        }
+
+
+        public void FocusObject(GameEntity f)
+        {
+            focus = f;
+            direction=CalcDirection(f.center);
         }
     }
 
@@ -239,8 +254,8 @@ namespace MobaGame2
             this.Name = "Minion";
             this.texturename = "Minion";
             this.speed = 1;
-            this.height = 30;
-            this.width = 30;
+            this.height = 32;
+            this.width = 32;
             this.position = new Vector2(80, 80);
         }
     }
@@ -254,6 +269,7 @@ namespace MobaGame2
             this.speed = 5;
             this.height = 48;
             this.width = 48;
+            this.range = 5;
             this.position = new Vector2(40, 40);
         }
     }
@@ -406,9 +422,9 @@ namespace MobaGame2
                         if (!foundobject)
                             if (minion.ClickedOn(Input.MousePosition - camera.position))
                             {
+                                Console.WriteLine("Clicked on minion");
                                 foundobject = true;
-                                //focus this minion 
-                                players[0].champ.direction = Vector2.Zero;
+                                players[0].champ.FocusObject(minion);
                             }
 
                     }
