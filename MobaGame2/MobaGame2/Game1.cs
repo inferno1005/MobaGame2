@@ -120,27 +120,60 @@ namespace MobaGame2
                 direction = CalcDirection(focus.center);
             }
 
-            //if we have distance to move
-            if (distance > 0 && range <distance)
-                //check bounds
-                if(Bounds(this.rect,map))
+
+            //if moving to an object that we want to hit
+            if (focus != null)
+            {
+                if (distance > 0 && range < distance)
                 {
-                        distance-=speed;
+                    //check bounds
+                    if (Bounds(this.rect, map))
+                    {
+                        distance -= speed;
                         position += speed * direction;
-                }
-                //if not push him back in the map
-                else
-                {
+                    }
+                    //if not push him back in the map
+                    else
+                    {
                         if (position.Y + height >= map.Y + map.Height)
-                            position.Y = map.Height + map.Y - height; 
+                            position.Y = map.Height + map.Y - height;
                         if (position.Y <= map.Y)
                             position.Y = map.Y;
                         if (position.X + width >= map.X + map.Width)
                             position.X = map.Width + map.X - width;
                         if (position.X <= map.X)
                             position.X = map.X;
+                    }
                 }
-            #endregion 
+            }
+                //if moving to a point on the map
+            else
+            {
+
+                if (distance > 0 )
+                {
+                    //check bounds
+                    if (Bounds(this.rect, map))
+                    {
+                        distance -= speed;
+                        position += speed * direction;
+                    }
+                    //if not push him back in the map
+                    else
+                    {
+                        if (position.Y + height >= map.Y + map.Height)
+                            position.Y = map.Height + map.Y - height;
+                        if (position.Y <= map.Y)
+                            position.Y = map.Y;
+                        if (position.X + width >= map.X + map.Width)
+                            position.X = map.Width + map.X - width;
+                        if (position.X <= map.X)
+                            position.X = map.X;
+                    }
+                }
+            }
+
+            #endregion
 
         }
 
