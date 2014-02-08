@@ -24,22 +24,22 @@ namespace MobaGame2
         public Vector2 destination;     //current destination
         public float speed;             //how fast
         public double distance;         //distance from poisition to destination
-        public double range;
+        public double range;            //how far the object needs to be to agro
 
-        public int height;
-        public int width;
+        public int height;              //height of this object
+        public int width;               //width of this object
 
         //drawing
-        public Texture2D texture;
-        public string texturename;
-        public Color color;
+        public Texture2D texture;       //default texture  for this object
+        public string texturename;      //texture name for this object
+        public Color color;             //default color for this object, usually white
 
         //options
-        public bool visible;
-        public bool clickable;
+        public bool visible;            //whether this object should be drawn
+        public bool clickable;          //whether this object can be clicked on
 
         //focus
-        public GameEntity focus;
+        public GameEntity focus;        //the focus of this object
 
         //returns a rectangle the shape of this object
         public Rectangle rect
@@ -48,12 +48,13 @@ namespace MobaGame2
         //Finds the direction the object needs to move to goto the target location
         public Vector2 CalcDirection(Vector2 target)
         {
+
+
             destination = target;
 
-            //Vector2 direction =mouseloc- new Vector2(this.position.X+(width/(float)2),this.position.Y+(height/(float)2));
             Vector2 direction = target - this.center;
 
-            distance = Math.Sqrt(Math.Pow((this.center.X - target.X), 2) + Math.Pow((this.center.Y - target.Y), 2));
+            distance = Vector2.Distance(this.center, target);
 
             if (direction == Vector2.Zero)
                 return Vector2.Zero;
@@ -64,15 +65,6 @@ namespace MobaGame2
         public double Distance()
         {
             return Vector2.Distance(focus.position, this.position);
-        }
-
-        //check to see if a is fully within b
-        public bool Bounds(Rectangle a, Rectangle b)
-        {
-            if (a.X >= b.X && a.X + a.Width <= b.X + b.Width)
-                if (a.Y >= b.Y && a.Y + a.Height <= b.Y + b.Height)
-                    return true;
-            return false;
         }
 
         public void Update(Rectangle map)
@@ -91,7 +83,7 @@ namespace MobaGame2
                 if (distance > 0 && range < distance)
                 {
                     //check bounds
-                    if (Bounds(this.rect, map))
+                    if (MathHelper.Bounds(this.rect, map))
                     {
                         distance -= speed;
                         position += speed * direction;
@@ -117,7 +109,7 @@ namespace MobaGame2
                 if (distance > 0)
                 {
                     //check bounds
-                    if (Bounds(this.rect, map))
+                    if (MathHelper.Bounds(this.rect, map))
                     {
                         distance -= speed;
                         position += speed * direction;
@@ -142,20 +134,12 @@ namespace MobaGame2
         }
 
 
-        public bool ClickedOn(Vector2 loc)
-        {
-            if (loc.X > position.X && loc.X < position.X + width)
-                if (loc.Y > position.Y && loc.Y < position.Y + height)
-                    return true;
-            return false;
-        }
-
 
         public void FocusObject(GameEntity f)
         {
             focus = f;
             if (focus != null)
-                direction = CalcDirection(f.center);
+                direction = CalcDirection(focus.center);
         }
 
     }
