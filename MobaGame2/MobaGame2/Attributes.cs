@@ -42,9 +42,9 @@ namespace MobaGame2
         {
             if (pos != null && spritebatch != null && texture!=null)
             {
-                //draw healh bars  going to need to fix these, find good ratios for them to display correctly
-                spritebatch.Draw(texture, new Rectangle((int)pos.X, (int)pos.Y, 50, 10), Color.Black);
-                spritebatch.Draw(texture, new Rectangle((int)pos.X, (int)pos.Y, (int)(100*(health/maxhealth)), 10), Color.Red);
+                //draw healh bars  going to need to fix these, find good ratios for them to display
+                spritebatch.Draw(texture, new Rectangle((int)pos.X, (int)pos.Y-10, 50, 10), Color.Black);
+                spritebatch.Draw(texture, new Rectangle((int)pos.X, (int)pos.Y-10, (int)(100*(health/maxhealth)), 10), Color.Red);
             }
         }
     }

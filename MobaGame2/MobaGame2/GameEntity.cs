@@ -77,9 +77,8 @@ namespace MobaGame2
         public void Update(Rectangle map)
         {
             #region moving and map bounds
-            //distance = this.Distance();
 
-            //if no focus or within range
+            //if focus or within range
             if (null != focus && range < distance)
             {
                 direction = CalcDirection(focus.center);
