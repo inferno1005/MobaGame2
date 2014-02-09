@@ -17,14 +17,19 @@ namespace MobaGame2
     class Champ :GameEntity
     {
         public string Name;
-        public Attribute attribute;
+        public Attributes attributes;
+
+        public Champ()
+        {
+            attributes = new Attributes();
+        }
+
+
 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(this.texture, this.rect, Color.White);
+            attributes.Draw(spriteBatch, this.position);
         }
-
-    
-
     }
 }

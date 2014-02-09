@@ -79,6 +79,7 @@
     <Compile Include="GameEntity.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Map.cs" />
+    <Compile Include="MathHelper.cs" />
     <Compile Include="Minion.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

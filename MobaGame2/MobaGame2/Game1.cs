@@ -99,8 +99,11 @@ namespace MobaGame2
 
             // TODO: use this.Content to load your game content here
             #region textures
-            foreach(var Player in players)
+            foreach (var Player in players)
+            {
                 Player.champ.texture = Content.Load<Texture2D>(Player.champ.texturename);
+                Player.champ.attributes.texture = Content.Load<Texture2D>(Player.champ.attributes.texturename);
+            }
 
             foreach (var Minion in minions)
                 Minion.texture = Content.Load<Texture2D>(Minion.texturename);
@@ -137,7 +140,7 @@ namespace MobaGame2
                 {
                     if (!foundobject)
                     {
-                        if (player.champ.ClickedOn(Input.MousePosition - camera.position))
+                        if (MathHelper.ClickedOn(Input.MousePosition - camera.position,player.champ.rect))
                         {
                             foundobject = true;
                             //focus this player
@@ -150,7 +153,7 @@ namespace MobaGame2
                     foreach (var minion in minions)
                     {
                         if (!foundobject)
-                            if (minion.ClickedOn(Input.MousePosition - camera.position))
+                        if (MathHelper.ClickedOn(Input.MousePosition - camera.position,players[0].champ.rect))
                             {
                                 Console.WriteLine("Clicked on minion");
                                 foundobject = true;
@@ -161,16 +164,13 @@ namespace MobaGame2
 
 
                 if (!foundobject)
-                    if (map.ClickedOn(Input.MousePosition - camera.position))
+                    if (MathHelper.ClickedOn(Input.MousePosition - camera.position,map.rect))
                     {
+                        Console.WriteLine("Clicked on map!");
                         players[0].champ.direction = players[0].champ.CalcDirection(Input.MousePosition + camera.position);
                         players[0].champ.FocusObject(null);
 
                     }
-
-
-
-
             }
             #endregion
 

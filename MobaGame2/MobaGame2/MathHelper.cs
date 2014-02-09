@@ -23,7 +23,7 @@ namespace MobaGame2
                     return true;
             return false;
         }
-        public bool ClickedOn(Vector2 loc,Rectangle rect)
+        static public bool ClickedOn(Vector2 loc,Rectangle rect)
         {
             if (loc.X > rect.X && loc.X < rect.X + rect.Width)
                 if (loc.Y > rect.Y && loc.Y < rect.Y + rect.Height)

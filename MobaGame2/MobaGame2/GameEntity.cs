@@ -15,7 +15,6 @@ namespace MobaGame2
 {
     class GameEntity
     {
-
         public Vector2 position;        //current position
         public Vector2 center           //center of the icon
         { get { return new Vector2(position.X + (width / (float)2), position.Y + (height / (float)2)); } }
@@ -45,101 +44,104 @@ namespace MobaGame2
         public Rectangle rect
         { get { return new Rectangle((int)position.X, (int)position.Y, (int)width, (int)height); } }
 
+
+        public GameEntity()
+        {
+        }
+
+
         //Finds the direction the object needs to move to goto the target location
         public Vector2 CalcDirection(Vector2 target)
         {
-
-
             destination = target;
 
             Vector2 direction = target - this.center;
 
             distance = Vector2.Distance(this.center, target);
 
-            if (direction == Vector2.Zero)
+            if (Vector2.Zero == direction)
+            {
                 return Vector2.Zero;
+            }
             else
+            {
                 return Vector2.Normalize(direction);
+            }
         }
 
         public double Distance()
         {
-            return Vector2.Distance(focus.position, this.position);
+                return Vector2.Distance(destination, this.position);
         }
 
         public void Update(Rectangle map)
         {
             #region moving and map bounds
+            //distance = this.Distance();
+
             //if no focus or within range
-            if (focus != null && range < (distance = this.Distance()))
+            if (null != focus && range < distance)
             {
                 direction = CalcDirection(focus.center);
+                MoveWithinBounds(map);
             }
-
 
             //if moving to an object that we want to hit
-            if (focus != null)
+            else if (null != focus && distance > 0 && range < distance)
             {
-                if (distance > 0 && range < distance)
-                {
-                    //check bounds
-                    if (MathHelper.Bounds(this.rect, map))
-                    {
-                        distance -= speed;
-                        position += speed * direction;
-                    }
-                    //if not push him back in the map
-                    else
-                    {
-                        if (position.Y + height >= map.Y + map.Height)
-                            position.Y = map.Height + map.Y - height;
-                        if (position.Y <= map.Y)
-                            position.Y = map.Y;
-                        if (position.X + width >= map.X + map.Width)
-                            position.X = map.Width + map.X - width;
-                        if (position.X <= map.X)
-                            position.X = map.X;
-                    }
-                }
+                MoveWithinBounds(map);
             }
-            //if moving to a point on the map
-            else
-            {
 
-                if (distance > 0)
-                {
-                    //check bounds
-                    if (MathHelper.Bounds(this.rect, map))
-                    {
-                        distance -= speed;
-                        position += speed * direction;
-                    }
-                    //if not push him back in the map
-                    else
-                    {
-                        if (position.Y + height >= map.Y + map.Height)
-                            position.Y = map.Height + map.Y - height;
-                        if (position.Y <= map.Y)
-                            position.Y = map.Y;
-                        if (position.X + width >= map.X + map.Width)
-                            position.X = map.Width + map.X - width;
-                        if (position.X <= map.X)
-                            position.X = map.X;
-                    }
-                }
+            //if moving to a point on the map
+            else if (distance > 0 && null==focus)
+            {
+                MoveWithinBounds(map);
             }
 
             #endregion
 
         }
 
+        public void MoveWithinBounds(Rectangle map)
+        {
 
+            //check bounds
+            if (MathHelper.Bounds(this.rect, map))
+            {
+                //Console.WriteLine("trying to move!");
+                distance -= speed;
+                position += (speed * direction);
+            }
+            //if not push him back in the map
+            else
+            {
+                if ((position.Y + height) >= (map.Y + map.Height))
+                {
+                    position.Y = map.Height + map.Y - height;
+                }
+                if (position.Y <= map.Y)
+                {
+                    position.Y = map.Y;
+                }
+                if ((position.X + width) >= (map.X + map.Width))
+                {
+                    position.X = map.Width + map.X - width;
+                }
+                if (position.X <= map.X)
+                {
+                    position.X = map.X;
+                }
+            }
+
+        }
 
         public void FocusObject(GameEntity f)
         {
             focus = f;
-            if (focus != null)
+            if (null != focus)
+            {
                 direction = CalcDirection(focus.center);
+            }
         }
 
     }
