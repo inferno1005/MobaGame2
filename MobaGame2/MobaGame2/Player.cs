@@ -35,7 +35,9 @@ namespace MobaGame2
         public void Update(Rectangle rect)
         {
             if (champ.attributes.health < 0)
+            {
                 alive = false;
+            }
             champ.Update(rect);
         }
 

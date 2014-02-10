@@ -16,6 +16,7 @@ namespace MobaGame2
 {
     static class MathHelper
     {
+        //determines if rect a is within rect b
         static public bool Bounds(Rectangle a, Rectangle b)
         {
             if (a.X >= b.X && a.X + a.Width <= b.X + b.Width)
@@ -23,6 +24,8 @@ namespace MobaGame2
                     return true;
             return false;
         }
+
+        //determines if the vec2 is within the rectangle
         static public bool ClickedOn(Vector2 loc,Rectangle rect)
         {
             if (loc.X > rect.X && loc.X < rect.X + rect.Width)
@@ -34,9 +37,5 @@ namespace MobaGame2
             }
             return false;
         }
-
-
-
-
     }
 }

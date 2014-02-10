@@ -143,7 +143,6 @@ namespace MobaGame2
             #region mouse
             if (Input.RightMouseButton() && players[0].alive)
             {
-                Console.WriteLine("Clicked right mouse button!");
                 foundobject = false;
 
                 //prefer plays over other objects, because they can kill you!
@@ -177,7 +176,6 @@ namespace MobaGame2
                 if (!foundobject)
                     if (MathHelper.ClickedOn(Input.MousePosition + camera.position,map.rect))
                     {
-                        Console.WriteLine("Clicked on map!");
                         players[0].champ.direction = players[0].champ.CalcDirection(Input.MousePosition + camera.position);
                         players[0].champ.FocusObject(null);
 
@@ -191,6 +189,14 @@ namespace MobaGame2
             if(Input.KeyHeld(Keys.Space))
             {
                 camera.Center(players[0].champ.center);
+            }
+            if(Input.KeyPressed(Keys.K))
+            {
+                if (players[0].alive == true)
+                    players[0].alive = false;
+                else
+                    players[0].alive = true;
+
             }
             #endregion
 
