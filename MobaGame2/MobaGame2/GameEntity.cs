@@ -31,7 +31,7 @@ namespace MobaGame2
         //drawing
         public Texture2D texture;       //default texture  for this object
         public string texturename;      //texture name for this object
-        public Color color;             //default color for this object, usually white
+        public Color color=Color.White; //default color for this object, usually white
 
         //options
         public bool visible;            //whether this object should be drawn
@@ -43,11 +43,6 @@ namespace MobaGame2
         //returns a rectangle the shape of this object
         public Rectangle rect
         { get { return new Rectangle((int)position.X, (int)position.Y, (int)width, (int)height); } }
-
-
-        public GameEntity()
-        {
-        }
 
 
         //Finds the direction the object needs to move to goto the target location
@@ -69,6 +64,7 @@ namespace MobaGame2
             }
         }
 
+        //finds the distance from this object to its set destination
         public double Distance()
         {
                 return Vector2.Distance(destination, this.position);
@@ -90,10 +86,6 @@ namespace MobaGame2
             {
                 MoveWithinBounds(map);
             }
-            //else if (null != focus)
-            //{
-                //MoveWithinBounds(map);
-            //}
 
             //if moving to a point on the map
             else if (distance > 0 && null == focus)
@@ -105,6 +97,7 @@ namespace MobaGame2
 
         }
 
+        //ensures this object moves only within the map
         public void MoveWithinBounds(Rectangle map)
         {
 
@@ -120,24 +113,26 @@ namespace MobaGame2
             {
                 if ((position.Y + height) >= (map.Y + map.Height))
                 {
-                    position.Y = map.Height + map.Y - height;
+                    position.Y = map.Height + map.Y - height-1;
                 }
                 if (position.Y <= map.Y)
                 {
-                    position.Y = map.Y;
+                    position.Y = map.Y+1;
                 }
                 if ((position.X + width) >= (map.X + map.Width))
                 {
-                    position.X = map.Width + map.X - width;
+                    position.X = map.Width + map.X - width-1;
                 }
                 if (position.X <= map.X)
                 {
-                    position.X = map.X;
+                    position.X = map.X+1;
                 }
             }
 
         }
 
+
+        //sets the focus for this object
         public void FocusObject(GameEntity f)
         {
             focus = f;

@@ -141,8 +141,9 @@ namespace MobaGame2
 
             //right button selects and targets, if not on anything but map, moves there
             #region mouse
-            if (Input.RightMouseButton())
+            if (Input.RightMouseButton() && players[0].alive)
             {
+                Console.WriteLine("Clicked right mouse button!");
                 foundobject = false;
 
                 //prefer plays over other objects, because they can kill you!
@@ -150,7 +151,7 @@ namespace MobaGame2
                 {
                     if (!foundobject)
                     {
-                        if (MathHelper.ClickedOn(Input.MousePosition - camera.position,player.champ.rect))
+                        if (MathHelper.ClickedOn(Input.MousePosition + camera.position,player.champ.rect))
                         {
 
                             foundobject = true;
@@ -164,9 +165,8 @@ namespace MobaGame2
                     foreach (var minion in minions)
                     {
                         if (!foundobject)
-                            if (MathHelper.ClickedOn(Input.MousePosition - camera.position, minion.rect))
+                            if (MathHelper.ClickedOn(Input.MousePosition + camera.position, minion.rect))
                             {
-                                Console.WriteLine("Clicked on minion");
                                 foundobject = true;
                                 players[0].champ.FocusObject(minion);
                             }
@@ -175,7 +175,7 @@ namespace MobaGame2
 
 
                 if (!foundobject)
-                    if (MathHelper.ClickedOn(Input.MousePosition - camera.position,map.rect))
+                    if (MathHelper.ClickedOn(Input.MousePosition + camera.position,map.rect))
                     {
                         Console.WriteLine("Clicked on map!");
                         players[0].champ.direction = players[0].champ.CalcDirection(Input.MousePosition + camera.position);
