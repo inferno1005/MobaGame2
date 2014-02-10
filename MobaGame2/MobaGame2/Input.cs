@@ -34,10 +34,14 @@ namespace MobaGame2
         public static bool KeyPressed(Keys key)
         { return lastkeyboardState.IsKeyUp(key) && keyboardState.IsKeyDown(key); }
 
+        public static bool KeyHeld(Keys key)
+        { return  keyboardState.IsKeyDown(key); }
+
         public static bool RightMouseButton()
         { return lastmousesState.RightButton == ButtonState.Pressed && mouseState.RightButton == ButtonState.Released; } 
 
         public static bool LeftMouseButton()
         { return lastmousesState.LeftButton== ButtonState.Pressed && mouseState.LeftButton== ButtonState.Released; }
+
     }
 }

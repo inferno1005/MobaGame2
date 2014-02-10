@@ -138,7 +138,9 @@ namespace MobaGame2
 
 
             #region controls
+
             //right button selects and targets, if not on anything but map, moves there
+            #region mouse
             if (Input.RightMouseButton())
             {
                 foundobject = false;
@@ -183,21 +185,20 @@ namespace MobaGame2
             }
             #endregion
 
+            #region keyboard
+
+            //center camera to champ and follow
+            if(Input.KeyHeld(Keys.Space))
+            {
+                camera.Center(players[0].champ.center);
+            }
+            #endregion
+
+
+            #endregion
+
             #region camera
-            /*
-            if(Input.KeyPressed(Keys.Down))
-            {
-                camera.zoom+=.05f;
-            }
-            if(Input.KeyPressed(Keys.Up))
-            {
-                camera.zoom-=.05f;
-            }
-             */
-
             camera.ScreenBorderMove(Input.MousePosition);
-
-
             #endregion
 
             #region updates
@@ -227,6 +228,7 @@ namespace MobaGame2
             //GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.Clear(Color.Gray);
 
+            //if player is alive draw normaly, otherwise dray grayed out
             if (players[0].alive)
                 drawcolor = Color.White;
             else 
@@ -297,6 +299,7 @@ namespace MobaGame2
             #endregion
             //
 
+            #region interface
             spriteBatch.Begin();
 
             UI.Draw(spriteBatch,font1,players[0]);
@@ -304,9 +307,8 @@ namespace MobaGame2
             //draw pointer to be drawn last so its over top everything
             spriteBatch.Draw(mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
 
-
-
             spriteBatch.End();
+            #endregion
 
 
             #region debug

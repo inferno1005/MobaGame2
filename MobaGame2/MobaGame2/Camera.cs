@@ -60,6 +60,11 @@ namespace MobaGame2
             if (mouse.Y > height - 4)
                 position.Y += speed;
         }
-    
+
+        public void Center(Vector2 pos)
+        {
+            position.X = pos.X-width/2;
+            position.Y = pos.Y-height/2;
+        }
     }
 }
