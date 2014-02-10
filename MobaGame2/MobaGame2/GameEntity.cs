@@ -90,9 +90,13 @@ namespace MobaGame2
             {
                 MoveWithinBounds(map);
             }
+            //else if (null != focus)
+            //{
+                //MoveWithinBounds(map);
+            //}
 
             //if moving to a point on the map
-            else if (distance > 0 && null==focus)
+            else if (distance > 0 && null == focus)
             {
                 MoveWithinBounds(map);
             }

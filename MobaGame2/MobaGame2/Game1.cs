@@ -103,7 +103,6 @@ namespace MobaGame2
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
             #region textures
             foreach (var Player in players)
             {
@@ -148,6 +147,7 @@ namespace MobaGame2
                     {
                         if (MathHelper.ClickedOn(Input.MousePosition - camera.position,player.champ.rect))
                         {
+
                             foundobject = true;
                             //focus this player
                         }
@@ -159,7 +159,7 @@ namespace MobaGame2
                     foreach (var minion in minions)
                     {
                         if (!foundobject)
-                        if (MathHelper.ClickedOn(Input.MousePosition - camera.position,players[0].champ.rect))
+                            if (MathHelper.ClickedOn(Input.MousePosition - camera.position, minion.rect))
                             {
                                 Console.WriteLine("Clicked on minion");
                                 foundobject = true;

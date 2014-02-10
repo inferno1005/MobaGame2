@@ -24,13 +24,14 @@ namespace MobaGame2
             this.height = 32;
             this.width = 32;
             this.position = new Vector2(80, 80);
-            this.range = 2000;
+            this.range = 200;
             this.speed = 1;
         }
         public void Agro(GameEntity target)
         {
-            if (range > Vector2.Distance(this.position, target.position))
+            if (range > (distance=Vector2.Distance(this.position, target.position)))
             {
+                Console.WriteLine("minion is AGRO");
                 FocusObject(target);
             }
         }
