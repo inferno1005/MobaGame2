@@ -27,7 +27,11 @@ namespace MobaGame2
             this.position = new Vector2(290, 290);
 
             this.attributes.maxhealth = 1000;
-            this.attributes.health = 50;
+            this.attributes.health = 750;
+
+
+            this.attributes.maxmana= 1000;
+            this.attributes.mana= 1000;
         }
     
     }

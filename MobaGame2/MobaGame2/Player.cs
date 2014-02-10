@@ -26,7 +26,7 @@ namespace MobaGame2
         public void Draw(SpriteBatch spritebatch, SpriteFont font)
         {
             //player name
-            spritebatch.DrawString(font, this.name, this.champ.position - new Vector2(0, 30), Color.White);
+            spritebatch.DrawString(font, this.name, this.champ.position - new Vector2(0, 50), Color.White);
             //draw champ
             champ.Draw(spritebatch);
         }

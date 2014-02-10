@@ -35,6 +35,7 @@ namespace MobaGame2
 
         //game objects
         Camera camera;
+        //Camera minimap;
 
         List<Player> players;
         List<Minion> minions;
@@ -72,6 +73,8 @@ namespace MobaGame2
             this.Window.Title = "Moba";
             #endregion
 
+            //ui
+            UI.SetPos(SCREENWIDTH, SCREENHEIGHT);
 
 
             // TODO: Add your initialization logic here
@@ -84,6 +87,9 @@ namespace MobaGame2
             minions.Add(new Minion());
 
             camera = new Camera(new Vector2(0, 0), SCREENHEIGHT, SCREENWIDTH, 8);
+            //minimap = new Camera(new Vector2(0, 0), 50, 50, 8);
+
+            //minimap.zoom = .30f;
 
             map = new Map();
 
@@ -214,6 +220,7 @@ namespace MobaGame2
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            #region game camera
             //draw based off camera location
             spriteBatch.Begin(
                 //SpriteSortMode.BackToFront,
@@ -241,9 +248,46 @@ namespace MobaGame2
                 minion.Draw(spriteBatch);
 
             spriteBatch.End();
+            #endregion
 
+            //
+            #region minimap camera
+            /*
+            //draw based off camera location
+            spriteBatch.Begin(
+                //SpriteSortMode.BackToFront,
+                SpriteSortMode.Immediate,
+                BlendState.AlphaBlend,
+                null,
+                null,
+                null,
+                null,
+                //camera.calc_transformation(SCREENHEIGHT,SCREENWIDTH)
+                minimap.calc_transformation(SCREENHEIGHT, SCREENWIDTH)
+                );
+            //draw map
+            spriteBatch.Draw(map.texture, map.rect, Color.White);
+
+            //spriteBatch.End();
+
+
+
+            foreach(var player in players)
+                player.Draw(spriteBatch, font1);
+
+            //draw minion 
+            foreach(var minion in minions)
+                minion.Draw(spriteBatch);
+
+            spriteBatch.End();
+
+            */
+            #endregion
+            //
 
             spriteBatch.Begin();
+
+            UI.Draw(spriteBatch,font1,players[0]);
 
             //draw pointer to be drawn last so its over top everything
             spriteBatch.Draw(mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
