@@ -26,9 +26,9 @@ namespace MobaGame2
 
 
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch,Color color)
         {
-            spriteBatch.Draw(this.texture, this.rect, Color.White);
+            spriteBatch.Draw(this.texture, this.rect, color);
             attributes.Draw(spriteBatch, this.position);
         }
     }

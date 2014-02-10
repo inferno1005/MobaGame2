@@ -21,15 +21,24 @@ namespace MobaGame2
         public int kills;
         public int deaths;
         public int assists;
+        public bool alive=true;
         public Champ champ;
 
-        public void Draw(SpriteBatch spritebatch, SpriteFont font)
+        public void Draw(SpriteBatch spritebatch, SpriteFont font,Color color)
         {
             //player name
-            spritebatch.DrawString(font, this.name, this.champ.position - new Vector2(0, 50), Color.White);
+            spritebatch.DrawString(font, this.name, this.champ.position - new Vector2(0, 50), color);
             //draw champ
-            champ.Draw(spritebatch);
+            champ.Draw(spritebatch,color);
         }
+
+        public void Update(Rectangle rect)
+        {
+            if (champ.attributes.health < 0)
+                alive = false;
+            champ.Update(rect);
+        }
+
     
     }
 }

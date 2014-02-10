@@ -53,6 +53,9 @@ namespace MobaGame2
         String buffer;
 
 
+        Color drawcolor;
+
+
 
 
         public Game1()
@@ -180,7 +183,6 @@ namespace MobaGame2
             }
             #endregion
 
-
             #region camera
             /*
             if(Input.KeyPressed(Keys.Down))
@@ -198,9 +200,12 @@ namespace MobaGame2
 
             #endregion
 
-            //
-            foreach(var player in players)
-                player.champ.Update(map.rect);
+            #region updates
+
+            foreach (var player in players)
+            {
+                player.Update(map.rect);
+            }
 
             foreach(var minion in minions)
             {
@@ -210,6 +215,7 @@ namespace MobaGame2
                 }
                 minion.Update(map.rect);
             }
+            #endregion
 
             // TODO: Add your update logic here
 
@@ -218,7 +224,13 @@ namespace MobaGame2
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            //GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Gray);
+
+            if (players[0].alive)
+                drawcolor = Color.White;
+            else 
+                drawcolor = Color.Gray;
 
             #region game camera
             //draw based off camera location
@@ -234,18 +246,18 @@ namespace MobaGame2
                 camera.calc_transformation(1, 1)
                 );
             //draw map
-            spriteBatch.Draw(map.texture, map.rect, Color.White);
+            spriteBatch.Draw(map.texture, map.rect, drawcolor);
 
             //spriteBatch.End();
 
 
 
             foreach(var player in players)
-                player.Draw(spriteBatch, font1);
+                player.Draw(spriteBatch, font1,drawcolor);
 
             //draw minion 
             foreach(var minion in minions)
-                minion.Draw(spriteBatch);
+                minion.Draw(spriteBatch,drawcolor);
 
             spriteBatch.End();
             #endregion
