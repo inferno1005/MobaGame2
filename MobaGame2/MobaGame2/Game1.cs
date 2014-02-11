@@ -353,7 +353,7 @@ namespace MobaGame2
         protected void DrawFog(GameTime gameTime)
         {
             GraphicsDevice.SetRenderTarget(fog);
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(new Color(15,15,15));
 
 
 
