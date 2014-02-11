@@ -24,6 +24,7 @@ namespace MobaGame2
         public float speed;             //how fast
         public double distance;         //distance from poisition to destination
         public double range;            //how far the object needs to be to agro
+        public double visionrange;            //how far the object needs to be to agro
 
         public int height;              //height of this object
         public int width;               //width of this object
@@ -46,7 +47,7 @@ namespace MobaGame2
 
 
         public Rectangle visionrect
-        { get { return new Rectangle((int)(center.X-range), (int)(center.Y-range), (int)(range*2), (int)(range*2)); } }
+        { get { return new Rectangle((int)(center.X-visionrange), (int)(center.Y-visionrange), (int)(visionrange*2), (int)(visionrange*2)); } }
 
 
         //Finds the direction the object needs to move to goto the target location

@@ -44,13 +44,13 @@ namespace MobaGame2
             {
                 int healthbarpercent = (int)(50* ((health / maxhealth)));
                 //draw healh bars  going to need to fix these, find good ratios for them to display
-                spritebatch.Draw(texture, new Rectangle((int)pos.X, (int)pos.Y-20, 50, 10), Color.Black);
-                spritebatch.Draw(texture, new Rectangle((int)pos.X, (int)pos.Y-20, healthbarpercent, 10), Color.Red);
+                spritebatch.Draw(texture, new Rectangle((int)pos.X, (int)pos.Y-20, 50, 5), Color.Black);
+                spritebatch.Draw(texture, new Rectangle((int)pos.X, (int)pos.Y-20, healthbarpercent, 5), Color.Red);
 
                 int manabarpercent= (int)(50* ((mana/ maxmana)));
                 //draw healh bars  going to need to fix these, find good ratios for them to display
-                spritebatch.Draw(texture, new Rectangle((int)pos.X, (int)pos.Y-10, 50, 10), Color.Black);
-                spritebatch.Draw(texture, new Rectangle((int)pos.X, (int)pos.Y-10, manabarpercent, 10), Color.Blue);
+                spritebatch.Draw(texture, new Rectangle((int)pos.X, (int)pos.Y-10, 50, 5), Color.Black);
+                spritebatch.Draw(texture, new Rectangle((int)pos.X, (int)pos.Y-10, manabarpercent, 5), Color.Blue);
 
             }
         }

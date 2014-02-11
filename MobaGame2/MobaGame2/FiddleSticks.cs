@@ -24,6 +24,7 @@ namespace MobaGame2
             this.height = 48;
             this.width = 48;
             this.range = 250;
+            this.visionrange = 450;
             this.position = new Vector2(290, 290);
 
             this.attributes.maxhealth = 1000;

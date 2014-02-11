@@ -25,6 +25,7 @@ namespace MobaGame2
             this.width = 32;
             this.position = new Vector2(80, 80);
             this.range = 200;
+            this.visionrange = 200;
             this.speed = 1;
         }
         public void Agro(GameEntity target)
