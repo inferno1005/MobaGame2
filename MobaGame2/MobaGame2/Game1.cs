@@ -35,6 +35,16 @@ namespace MobaGame2
 
         //game objects
         Camera camera;
+
+
+        //scene stuff
+        RenderTarget2D mainscene;
+        RenderTarget2D fog;
+
+        //Shader
+        Effect fogeffect;
+
+
         //Camera minimap;
 
         List<Player> players;
@@ -48,6 +58,7 @@ namespace MobaGame2
 
         SpriteFont font1;
         Texture2D mouseTexture;
+        Texture2D lightmask;
 
         //buffer
         String buffer;
@@ -73,8 +84,21 @@ namespace MobaGame2
             graphics.PreferMultiSampling = false;
             graphics.IsFullScreen = false;
             graphics.ApplyChanges();
+
+            GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
             this.Window.Title = "Moba";
             #endregion
+
+
+            //fog
+
+            fogeffect = Content.Load<Effect>("lighting");
+
+            var pp = GraphicsDevice.PresentationParameters;
+            mainscene = new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight);
+            fog= new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight);
+
+
 
             //ui
             UI.SetPos(SCREENWIDTH, SCREENHEIGHT);
@@ -90,8 +114,8 @@ namespace MobaGame2
             minions.Add(new Minion());
 
             camera = new Camera(new Vector2(0, 0), SCREENHEIGHT, SCREENWIDTH, 8);
-            //minimap = new Camera(new Vector2(0, 0), 50, 50, 8);
 
+            //minimap = new Camera(new Vector2(0, 0), 50, 50, 8);
             //minimap.zoom = .30f;
 
             map = new Map();
@@ -118,6 +142,7 @@ namespace MobaGame2
 
             map.texture = Content.Load<Texture2D>(map.texturename);
             mouseTexture = Content.Load<Texture2D>("pointer");
+            lightmask = Content.Load<Texture2D>("lightmask");
             #endregion
 
             #region fonts
@@ -229,9 +254,10 @@ namespace MobaGame2
             base.Update(gameTime);
         }
 
-        protected override void Draw(GameTime gameTime)
+        protected void DrawMain(GameTime gameTime)
         {
             //GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.SetRenderTarget(mainscene);
             GraphicsDevice.Clear(Color.Gray);
 
             //if player is alive draw normaly, otherwise dray grayed out
@@ -305,16 +331,6 @@ namespace MobaGame2
             #endregion
             //
 
-            #region interface
-            spriteBatch.Begin();
-
-            UI.Draw(spriteBatch,font1,players[0]);
-
-            //draw pointer to be drawn last so its over top everything
-            spriteBatch.Draw(mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
-
-            spriteBatch.End();
-            #endregion
 
 
             #region debug
@@ -327,6 +343,76 @@ namespace MobaGame2
                 (player1.champ.position- new Vector2(0, 80)), Color.White);
             spriteBatch.End();
              */
+            #endregion
+
+            GraphicsDevice.SetRenderTarget(null);
+            //base.Draw(gameTime);
+        }
+
+
+        protected void DrawFog(GameTime gameTime)
+        {
+            GraphicsDevice.SetRenderTarget(fog);
+            GraphicsDevice.Clear(Color.Black);
+
+
+
+            #region game camera
+            //draw based off camera location
+            spriteBatch.Begin(
+                //SpriteSortMode.BackToFront,
+                SpriteSortMode.Immediate,
+                BlendState.Additive,
+                null,
+                null,
+                null,
+                null,
+                //camera.calc_transformation(SCREENHEIGHT,SCREENWIDTH)
+                camera.calc_transformation(1, 1)
+                );
+            //draw map
+            //spriteBatch.Draw(map.texture, map.rect, drawcolor);
+
+            //spriteBatch.End();
+
+
+
+            foreach (var player in players)
+                spriteBatch.Draw(lightmask, player.champ.visionrect, Color.White);
+
+            //draw minion 
+            foreach (var minion in minions)
+                spriteBatch.Draw(lightmask, minion.visionrect, Color.White);
+
+            spriteBatch.End();
+            #endregion
+        
+            GraphicsDevice.SetRenderTarget(null);
+        }
+        
+        protected override void Draw(GameTime gameTime)
+        {
+            DrawMain(gameTime);
+            DrawFog(gameTime);
+
+            GraphicsDevice.Clear(Color.Black);
+
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
+            fogeffect.Parameters["lightMask"].SetValue(fog);
+            fogeffect.CurrentTechnique.Passes[0].Apply();
+            spriteBatch.Draw(mainscene, new Vector2(0, 0), Color.White);
+            spriteBatch.End();
+
+
+            #region interface
+            spriteBatch.Begin();
+
+            UI.Draw(spriteBatch,font1,players[0]);
+
+            //draw pointer to be drawn last so its over top everything
+            spriteBatch.Draw(mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
+
+            spriteBatch.End();
             #endregion
 
             base.Draw(gameTime);

@@ -45,6 +45,10 @@ namespace MobaGame2
         { get { return new Rectangle((int)position.X, (int)position.Y, (int)width, (int)height); } }
 
 
+        public Rectangle visionrect
+        { get { return new Rectangle((int)(center.X-range), (int)(center.Y-range), (int)(range*2), (int)(range*2)); } }
+
+
         //Finds the direction the object needs to move to goto the target location
         public Vector2 CalcDirection(Vector2 target)
         {
