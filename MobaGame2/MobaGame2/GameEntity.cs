@@ -30,6 +30,7 @@ namespace MobaGame2
         public int width;               //width of this object
 
         //drawing
+        public float rotation=0;          //rotation to draw this texture in
         public Texture2D texture;       //default texture  for this object
         public string texturename;      //texture name for this object
         public Color color=Color.White; //default color for this object, usually white
@@ -100,6 +101,7 @@ namespace MobaGame2
 
             #endregion
 
+            rotation= (float)Math.Atan2(direction.Y, direction.X);
         }
 
         //ensures this object moves only within the map
