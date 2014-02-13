@@ -21,8 +21,8 @@ namespace MobaGame2
             this.Name = "Minion";
             this.texturename = "Minion";
             this.speed = 1;
-            this.height = 32;
-            this.width = 32;
+            this.height = 64;
+            this.width = 64;
             this.position = new Vector2(80, 80);
             this.range = 200;
             this.visionrange = 200;

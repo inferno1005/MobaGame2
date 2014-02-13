@@ -82,7 +82,7 @@ namespace MobaGame2
             graphics.PreferredBackBufferHeight = SCREENHEIGHT;
             graphics.PreferredBackBufferWidth = SCREENWIDTH;
             graphics.PreferMultiSampling = false;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
             GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;

@@ -24,7 +24,7 @@ namespace MobaGame2
         public float speed;             //how fast
         public double distance;         //distance from poisition to destination
         public double range;            //how far the object needs to be to agro
-        public double visionrange;            //how far the object needs to be to agro
+        public double visionrange;      //how far the object needs to be to agro
 
         public int height;              //height of this object
         public int width;               //width of this object

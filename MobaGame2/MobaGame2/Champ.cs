@@ -31,9 +31,18 @@ namespace MobaGame2
             //Console.WriteLine(this.Name + this.rect + " " + this.position);
 
 
-            //rotation %= (float)Math.PI * 2 ;
-            spriteBatch.Draw(this.texture, this.rect, null,color,rotation,this.center,SpriteEffects.None,0);
-            //spriteBatch.Draw(this.texture,this.rect,color);
+            //so slow ;-;
+            rotation %= (float)Math.PI * 2 ;
+            rotation += (float)Math.PI / 2;
+
+            spriteBatch.Draw(this.texture,
+                new Rectangle((int)this.position.X+width/2,(int)this.position.Y+height/2,width,height),
+                null,
+                color,
+                this.rotation,
+                new Vector2(this.width/2,this.height/2),
+                SpriteEffects.None,0);
+            spriteBatch.Draw(this.texture,this.rect,Color.Black);
             attributes.Draw(spriteBatch, this.position);
         }
     }
