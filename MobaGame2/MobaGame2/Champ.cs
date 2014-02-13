@@ -28,6 +28,7 @@ namespace MobaGame2
 
         public void Draw(SpriteBatch spriteBatch,Color color)
         {
+            /*
             //so slow ;-;
             this.rotation %= (float)Math.PI * 2 ;
             this.rotation += (float)Math.PI / 2;
@@ -39,9 +40,10 @@ namespace MobaGame2
                 this.rotation,
                 new Vector2(this.width,this.height),
                 SpriteEffects.None,0);
+             */
 
 
-            spriteBatch.Draw(this.texture,this.rect,Color.Black);
+            spriteBatch.Draw(this.texture,this.rect,color);
             attributes.Draw(spriteBatch, this.position);
         }
     }
