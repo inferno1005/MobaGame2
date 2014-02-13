@@ -23,7 +23,7 @@ namespace MobaGame2
             this.speed = 1;
             this.height = 64;
             this.width = 64;
-            this.position = new Vector2(80, 80);
+            this.position = new Vector2(10, 10);
             this.range = 200;
             this.visionrange = 200;
         }

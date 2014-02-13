@@ -19,9 +19,10 @@ namespace MobaGame2
         public FiddleSticks()
         {
             this.Name = "Fiddle Sticks";
-            this.texturename = "Fiddle-Pumpkin";
+            //this.texturename = "Fiddle-Pumpkin";
+            this.texturename = "FiddleSticksSquare";
             this.speed = 5;
-            this.height = 32;
+            this.height = 64;
             this.width = 64;
             this.range = 250;
             this.visionrange = 450;
