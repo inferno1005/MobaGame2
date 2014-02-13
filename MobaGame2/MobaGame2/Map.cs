@@ -19,7 +19,7 @@ namespace MobaGame2
         public Map()
         {
             this.position = new Vector2(30, 30);
-            this.clickable = true;
+            this.attribute.clickable = true;
             this.height = 800;
             this.width = 1300;
             texturename = "seamless_ground";

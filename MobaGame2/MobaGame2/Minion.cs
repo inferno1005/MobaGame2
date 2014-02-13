@@ -20,16 +20,16 @@ namespace MobaGame2
         {
             this.Name = "Minion";
             this.texturename = "Minion";
-            this.speed = 1;
             this.height = 32;
             this.width = 32;
             this.position = new Vector2(10, 10);
-            this.range = 200;
-            this.visionrange = 200;
+            this.attribute.range = 200;
+            this.attribute.speed = 1;
+            this.attribute.visionrange = 200;
         }
         public void Agro(GameEntity target)
         {
-            if (range > (distance=Vector2.Distance(this.position, target.position)))
+            if (this.attribute.range > (distance=Vector2.Distance(this.position, target.position)))
             {
                 FocusObject(target);
             }

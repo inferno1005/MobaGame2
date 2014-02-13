@@ -68,8 +68,8 @@ namespace MobaGame2
             //spritebatch.DrawString(font,player.champ.attributes.mana.ToString(), manaStringPos,Color.White);
 
             //draw near the percent of each bar to look nice
-            spritebatch.DrawString(font,player.champ.attributes.health.ToString(),new Vector2(healthbarpercent+healthpos.X-55,healthpos.Y-3),Color.White);
-            spritebatch.DrawString(font,player.champ.attributes.mana.ToString(),new Vector2(manabarpercent+manapos.X-55,manapos.Y-3),Color.White);
+            spritebatch.DrawString(font,((int)(player.champ.attributes.health)).ToString(),new Vector2(healthbarpercent+healthpos.X-55,healthpos.Y-3),Color.White);
+            spritebatch.DrawString(font,((int)player.champ.attributes.mana).ToString(),new Vector2(manabarpercent+manapos.X-55,manapos.Y-3),Color.White);
 
 
         }

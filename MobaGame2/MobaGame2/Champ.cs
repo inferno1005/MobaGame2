@@ -18,10 +18,12 @@ namespace MobaGame2
     {
         public string Name;
         public Attributes attributes;
+        public List<Ability> abilities;
 
         public Champ()
         {
             attributes = new Attributes();
+            abilities = new List<Ability>();
         }
 
 
@@ -45,6 +47,15 @@ namespace MobaGame2
 
             spriteBatch.Draw(this.texture,this.rect,color);
             attributes.Draw(spriteBatch, this.position);
+        }
+        public void Updater(Rectangle rect,GameTime gametime)
+        {
+            this.Update(rect);
+            attributes.Update();
+            foreach (var ability in abilities)
+            {
+                ability.Update(gametime);
+            }
         }
     }
 }

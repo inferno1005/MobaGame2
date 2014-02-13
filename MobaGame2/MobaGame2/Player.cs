@@ -32,13 +32,17 @@ namespace MobaGame2
             champ.Draw(spritebatch,color);
         }
 
-        public void Update(Rectangle rect)
+        public void Update(Rectangle rect,GameTime gametime)
         {
             if (champ.attributes.health < 0)
             {
                 alive = false;
             }
-            champ.Update(rect);
+            if (alive)
+            {
+                champ.Updater(rect,gametime);
+                champ.attributes.Update();
+            }
         }
 
     

@@ -20,8 +20,10 @@ namespace MobaGame2
         public double mana;
         public double maxmana;
         public double healthRegen;
+        public double speed;
         public double manaRegen;
         public double range;
+        public double visionrange;
         public double coolDown;
         public double armor;
         public double magicResist;
@@ -31,6 +33,8 @@ namespace MobaGame2
         public int goldpersec;
         public Texture2D texture;
         public string texturename;
+        public bool visible;
+        public bool clickable;
 
         public Attributes()
         {
@@ -53,6 +57,20 @@ namespace MobaGame2
                 spritebatch.Draw(texture, new Rectangle((int)pos.X, (int)pos.Y-10, manabarpercent, 5), Color.Blue);
 
             }
+        }
+        public void Update()
+        {
+            if (health < maxhealth)
+            {
+                health += healthRegen;
+            }
+            else
+                health = maxhealth;
+
+            if (mana < maxmana)
+                mana += manaRegen;
+            else
+                mana = maxmana;
         }
     }
 }

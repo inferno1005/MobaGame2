@@ -73,6 +73,7 @@ namespace MobaGame2
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            this.IsFixedTimeStep = false;
         }
 
         protected override void Initialize()
@@ -236,7 +237,7 @@ namespace MobaGame2
 
             foreach (var player in players)
             {
-                player.Update(map.rect);
+                player.Update(map.rect,gameTime);
             }
 
             foreach(var minion in minions)
@@ -245,7 +246,7 @@ namespace MobaGame2
                 {
                     minion.Agro(player.champ);
                 }
-                minion.Update(map.rect);
+                minion.Updater(map.rect,gameTime);
             }
             #endregion
 

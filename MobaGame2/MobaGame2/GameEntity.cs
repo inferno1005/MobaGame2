@@ -19,25 +19,22 @@ namespace MobaGame2
         public Vector2 center           //center of the icon
         { get { return new Vector2(position.X + (width / (float)2), position.Y + (height / (float)2)); } }
 
-        public Vector2 direction;       //direction from position to destination
-        public Vector2 destination;     //current destination
-        public float speed;             //how fast
-        public double distance;         //distance from poisition to destination
-        public double range;            //how far the object needs to be to agro
-        public double visionrange;      //how far the object needs to be to agro
+        public Attributes attribute;
 
         public int height;              //height of this object
         public int width;               //width of this object
 
+        public Vector2 direction;       //direction from position to destination
+        public Vector2 destination;     //current destination
+        public double distance;         //distance from poisition to destination
+
+
         //drawing
-        public float rotation=0;          //rotation to draw this texture in
+        public float rotation=0;        //rotation to draw this texture in
         public Texture2D texture;       //default texture  for this object
         public string texturename;      //texture name for this object
         public Color color=Color.White; //default color for this object, usually white
 
-        //options
-        public bool visible;            //whether this object should be drawn
-        public bool clickable;          //whether this object can be clicked on
 
         //focus
         public GameEntity focus;        //the focus of this object
@@ -48,8 +45,13 @@ namespace MobaGame2
 
 
         public Rectangle visionrect
-        { get { return new Rectangle((int)(center.X-visionrange), (int)(center.Y-visionrange), (int)(visionrange*2), (int)(visionrange*2)); } }
+        { get { return new Rectangle((int)(center.X-this.attribute.visionrange), (int)(center.Y-this.attribute.visionrange), (int)(this.attribute.visionrange*2), (int)(this.attribute.visionrange*2)); } }
 
+
+        public GameEntity()
+        {
+            attribute = new Attributes();
+        }
 
         //Finds the direction the object needs to move to goto the target location
         public Vector2 CalcDirection(Vector2 target)
@@ -81,14 +83,14 @@ namespace MobaGame2
             #region moving and map bounds
 
             //if focus or within range
-            if (null != focus && range < distance)
+            if (null != focus && this.attribute.range < distance)
             {
                 direction = CalcDirection(focus.center);
                 MoveWithinBounds(map);
             }
 
             //if moving to an object that we want to hit
-            else if (null != focus && distance > 0 && range < distance)
+            else if (null != focus && distance > 0 && this.attribute.range < distance)
             {
                 MoveWithinBounds(map);
             }
@@ -112,8 +114,8 @@ namespace MobaGame2
             if (MathHelper.Bounds(this.rect, map))
             {
                 //Console.WriteLine("trying to move!");
-                distance -= speed;
-                position += (speed * direction);
+                distance -= this.attribute.speed;
+                position += ((float)(this.attribute.speed )* direction);
             }
             //if not push him back in the map
             else
