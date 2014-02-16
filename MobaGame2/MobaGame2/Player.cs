@@ -41,7 +41,7 @@ namespace MobaGame2
             if (alive)
             {
                 champ.Updater(rect,gametime);
-                champ.attributes.Update();
+                //champ.attributes.Update();
             }
         }
 

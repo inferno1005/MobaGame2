@@ -140,7 +140,11 @@ namespace MobaGame2
             }
 
             foreach (var Minion in minions)
+            {
                 Minion.texture = Content.Load<Texture2D>(Minion.texturename);
+                Minion.abilities[0].texture= Content.Load<Texture2D>(Minion.abilities[0].texturename);
+            }
+                
 
             map.texture = Content.Load<Texture2D>(map.texturename);
             mouseTexture = Content.Load<Texture2D>("texture\\pointer");

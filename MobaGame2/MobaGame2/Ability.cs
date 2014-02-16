@@ -64,7 +64,10 @@ namespace MobaGame2
                 if (focus != null)
                 {
                     Console.WriteLine("Should be applying damage!");
+                    Console.WriteLine(focus.attribute.health);
                     focus.attribute.health -= this.physicalDamage;
+                    Console.WriteLine(focus.attribute.health-this.physicalDamage);
+                    Console.WriteLine(focus.attribute.health);
                     ghost = true;
                 }
             }

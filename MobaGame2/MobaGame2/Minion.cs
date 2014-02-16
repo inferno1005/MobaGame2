@@ -34,6 +34,7 @@ namespace MobaGame2
             this.abilities[0].physicalDamage = 1000;
             this.abilities[0].magicDamage = 0;
             this.abilities[0].coolDown = 1;
+            this.abilities[0].texturename = "texture\\fireball";
 
 
 
