@@ -136,14 +136,15 @@ namespace MobaGame2
             {
                 Player.champ.texture = Content.Load<Texture2D>(Player.champ.texturename);
                 Player.champ.attributes.texture = Content.Load<Texture2D>(Player.champ.attributes.texturename);
+                Player.champ.abilities[0].texture = Content.Load<Texture2D>(Player.champ.abilities[0].texturename);
             }
 
             foreach (var Minion in minions)
                 Minion.texture = Content.Load<Texture2D>(Minion.texturename);
 
             map.texture = Content.Load<Texture2D>(map.texturename);
-            mouseTexture = Content.Load<Texture2D>("pointer");
-            lightmask = Content.Load<Texture2D>("lightmask");
+            mouseTexture = Content.Load<Texture2D>("texture\\pointer");
+            lightmask = Content.Load<Texture2D>("texture\\lightmask");
             #endregion
 
             #region fonts

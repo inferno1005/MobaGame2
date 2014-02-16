@@ -25,9 +25,14 @@ namespace MobaGame2
         public float timer=0f;
         public bool cast=false;
         public bool ghost=false;
+        public Texture2D texture;
+        public string texturename;
 
         public Ability()
         {
+            this.width = 20;
+            this.height= 20;
+            this.attribute.speed = 2;
 
         }
         public void Update(GameTime gametime)
@@ -46,15 +51,22 @@ namespace MobaGame2
             //move
             if (focus != null)
             {
+                //Console.WriteLine("Should be moving!");
                 direction = CalcDirection(focus.center);
                 distance -= this.attribute.speed;
                 position += ((float)(this.attribute.speed) * direction);
+                //Console.WriteLine(position);
             }
 
             //we have hit the target , we should apply damage and remove this casted ability 
-            if (distance < 1)
+            if (distance < 3)
             {
-                ghost = true;
+                if (focus != null)
+                {
+                    Console.WriteLine("Should be applying damage!");
+                    focus.attribute.health -= this.physicalDamage;
+                    ghost = true;
+                }
             }
         }
     }

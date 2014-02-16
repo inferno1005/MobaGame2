@@ -30,7 +30,7 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FiddlesticksSquare.png">
+    <Compile Include="texture\FiddlesticksSquare.png">
       <Name>FiddlesticksSquare</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -44,35 +44,35 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="1x1.png">
+    <Compile Include="texture\1x1.png">
       <Name>1x1</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="pointer.png">
+    <Compile Include="texture\pointer.png">
       <Name>pointer</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="seamless_ground.jpg">
+    <Compile Include="texture\seamless_ground.jpg">
       <Name>seamless_ground</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Minion.png">
+    <Compile Include="texture\Minion.png">
       <Name>Minion</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="lightmask.png">
+    <Compile Include="texture\lightmask.png">
       <Name>lightmask</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -86,8 +86,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fiddle-Pumpkin.png">
+    <Compile Include="texture\Fiddle-Pumpkin.png">
       <Name>Fiddle-Pumpkin</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="texture\fireball.png">
+      <Name>fireball</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

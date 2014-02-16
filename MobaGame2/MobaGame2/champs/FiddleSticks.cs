@@ -19,7 +19,7 @@ namespace MobaGame2
         public FiddleSticks()
         {
             this.Name = "Fiddle Sticks";
-            this.texturename = "Fiddle-Pumpkin";
+            this.texturename = "texture\\Fiddle-Pumpkin";
             //this.texturename = "FiddleSticksSquare";
             this.height = 32;
             this.width = 64;
@@ -38,9 +38,8 @@ namespace MobaGame2
             this.abilities[0].attribute.range = this.attribute.range;
             this.abilities[0].physicalDamage= this.attributes.attackDamage;
             this.abilities[0].magicDamage = 0;
-            this.abilities[0].coolDown= 10;
-
-
+            this.abilities[0].coolDown= 3;
+            this.abilities[0].texturename = "texture\\fireball";
 
             this.attributes.maxmana= 1000;
             this.attributes.mana= 1000;

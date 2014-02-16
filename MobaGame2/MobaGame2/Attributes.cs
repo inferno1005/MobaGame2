@@ -38,7 +38,7 @@ namespace MobaGame2
 
         public Attributes()
         {
-            texturename = "1x1";
+            texturename = "texture\\1x1";
         }
 
 
