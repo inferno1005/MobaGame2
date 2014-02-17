@@ -49,6 +49,7 @@ namespace MobaGame2
 
         List<Player> players;
         List<Minion> minions;
+        List<Tower> towers;
         List<GameEntity> entities;
 
         Map map;
@@ -106,13 +107,18 @@ namespace MobaGame2
 
 
             // TODO: Add your initialization logic here
-            players= new List<Player>();
+            #region game entity lists
+            players = new List<Player>();
             players.Add(new Player());
             players[0].name = "inferno1005";
             players[0].champ = new FiddleSticks();
 
             minions= new List<Minion>();
             minions.Add(new Minion());
+
+            towers = new List<Tower>();
+            towers.Add(new Tower());
+            #endregion
 
             camera = new Camera(new Vector2(0, 0), SCREENHEIGHT, SCREENWIDTH, 8);
 
@@ -143,6 +149,11 @@ namespace MobaGame2
             {
                 Minion.texture = Content.Load<Texture2D>(Minion.texturename);
                 Minion.abilities[0].texture= Content.Load<Texture2D>(Minion.abilities[0].texturename);
+            }
+
+            foreach (var tower in Towers)
+            {
+                tower.texture = Content.Load<Texture2D>(tower.texturename);
             }
                 
 
