@@ -16,6 +16,29 @@ namespace MobaGame2
     class Attributes
     {
         public double health;
+        public double Health
+        {
+            get
+            {
+                if (health > 0)
+                    return health;
+                else
+                    return 0;
+            }
+            set
+            {
+                if (value >= maxhealth)
+                {
+                    health = maxhealth;
+                }
+                else
+                {
+                    health = value;
+                }
+
+            }
+        }
+
         public double maxhealth;
         public double mana;
         public double maxmana;
@@ -46,7 +69,7 @@ namespace MobaGame2
         {
             if (pos != null && spritebatch != null && texture!=null)
             {
-                int healthbarpercent = (int)(50* ((health / maxhealth)));
+                int healthbarpercent = (int)(50* ((Health / maxhealth)));
                 //draw healh bars  going to need to fix these, find good ratios for them to display
                 spritebatch.Draw(texture, new Rectangle((int)pos.X, (int)pos.Y-20, 50, 5), Color.Black);
                 spritebatch.Draw(texture, new Rectangle((int)pos.X, (int)pos.Y-20, healthbarpercent, 5), Color.Red);
@@ -65,12 +88,20 @@ namespace MobaGame2
                 health += healthRegen;
             }
             else
+            {
                 health = maxhealth;
+            }
+
+
 
             if (mana < maxmana)
+            {
                 mana += manaRegen;
+            }
             else
+            {
                 mana = maxmana;
+            }
         }
     }
 }

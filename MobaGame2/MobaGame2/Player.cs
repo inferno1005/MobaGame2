@@ -34,7 +34,7 @@ namespace MobaGame2
 
         public void Update(Rectangle rect,GameTime gametime)
         {
-            if (champ.attributes.health < 0)
+            if (champ.attribute.health < 0)
             {
                 alive = false;
             }

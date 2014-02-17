@@ -28,11 +28,12 @@ namespace MobaGame2
         public Texture2D texture;
         public string texturename;
 
-        public Ability()
+        public Ability(double damage)
         {
             this.width = 20;
             this.height= 20;
             this.attribute.speed = 2;
+            this.physicalDamage = damage;
 
         }
         public void Update(GameTime gametime)
@@ -64,10 +65,10 @@ namespace MobaGame2
                 if (focus != null)
                 {
                     Console.WriteLine("Should be applying damage!");
-                    Console.WriteLine(focus.attribute.health);
-                    focus.attribute.health -= this.physicalDamage;
-                    Console.WriteLine(focus.attribute.health-this.physicalDamage);
-                    Console.WriteLine(focus.attribute.health);
+                    Console.WriteLine(focus.attribute.Health);
+                    focus.attribute.Health -= this.physicalDamage;
+                    Console.WriteLine(this.physicalDamage);
+                    Console.WriteLine(focus.attribute.Health);
                     ghost = true;
                 }
             }

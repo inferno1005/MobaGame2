@@ -37,14 +37,14 @@ namespace MobaGame2
 
         static public void Draw(SpriteBatch spritebatch,SpriteFont font,Player player)
         {
-            int healthbarpercent = (int)(barwidth*((player.champ.attributes.health / player.champ.attributes.maxhealth)));
-            int manabarpercent = (int)(barwidth*((player.champ.attributes.mana/ player.champ.attributes.maxmana)));
+            int healthbarpercent = (int)(barwidth*((player.champ.attribute.Health / player.champ.attribute.maxhealth)));
+            int manabarpercent = (int)(barwidth*((player.champ.attribute.mana/ player.champ.attribute.maxmana)));
 
 
 
             //draw healh bars  
-            spritebatch.Draw(player.champ.attributes.texture, new Rectangle((int)healthpos.X, (int)healthpos.Y ,barwidth , 20), Color.Black);
-            spritebatch.Draw(player.champ.attributes.texture,
+            spritebatch.Draw(player.champ.attribute.texture, new Rectangle((int)healthpos.X, (int)healthpos.Y ,barwidth , 20), Color.Black);
+            spritebatch.Draw(player.champ.attribute.texture,
                 new Rectangle(
                     (int)healthpos.X,       //x
                     (int)healthpos.Y ,      //y
@@ -53,8 +53,8 @@ namespace MobaGame2
                     Color.Red);             //color
 
             //draw mana bars  
-            spritebatch.Draw(player.champ.attributes.texture, new Rectangle((int)manapos.X, (int)manapos.Y ,barwidth , 20), Color.Black);
-            spritebatch.Draw(player.champ.attributes.texture,
+            spritebatch.Draw(player.champ.attribute.texture, new Rectangle((int)manapos.X, (int)manapos.Y ,barwidth , 20), Color.Black);
+            spritebatch.Draw(player.champ.attribute.texture,
                 new Rectangle(
                     (int)manapos.X,       //x
                     (int)manapos.Y ,      //y
@@ -68,8 +68,8 @@ namespace MobaGame2
             //spritebatch.DrawString(font,player.champ.attributes.mana.ToString(), manaStringPos,Color.White);
 
             //draw near the percent of each bar to look nice
-            spritebatch.DrawString(font,((int)(player.champ.attributes.health)).ToString(),new Vector2(healthbarpercent+healthpos.X-55,healthpos.Y-3),Color.White);
-            spritebatch.DrawString(font,((int)player.champ.attributes.mana).ToString(),new Vector2(manabarpercent+manapos.X-55,manapos.Y-3),Color.White);
+            spritebatch.DrawString(font,((int)(player.champ.attribute.Health)).ToString(),new Vector2(healthbarpercent+healthpos.X-55,healthpos.Y-3),Color.White);
+            spritebatch.DrawString(font,((int)player.champ.attribute.mana).ToString(),new Vector2(manabarpercent+manapos.X-55,manapos.Y-3),Color.White);
 
 
         }

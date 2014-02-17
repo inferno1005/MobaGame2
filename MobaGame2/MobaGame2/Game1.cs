@@ -135,7 +135,7 @@ namespace MobaGame2
             foreach (var Player in players)
             {
                 Player.champ.texture = Content.Load<Texture2D>(Player.champ.texturename);
-                Player.champ.attributes.texture = Content.Load<Texture2D>(Player.champ.attributes.texturename);
+                Player.champ.attribute.texture = Content.Load<Texture2D>(Player.champ.attribute.texturename);
                 Player.champ.abilities[0].texture = Content.Load<Texture2D>(Player.champ.abilities[0].texturename);
             }
 

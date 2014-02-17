@@ -17,12 +17,12 @@ namespace MobaGame2
     class Champ :GameEntity
     {
         public string Name;
-        public Attributes attributes;
+        //public Attributes attributes;
         public List<Ability> abilities;
 
         public Champ()
         {
-            attributes = new Attributes();
+            attribute = new Attributes();
             abilities = new List<Ability>();
         }
 
@@ -51,12 +51,12 @@ namespace MobaGame2
                 if(ability.texture!=null && ability.rect!=null && ability.color!=null)
                     spriteBatch.Draw(ability.texture, ability.rect, ability.color);
             }
-            attributes.Draw(spriteBatch, this.position);
+            attribute.Draw(spriteBatch, this.position);
         }
         public void Updater(Rectangle rect,GameTime gametime)
         {
             this.Update(rect);
-            attributes.Update();
+            attribute.Update();
 
             //attack focused object
             if (focus != null)
@@ -67,7 +67,7 @@ namespace MobaGame2
                     {
                         //Console.WriteLine("SPAWNING AN ABILITY!");
                         this.abilities[0].cast = true;
-                        Ability temp = new Ability();
+                        Ability temp = new Ability(this.abilities[0].physicalDamage);
                         temp.texture = this.abilities[0].texture;
                         temp.focus = this.focus;
                         temp.position = this.position;

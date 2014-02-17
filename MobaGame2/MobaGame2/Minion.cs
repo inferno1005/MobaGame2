@@ -27,11 +27,11 @@ namespace MobaGame2
             this.attribute.speed = 1;
             this.attribute.visionrange = 200;
 
-            this.abilities.Add(new Ability());
+            this.abilities.Add(new Ability(100));
             this.abilities[0].name = "Basic Attack";
             this.abilities[0].attribute.range = this.attribute.range;
             //this.abilities[0].physicalDamage = this.attributes.attackDamage;
-            this.abilities[0].physicalDamage = 1000;
+            //this.abilities[0].physicalDamage = 1000f;
             this.abilities[0].magicDamage = 0;
             this.abilities[0].coolDown = 1;
             this.abilities[0].texturename = "texture\\fireball";
@@ -47,6 +47,11 @@ namespace MobaGame2
             {
                 FocusObject(target);
             }
+            //else
+            //{
+                //this.focus = null;
+            //}
+
         }
 
     }
