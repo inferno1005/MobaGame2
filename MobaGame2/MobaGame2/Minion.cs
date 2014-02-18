@@ -16,7 +16,8 @@ namespace MobaGame2
 {
     class Minion : Champ
     {
-        public Minion()
+        GameEntity enemybase;
+        public Minion(GameEntity ge)
         {
             this.Name = "Minion";
             this.texturename = "texture\\Minion";
@@ -35,6 +36,7 @@ namespace MobaGame2
             this.abilities[0].magicDamage = 0;
             this.abilities[0].coolDown = 1;
             this.abilities[0].texturename = "texture\\fireball";
+            enemybase = ge;
 
 
 
@@ -47,12 +49,46 @@ namespace MobaGame2
             {
                 FocusObject(target);
             }
-            //else
-            //{
-                //this.focus = null;
-            //}
-
         }
+        public void Updater(Rectangle rect, GameTime gametime)
+        {
+
+            this.Update(rect);
+            attribute.Update();
+
+            //attack focused object
+            if (focus != null)
+            {
+                if (focus.distance < this.attribute.range)
+                {
+                    if (!this.abilities[0].cast)
+                    {
+                        //Console.WriteLine("SPAWNING AN ABILITY!");
+                        this.abilities[0].cast = true;
+                        Ability temp = new Ability(this.abilities[0].physicalDamage);
+                        temp.texture = this.abilities[0].texture;
+                        temp.focus = this.focus;
+                        temp.position = this.position;
+                        abilities.Add(temp);
+                    }
+                }
+                else
+                {
+                    this.focus = enemybase;
+                }
+            }
+            //foreach (var ability in abilities)
+            for(int i=0;i<abilities.Count;i++)
+            {
+                abilities[i].Update(gametime);
+                if (abilities[i].ghost)
+                {
+                    abilities.RemoveAt(i);
+                }
+            }
+        
+        }
+
 
     }
 }

@@ -84,7 +84,7 @@ namespace MobaGame2
             graphics.PreferredBackBufferHeight = SCREENHEIGHT;
             graphics.PreferredBackBufferWidth = SCREENWIDTH;
             graphics.PreferMultiSampling = false;
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
@@ -98,7 +98,7 @@ namespace MobaGame2
 
             var pp = GraphicsDevice.PresentationParameters;
             mainscene = new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight);
-            fog= new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight);
+            fog = new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight);
 
 
 
@@ -113,11 +113,14 @@ namespace MobaGame2
             players[0].name = "inferno1005";
             players[0].champ = new FiddleSticks();
 
-            minions= new List<Minion>();
-            minions.Add(new Minion());
 
             towers = new List<Tower>();
             towers.Add(new Tower());
+
+
+            minions = new List<Minion>();
+            minions.Add(new Minion(towers[0]));
+
             #endregion
 
             camera = new Camera(new Vector2(0, 0), SCREENHEIGHT, SCREENWIDTH, 8);
@@ -148,14 +151,14 @@ namespace MobaGame2
             foreach (var Minion in minions)
             {
                 Minion.texture = Content.Load<Texture2D>(Minion.texturename);
-                Minion.abilities[0].texture= Content.Load<Texture2D>(Minion.abilities[0].texturename);
+                Minion.abilities[0].texture = Content.Load<Texture2D>(Minion.abilities[0].texturename);
             }
 
-            foreach (var tower in Towers)
-            {
-                tower.texture = Content.Load<Texture2D>(tower.texturename);
-            }
-                
+            //foreach (var tower in Towers)
+            //{
+            //tower.texture = Content.Load<Texture2D>(tower.texturename);
+            //}
+
 
             map.texture = Content.Load<Texture2D>(map.texturename);
             mouseTexture = Content.Load<Texture2D>("texture\\pointer");
@@ -183,61 +186,96 @@ namespace MobaGame2
 
             //right button selects and targets, if not on anything but map, moves there
             #region mouse
-            if (Input.RightMouseButton() && players[0].alive)
+            //if menu is not open
+            if (!UI.escMenuOpen)
             {
-                foundobject = false;
-
-                //prefer plays over other objects, because they can kill you!
-                foreach (var player in players)
+                //right click
+                if (Input.RightMouseButton() && players[0].alive)
                 {
-                    if (!foundobject)
-                    {
-                        if (MathHelper.ClickedOn(Input.MousePosition + camera.position,player.champ.rect))
-                        {
+                    foundobject = false;
 
-                            foundobject = true;
-                            //focus this player
+                    //prefer plays over other objects, because they can kill you!
+                    foreach (var player in players)
+                    {
+                        if (!foundobject)
+                        {
+                            if (MathHelper.ClickedOn(Input.MousePosition + camera.position, player.champ.rect))
+                            {
+                                //focus this player
+                                foundobject = true;
+                            }
                         }
                     }
+
+
+                    if (!foundobject)
+                        foreach (var minion in minions)
+                        {
+                            if (!foundobject)
+                                if (MathHelper.ClickedOn(Input.MousePosition + camera.position, minion.rect))
+                                {
+                                    foundobject = true;
+                                    players[0].champ.FocusObject(minion);
+                                }
+
+                        }
+
+
+                    if (!foundobject)
+                        if (MathHelper.ClickedOn(Input.MousePosition + camera.position, map.rect))
+                        {
+                            players[0].champ.direction = players[0].champ.CalcDirection(Input.MousePosition + camera.position);
+                            players[0].champ.FocusObject(null);
+
+                        }
+                }
+            }
+
+            else //working with the esc menu
+            {
+                if (Input.LeftMouseButton())
+                {
+                    switch (UI.MenuChoice(Input.MousePosition))
+                    {
+                        case 1: Exit();
+                            break;
+                    }
+
                 }
 
 
-                if(!foundobject)
-                    foreach (var minion in minions)
-                    {
-                        if (!foundobject)
-                            if (MathHelper.ClickedOn(Input.MousePosition + camera.position, minion.rect))
-                            {
-                                foundobject = true;
-                                players[0].champ.FocusObject(minion);
-                            }
 
-                    }
-
-
-                if (!foundobject)
-                    if (MathHelper.ClickedOn(Input.MousePosition + camera.position,map.rect))
-                    {
-                        players[0].champ.direction = players[0].champ.CalcDirection(Input.MousePosition + camera.position);
-                        players[0].champ.FocusObject(null);
-
-                    }
             }
             #endregion
 
             #region keyboard
 
             //center camera to champ and follow
-            if(Input.KeyHeld(Keys.Space))
+            if (Input.KeyHeld(Keys.Space))
             {
                 camera.Center(players[0].champ.center);
             }
-            if(Input.KeyPressed(Keys.K))
+
+            //debug respawn and insta kill
+            if (Input.KeyPressed(Keys.K))
             {
                 if (players[0].alive == true)
                     players[0].alive = false;
                 else
+                {
                     players[0].alive = true;
+                    players[0].champ.attribute.Health = players[0].champ.attribute.maxhealth;
+                }
+
+            }
+
+            //display menu
+            if (Input.KeyPressed(Keys.Escape))
+            {
+                if (UI.escMenuOpen)
+                    UI.escMenuOpen = false;
+                else
+                    UI.escMenuOpen = true;
 
             }
             #endregion
@@ -253,16 +291,16 @@ namespace MobaGame2
 
             foreach (var player in players)
             {
-                player.Update(map.rect,gameTime);
+                player.Update(map.rect, gameTime);
             }
 
-            foreach(var minion in minions)
+            foreach (var minion in minions)
             {
                 foreach (var player in players)
                 {
                     minion.Agro(player.champ);
                 }
-                minion.Updater(map.rect,gameTime);
+                minion.Updater(map.rect, gameTime);
             }
             #endregion
 
@@ -280,7 +318,7 @@ namespace MobaGame2
             //if player is alive draw normaly, otherwise dray grayed out
             if (players[0].alive)
                 drawcolor = Color.White;
-            else 
+            else
                 drawcolor = Color.Gray;
 
             #region game camera
@@ -303,12 +341,12 @@ namespace MobaGame2
 
 
 
-            foreach(var player in players)
-                player.Draw(spriteBatch, font1,drawcolor);
+            foreach (var player in players)
+                player.Draw(spriteBatch, font1, drawcolor);
 
             //draw minion 
-            foreach(var minion in minions)
-                minion.Draw(spriteBatch,drawcolor);
+            foreach (var minion in minions)
+                minion.Draw(spriteBatch, drawcolor);
 
             spriteBatch.End();
             #endregion
@@ -370,9 +408,7 @@ namespace MobaGame2
         protected void DrawFog(GameTime gameTime)
         {
             GraphicsDevice.SetRenderTarget(fog);
-            GraphicsDevice.Clear(new Color(15,15,15));
-
-
+            GraphicsDevice.Clear(new Color(15, 15, 15));
 
             #region game camera
             //draw based off camera location
@@ -403,10 +439,10 @@ namespace MobaGame2
 
             spriteBatch.End();
             #endregion
-        
+
             GraphicsDevice.SetRenderTarget(null);
         }
-        
+
         protected override void Draw(GameTime gameTime)
         {
             DrawMain(gameTime);
@@ -424,7 +460,7 @@ namespace MobaGame2
             #region interface
             spriteBatch.Begin();
 
-            UI.Draw(spriteBatch,font1,players[0]);
+            UI.Draw(spriteBatch, font1, players[0], Input.MousePosition);
 
             //draw pointer to be drawn last so its over top everything
             spriteBatch.Draw(mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);

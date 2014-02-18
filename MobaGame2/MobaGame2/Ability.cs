@@ -32,7 +32,7 @@ namespace MobaGame2
         {
             this.width = 20;
             this.height= 20;
-            this.attribute.speed = 2;
+            this.attribute.speed = 10;
             this.physicalDamage = damage;
 
         }
