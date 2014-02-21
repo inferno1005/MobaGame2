@@ -84,7 +84,7 @@ namespace MobaGame2
             graphics.PreferredBackBufferHeight = SCREENHEIGHT;
             graphics.PreferredBackBufferWidth = SCREENWIDTH;
             graphics.PreferMultiSampling = false;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
             GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
@@ -162,7 +162,8 @@ namespace MobaGame2
 
             map.texture = Content.Load<Texture2D>(map.texturename);
             mouseTexture = Content.Load<Texture2D>("texture\\pointer");
-            lightmask = Content.Load<Texture2D>("texture\\lightmask");
+            //lightmask = Content.Load<Texture2D>("texture\\lightmask");
+            lightmask = Content.Load<Texture2D>("texture\\whitemask");
             #endregion
 
             #region fonts
@@ -327,18 +328,33 @@ namespace MobaGame2
                 //SpriteSortMode.BackToFront,
                 SpriteSortMode.Immediate,
                 BlendState.AlphaBlend,
-                null,
-                null,
-                null,
+                SamplerState.LinearWrap,
+                DepthStencilState.Default,
+                RasterizerState.CullNone,
                 null,
                 //camera.calc_transformation(SCREENHEIGHT,SCREENWIDTH)
                 camera.calc_transformation(1, 1)
                 );
+
             //draw map
-            spriteBatch.Draw(map.texture, map.rect, drawcolor);
+            spriteBatch.Draw(map.texture,
+                map.rect,
+                new Rectangle((int)map.position.X,(int)map.position.Y,map.texturewidth,map.textureheight),
+               drawcolor);
 
-            //spriteBatch.End();
+            spriteBatch.End();
 
+            spriteBatch.Begin(
+                //SpriteSortMode.BackToFront,
+                            SpriteSortMode.Immediate,
+                            BlendState.AlphaBlend,
+                            null,
+                            null,
+                            null,
+                            null,
+                //camera.calc_transformation(SCREENHEIGHT,SCREENWIDTH)
+                            camera.calc_transformation(1, 1)
+                    );
 
 
             foreach (var player in players)
@@ -446,11 +462,12 @@ namespace MobaGame2
         protected override void Draw(GameTime gameTime)
         {
             DrawMain(gameTime);
+
             DrawFog(gameTime);
 
             GraphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             fogeffect.Parameters["lightMask"].SetValue(fog);
             fogeffect.CurrentTechnique.Passes[0].Apply();
             spriteBatch.Draw(mainscene, new Vector2(0, 0), Color.White);

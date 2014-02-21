@@ -72,13 +72,17 @@ namespace MobaGame2
                     Color.Blue);          //color
 
 
-            //drawstring health
-            //spritebatch.DrawString(font,player.champ.attributes.health.ToString(),healthStringPos ,Color.White);
-            //spritebatch.DrawString(font,player.champ.attributes.mana.ToString(), manaStringPos,Color.White);
 
             //draw near the percent of each bar to look nice
-            spritebatch.DrawString(font,((int)(player.champ.attribute.Health)).ToString(),new Vector2(healthbarpercent+healthpos.X-55,healthpos.Y-3),Color.White);
-            spritebatch.DrawString(font,((int)player.champ.attribute.mana).ToString(),new Vector2(manabarpercent+manapos.X-55,manapos.Y-3),Color.White);
+            if (healthbarpercent > 100)
+                spritebatch.DrawString(font, ((int)(player.champ.attribute.Health)).ToString(), new Vector2(healthbarpercent + healthpos.X -55, healthpos.Y - 3), Color.White);
+            else
+                spritebatch.DrawString(font, ((int)(player.champ.attribute.Health)).ToString(), new Vector2(healthpos.X, healthpos.Y - 3), Color.White);
+
+            if(manabarpercent>100)
+                spritebatch.DrawString(font, ((int)player.champ.attribute.mana).ToString(), new Vector2(manabarpercent + manapos.X - 55, manapos.Y - 3), Color.White);
+            else
+                spritebatch.DrawString(font, ((int)player.champ.attribute.mana).ToString(), new Vector2( manapos.X, manapos.Y - 3), Color.White);
 
             //draw options menu
             if (escMenuOpen)
