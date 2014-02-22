@@ -38,7 +38,6 @@ namespace MobaGame2
 
             }
         }
-
         public double maxhealth;
         public double mana;
         public double maxmana;
@@ -56,8 +55,9 @@ namespace MobaGame2
         public int goldpersec;
         public Texture2D texture;
         public string texturename;
-        public bool visible;
-        public bool clickable;
+        public bool visible=true;
+        public bool clickable=true;
+        public bool alive = true;
 
         public Attributes()
         {

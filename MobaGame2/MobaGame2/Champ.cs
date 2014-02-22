@@ -30,28 +30,31 @@ namespace MobaGame2
 
         public void Draw(SpriteBatch spriteBatch,Color color)
         {
-            /*
-            //so slow ;-;
-            this.rotation %= (float)Math.PI * 2 ;
-            this.rotation += (float)Math.PI / 2;
-
-            spriteBatch.Draw(this.texture,
-                new Rectangle((int)this.center.X,(int)this.center.Y,(int)this.width,(int)this.height),
-                null,
-                this.color,
-                this.rotation,
-                new Vector2(this.width,this.height),
-                SpriteEffects.None,0);
-             */
-
-
-            spriteBatch.Draw(this.texture,this.rect,color);
-            foreach (var ability in abilities)
+            if (this.attribute.visible)
             {
-                if(ability.texture!=null && ability.rect!=null && ability.color!=null)
-                    spriteBatch.Draw(ability.texture, ability.rect, ability.color);
+                /*
+                //so slow ;-;
+                this.rotation %= (float)Math.PI * 2 ;
+                this.rotation += (float)Math.PI / 2;
+
+                spriteBatch.Draw(this.texture,
+                    new Rectangle((int)this.center.X,(int)this.center.Y,(int)this.width,(int)this.height),
+                    null,
+                    this.color,
+                    this.rotation,
+                    new Vector2(this.width,this.height),
+                    SpriteEffects.None,0);
+                 */
+
+
+                spriteBatch.Draw(this.texture, this.rect, color);
+                foreach (var ability in abilities)
+                {
+                    if (ability.texture != null && ability.rect != null && ability.color != null)
+                        spriteBatch.Draw(ability.texture, ability.rect, ability.color);
+                }
+                attribute.Draw(spriteBatch, this.position);
             }
-            attribute.Draw(spriteBatch, this.position);
         }
         public void Updater(Rectangle rect,GameTime gametime)
         {
@@ -59,7 +62,7 @@ namespace MobaGame2
             attribute.Update();
 
             //attack focused object
-            if (focus != null)
+            if (focus != null && focus.attribute.alive)
             {
                 if (focus.distance < this.attribute.range)
                 {
@@ -67,7 +70,7 @@ namespace MobaGame2
                     {
                         //Console.WriteLine("SPAWNING AN ABILITY!");
                         this.abilities[0].cast = true;
-                        Ability temp = new Ability(this.abilities[0].physicalDamage);
+                        Ability temp = new Ability();
                         temp.texture = this.abilities[0].texture;
                         temp.focus = this.focus;
                         temp.position = this.position;
@@ -75,6 +78,7 @@ namespace MobaGame2
                     }
                 }
             }
+
             //foreach (var ability in abilities)
             for(int i=0;i<abilities.Count;i++)
             {

@@ -103,6 +103,8 @@ namespace MobaGame2
 
             #endregion
 
+            attribute.Update();
+
             rotation= (float)Math.Atan2(direction.Y, direction.X);
         }
 
@@ -139,7 +141,6 @@ namespace MobaGame2
             }
 
         }
-
 
         //sets the focus for this object
         public void FocusObject(GameEntity f)

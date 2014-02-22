@@ -14,13 +14,14 @@ using Microsoft.Xna.Framework.Media;
 
 namespace MobaGame2
 {
-    class Minion : Champ
+    class Minion : NewChamp
     {
         GameEntity enemybase;
-        public Minion(GameEntity ge)
+        public Minion(GameEntity ge,Map m,List<Ability> ga) : base(m,ga)
         {
             this.Name = "Minion";
             this.texturename = "texture\\Minion";
+
             this.height = 32;
             this.width = 32;
             this.position = new Vector2(10, 10);
@@ -28,21 +29,18 @@ namespace MobaGame2
             this.attribute.speed = 1;
             this.attribute.visionrange = 200;
             this.attribute.attackDamage=10;
+            this.attribute.maxhealth = 500;
+            this.attribute.health= 500;
 
-            this.abilities.Add(new Ability(100));
+
+            this.abilities.Add(new Ability());
             this.abilities[0].name = "Basic Attack";
             this.abilities[0].attribute.range = this.attribute.range;
             this.abilities[0].physicalDamage = this.attribute.attackDamage;
-            //this.abilities[0].physicalDamage = 1000f;
             this.abilities[0].magicDamage = 0;
-            this.abilities[0].coolDown = 1;
+            this.abilities[0].coolDown = 3;
             this.abilities[0].texturename = "texture\\fireball";
             enemybase = ge;
-
-
-
-
-
         }
         public void Agro(GameEntity target)
         {
@@ -56,38 +54,19 @@ namespace MobaGame2
 
             this.Update(rect);
             attribute.Update();
+            BasicAttack();
 
-            //attack focused object
-            if (focus != null)
+            if (this.attribute.health < 0)
             {
-                if (focus.distance < this.attribute.range)
-                {
-                    if (!this.abilities[0].cast)
-                    {
-                        //Console.WriteLine("SPAWNING AN ABILITY!");
-                        this.abilities[0].cast = true;
-                        Ability temp = new Ability(this.abilities[0].physicalDamage);
-                        temp.texture = this.abilities[0].texture;
-                        temp.focus = this.focus;
-                        temp.position = this.position;
-                        abilities.Add(temp);
-                    }
-                }
-                else
-                {
-                    this.focus = enemybase;
-                }
+                Console.WriteLine("Minion is dead!");
+                this.attribute.alive = false;
+                this.attribute.clickable = false;
+                this.attribute.visible= false;
             }
-            //foreach (var ability in abilities)
-            for(int i=0;i<abilities.Count;i++)
+            foreach (var ability in abilities)
             {
-                abilities[i].Update(gametime);
-                if (abilities[i].ghost)
-                {
-                    abilities.RemoveAt(i);
-                }
+                ability.Update(gametime);
             }
-        
         }
 
 

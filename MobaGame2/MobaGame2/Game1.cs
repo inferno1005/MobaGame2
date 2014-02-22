@@ -51,6 +51,7 @@ namespace MobaGame2
         List<Minion> minions;
         List<Tower> towers;
         List<GameEntity> entities;
+        List<Ability> abilities;
 
         Map map;
 
@@ -111,15 +112,16 @@ namespace MobaGame2
             players = new List<Player>();
             players.Add(new Player());
             players[0].name = "inferno1005";
-            players[0].champ = new FiddleSticks();
 
+            abilities = new List<Ability>();
 
             towers = new List<Tower>();
             towers.Add(new Tower());
 
 
+            players[0].champ = new FiddleSticks(map,abilities);
             minions = new List<Minion>();
-            minions.Add(new Minion(towers[0]));
+            minions.Add(new Minion(towers[0],map,abilities));
 
             #endregion
 
@@ -184,7 +186,6 @@ namespace MobaGame2
 
 
             #region controls
-
             //right button selects and targets, if not on anything but map, moves there
             #region mouse
             //if menu is not open
@@ -217,6 +218,10 @@ namespace MobaGame2
                                 {
                                     foundobject = true;
                                     players[0].champ.FocusObject(minion);
+                                    if (players[0].champ.abilities[0].cast)
+                                    {
+                                        Console.WriteLine("CASTED");
+                                    }
                                 }
 
                         }
@@ -281,27 +286,40 @@ namespace MobaGame2
             }
             #endregion
 
-
             #endregion
 
             #region camera
             camera.ScreenBorderMove(Input.MousePosition);
             #endregion
 
+
             #region updates
 
             foreach (var player in players)
             {
-                player.Update(map.rect, gameTime);
+                player.Update(map.rect, gameTime,abilities);
             }
 
-            foreach (var minion in minions)
+            for (int i = 0; i < minions.Count;i++ )
             {
                 foreach (var player in players)
                 {
-                    minion.Agro(player.champ);
+                    minions[i].Agro(player.champ);
                 }
-                minion.Updater(map.rect, gameTime);
+
+                minions[i].Updater(map.rect, gameTime);
+
+                if (!minions[i].attribute.alive)
+                {
+                    minions.RemoveAt(i);
+                }
+            }
+
+            for (int i = 0; i < abilities.Count; i++)
+            {
+                abilities[i].Update(gameTime);
+                if (abilities[i].ghost)
+                    abilities.RemoveAt(i);
             }
             #endregion
 
@@ -357,12 +375,17 @@ namespace MobaGame2
                     );
 
 
+            //draw players champs
             foreach (var player in players)
                 player.Draw(spriteBatch, font1, drawcolor);
 
             //draw minion 
             foreach (var minion in minions)
                 minion.Draw(spriteBatch, drawcolor);
+
+            //draw abilities
+            foreach (var ability in abilities)
+                ability.Draw(spriteBatch, drawcolor);
 
             spriteBatch.End();
             #endregion

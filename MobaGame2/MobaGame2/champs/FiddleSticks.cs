@@ -14,9 +14,9 @@ using Microsoft.Xna.Framework.Media;
 
 namespace MobaGame2
 {
-    class FiddleSticks : Champ
+    class FiddleSticks : NewChamp
     {
-        public FiddleSticks()
+        public FiddleSticks(Map m,List<Ability> ga) : base(m,ga)
         {
             this.Name = "Fiddle Sticks";
             this.texturename = "texture\\Fiddle-Pumpkin";
@@ -32,13 +32,17 @@ namespace MobaGame2
             this.attribute.health = 750;
             this.attribute.healthRegen = .05f;
             this.attribute.manaRegen= .15f;
+            this.attribute.attackDamage=30;
 
-            this.abilities.Add(new Ability(this.attribute.attackDamage));
+            this.abilities.Add(new Ability());
             this.abilities[0].name = "Basic Attack";
             this.abilities[0].attribute.range = this.attribute.range;
-            //this.abilities[0].physicalDamage= this.attribute.attackDamage;
+            this.abilities[0].physicalDamage= this.attribute.attackDamage;
             this.abilities[0].magicDamage = 0;
             this.abilities[0].coolDown= 3;
+            this.abilities[0].attribute.visible = false;
+
+            //this.abilities[0].attribute.speed= 10;
             this.abilities[0].texturename = "texture\\fireball";
 
             this.attribute.maxmana= 1000;

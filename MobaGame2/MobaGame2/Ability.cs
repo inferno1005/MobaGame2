@@ -28,13 +28,30 @@ namespace MobaGame2
         public Texture2D texture;
         public string texturename;
 
-        public Ability(double damage)
+        public Ability()
         {
-            this.width = 20;
-            this.height= 20;
+            this.width = 10;
+            this.height= 10;
             this.attribute.speed = 10;
-            this.physicalDamage = damage;
+        }
+        public Ability(Ability copy)
+        {
 
+            this.width = 10;
+            this.height= 10;
+            this.attribute.speed = 10;
+
+            name=copy.name;
+            manaCost=copy.manaCost;
+            healthCost=copy.healthCost;
+            physicalDamage=copy.physicalDamage;
+            magicDamage=copy.magicDamage;
+            coolDown = copy.coolDown;
+            timer = copy.timer;
+            cast = true;
+            ghost = false;
+            texture=copy.texture;
+            texturename=copy.texturename;
         }
         public void Update(GameTime gametime)
         {
@@ -62,7 +79,7 @@ namespace MobaGame2
             //we have hit the target , we should apply damage and remove this casted ability 
             if (distance < 3)
             {
-                if (focus != null)
+                if (focus != null && !ghost)
                 {
                     Console.WriteLine("Should be applying damage!");
                     Console.WriteLine(focus.attribute.Health);
@@ -71,6 +88,14 @@ namespace MobaGame2
                     Console.WriteLine(focus.attribute.Health);
                     ghost = true;
                 }
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch, Color color)
+        {
+            if (this.attribute.visible)
+            {
+                spriteBatch.Draw(this.texture, this.rect, color);
             }
         }
     }
