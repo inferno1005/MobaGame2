@@ -18,7 +18,7 @@ namespace MobaGame2
     static class Networking
     {
         public static  NetworkSession networkSession;
-        public  static AvailableNetworkSession availableSessions;
+        public  static AvailableNetworkSessionCollection availableSessions;
         public  static int selectedSessionIndex;
         public  static PacketReader packetReader = new PacketReader();
         public  static PacketWriter packetWriter = new PacketWriter();

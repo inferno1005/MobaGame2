@@ -495,6 +495,8 @@ namespace MobaGame2
 
             if (Networking.networkSession != null)
             {
+                if (Networking.networkSession.SessionState == NetworkSessionState.Lobby)
+                    UI.DrawLobby(spriteBatch,font1);
             }
             else if (Networking.availableSessions != null)
             {

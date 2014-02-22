@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Net;
 
 
 
@@ -120,8 +121,78 @@ namespace MobaGame2
 
             spriteBatch.End();
         }
+        public static void HandleTitleScreenInput(Vector2 mouse)
+        {
+            //if create session
+            if(MathHelper.ClickedOn(mouse,new Rectangle(10,10,100,20)))
+            {
+                Networking.CreateSession();
+            }
+            //if finding session
+            if(MathHelper.ClickedOn(mouse,new Rectangle(10,50,100,20)))
+            {
+                Networking.availableSessions =
+                    NetworkSession.Find(NetworkSessionType.SystemLink, 1, null);
+
+                Networking.selectedSessionIndex = 0;
+            }
+        }
+
         public static void DrawLobby(SpriteBatch spriteBatch, SpriteFont font)
         {
+            spriteBatch.Begin();
+
+            spriteBatch.DrawString(font,"LOBBY",new Vector2(10,10),Color.White);
+
+            int y = 100;
+
+            foreach (NetworkGamer gamer in Networking.networkSession.AllGamers)
+            {
+                string text = gamer.Gamertag;
+
+                Player player = gamer.Tag as Player;
+
+                //picture stuff
+
+                if (gamer.IsReady)
+                    text += " - ready";
+
+                spriteBatch.DrawString(font, text, new Vector2(10, y), Color.White);
+
+
+                y += 100;
+            }
+            spriteBatch.End();
+
+
+
+        }
+
+        public static void HandleLobbyInput()
+        {
+            //if pressed
+            {
+                foreach (LocalNetworkGamer gamer in Networking.networkSession.LocalGamers)
+                {
+                    gamer.IsReady = true;
+                }
+            }
+
+            //if esc or back button
+            {
+                Networking.networkSession = null;
+                Networking.availableSessions = null;
+            }
+
+            //if everyone is ready start game!
+            if(Networking.networkSession.IsHost)
+            {
+                if (Networking.networkSession.IsEveryoneReady)
+                    Networking.networkSession.StartGame();
+            }
+
+            //pump the underlying seesion object
+            Networking.networkSession.Update();
         }
 
     }
