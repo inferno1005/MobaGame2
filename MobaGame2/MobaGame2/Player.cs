@@ -21,7 +21,6 @@ namespace MobaGame2
         public int kills;
         public int deaths;
         public int assists;
-        public bool alive=true;
         public NewChamp champ;
 
         public void Draw(SpriteBatch spritebatch, SpriteFont font,Color color)
@@ -34,14 +33,9 @@ namespace MobaGame2
 
         public void Update(Rectangle rect,GameTime gametime,List<Ability> abi)
         {
-            if (champ.attribute.health < 0)
-            {
-                alive = false;
-            }
-            if (alive)
+            if (champ.attribute.alive)
             {
                 champ.Updater(gametime);
-                //champ.attributes.Update();
             }
         }
 

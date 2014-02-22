@@ -35,6 +35,9 @@ namespace MobaGame2
             this.Update(rect);
             BasicAttack();
 
+            if (this.attribute.health < 0)
+                this.attribute.alive = false;
+
             foreach (var ability in abilities)
             {
                 ability.Update(gametime);

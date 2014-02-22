@@ -16,6 +16,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Net;
 
 
 
@@ -59,7 +60,7 @@ namespace MobaGame2
 
 
         SpriteFont font1;
-        Texture2D mouseTexture;
+        //Texture2D mouseTexture;
         Texture2D lightmask;
 
         //buffer
@@ -76,6 +77,12 @@ namespace MobaGame2
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             this.IsFixedTimeStep = false;
+
+            // add gamer services
+            Components.Add(new GamerServicesComponent(this));
+
+            //respond to the signed in gamer event
+            SignedInGamer.SignedIn += new EventHandler<SignedInEventArgs>(Networking.SignedInGamer_SignedIn);
         }
 
         protected override void Initialize()
@@ -163,7 +170,7 @@ namespace MobaGame2
 
 
             map.texture = Content.Load<Texture2D>(map.texturename);
-            mouseTexture = Content.Load<Texture2D>("texture\\pointer");
+            UI.mouseTexture = Content.Load<Texture2D>("texture\\pointer");
             //lightmask = Content.Load<Texture2D>("texture\\lightmask");
             lightmask = Content.Load<Texture2D>("texture\\whitemask");
             #endregion
@@ -192,7 +199,7 @@ namespace MobaGame2
             if (!UI.escMenuOpen)
             {
                 //right click
-                if (Input.RightMouseButton() && players[0].alive)
+                if (Input.RightMouseButton() && players[0].champ.attribute.alive)
                 {
                     foundobject = false;
 
@@ -265,11 +272,11 @@ namespace MobaGame2
             //debug respawn and insta kill
             if (Input.KeyPressed(Keys.K))
             {
-                if (players[0].alive == true)
-                    players[0].alive = false;
+                if (players[0].champ.attribute.alive == true)
+                    players[0].champ.attribute.alive = false;
                 else
                 {
-                    players[0].alive = true;
+                    players[0].champ.attribute.alive = true;
                     players[0].champ.attribute.Health = players[0].champ.attribute.maxhealth;
                 }
 
@@ -335,7 +342,7 @@ namespace MobaGame2
             GraphicsDevice.Clear(Color.Gray);
 
             //if player is alive draw normaly, otherwise dray grayed out
-            if (players[0].alive)
+            if (players[0].champ.attribute.alive)
                 drawcolor = Color.White;
             else
                 drawcolor = Color.Gray;
@@ -443,7 +450,6 @@ namespace MobaGame2
             //base.Draw(gameTime);
         }
 
-
         protected void DrawFog(GameTime gameTime)
         {
             GraphicsDevice.SetRenderTarget(fog);
@@ -482,31 +488,51 @@ namespace MobaGame2
             GraphicsDevice.SetRenderTarget(null);
         }
 
+
         protected override void Draw(GameTime gameTime)
         {
-            DrawMain(gameTime);
-
-            DrawFog(gameTime);
-
-            GraphicsDevice.Clear(Color.Black);
-
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-            fogeffect.Parameters["lightMask"].SetValue(fog);
-            fogeffect.CurrentTechnique.Passes[0].Apply();
-            spriteBatch.Draw(mainscene, new Vector2(0, 0), Color.White);
-            spriteBatch.End();
 
 
-            #region interface
-            spriteBatch.Begin();
+            if (Networking.networkSession != null)
+            {
+            }
+            else if (Networking.availableSessions != null)
+            {
+            }
+            else
+            {
+                UI.DrawTitleScreen(spriteBatch,font1);
+            }
 
-            UI.Draw(spriteBatch, font1, players[0], Input.MousePosition);
 
-            //draw pointer to be drawn last so its over top everything
-            spriteBatch.Draw(mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
+            /*
+            //if in game draw game
+            {
+                DrawMain(gameTime);
 
-            spriteBatch.End();
-            #endregion
+                DrawFog(gameTime);
+
+                GraphicsDevice.Clear(Color.Black);
+
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+                fogeffect.Parameters["lightMask"].SetValue(fog);
+                fogeffect.CurrentTechnique.Passes[0].Apply();
+                spriteBatch.Draw(mainscene, new Vector2(0, 0), Color.White);
+                spriteBatch.End();
+
+
+                #region interface
+                spriteBatch.Begin();
+
+                UI.Draw(spriteBatch, font1, players[0], Input.MousePosition);
+
+                //draw pointer to be drawn last so its over top everything
+                spriteBatch.Draw(mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
+
+                spriteBatch.End();
+                #endregion
+            }
+             */
 
             base.Draw(gameTime);
         }

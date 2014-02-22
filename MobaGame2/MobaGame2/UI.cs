@@ -27,6 +27,8 @@ namespace MobaGame2
         public static bool escMenuOpen = false;
         static Vector2 menupos;
         static Vector2 menusize;
+        //mouse
+        public static Texture2D mouseTexture;
 
 
 
@@ -99,6 +101,27 @@ namespace MobaGame2
                 return 1;
             }
             return 0;
+        }
+
+
+        public static void DrawTitleScreen(SpriteBatch spriteBatch,SpriteFont font)
+        {
+            spriteBatch.Begin();
+            if (SignedInGamer.SignedInGamers.Count == 0)
+            {
+                spriteBatch.DrawString(font, "no one signed in\n in order to play hit the home button on the keyboard\n then create a new account\n scroll down and create a local account", new Vector2(10, 10), Color.White);
+            }
+            else
+            {
+                spriteBatch.DrawString(font, "Create New Lobby", new Vector2(10, 10), Color.White);
+                spriteBatch.DrawString(font, "Find a game", new Vector2(10, 50), Color.White);
+            }
+            spriteBatch.Draw(mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
+
+            spriteBatch.End();
+        }
+        public static void DrawLobby(SpriteBatch spriteBatch, SpriteFont font)
+        {
         }
 
     }
