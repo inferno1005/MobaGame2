@@ -189,6 +189,32 @@ namespace MobaGame2
         protected override void Update(GameTime gameTime)
         {
             Input.Update();
+            if (!Guide.IsVisible)
+            {
+                foreach (SignedInGamer signedInGamer in SignedInGamer.SignedInGamers)
+                {
+
+                    if (Networking.networkSession != null)
+                    {
+                        if (Networking.networkSession.SessionState == NetworkSessionState.Lobby)
+                            UI.HandleLobbyInput();
+                    }
+                    else if (Networking.availableSessions != null)
+                    {
+                        // Handle the available sessions input here...
+                    }
+                    else
+                    {
+                        UI.HandleTitleScreenInput(Input.MousePosition);
+                    }
+                    //player.lastState = currentState;
+                }
+            }
+            base.Update(gameTime);
+        }
+        protected void GameUpdate(GameTime gameTime)
+        {
+            Input.Update();
             bool foundobject;
 
 
@@ -335,6 +361,55 @@ namespace MobaGame2
             base.Update(gameTime);
         }
 
+        protected override void Draw(GameTime gameTime)
+        {
+
+
+            if (Networking.networkSession != null)
+            {
+                if (Networking.networkSession.SessionState == NetworkSessionState.Lobby)
+                    UI.DrawLobby(spriteBatch,font1);
+            }
+            else if (Networking.availableSessions != null)
+            {
+            }
+            else
+            {
+                UI.DrawTitleScreen(spriteBatch,font1);
+            }
+
+
+            /*
+            //if in game draw game
+            {
+                DrawMain(gameTime);
+
+                DrawFog(gameTime);
+
+                GraphicsDevice.Clear(Color.Black);
+
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+                fogeffect.Parameters["lightMask"].SetValue(fog);
+                fogeffect.CurrentTechnique.Passes[0].Apply();
+                spriteBatch.Draw(mainscene, new Vector2(0, 0), Color.White);
+                spriteBatch.End();
+
+
+                #region interface
+                spriteBatch.Begin();
+
+                UI.Draw(spriteBatch, font1, players[0], Input.MousePosition);
+
+                //draw pointer to be drawn last so its over top everything
+                spriteBatch.Draw(mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
+
+                spriteBatch.End();
+                #endregion
+            }
+             */
+
+            base.Draw(gameTime);
+        }
         protected void DrawMain(GameTime gameTime)
         {
             //GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -489,54 +564,5 @@ namespace MobaGame2
         }
 
 
-        protected override void Draw(GameTime gameTime)
-        {
-
-
-            if (Networking.networkSession != null)
-            {
-                if (Networking.networkSession.SessionState == NetworkSessionState.Lobby)
-                    UI.DrawLobby(spriteBatch,font1);
-            }
-            else if (Networking.availableSessions != null)
-            {
-            }
-            else
-            {
-                UI.DrawTitleScreen(spriteBatch,font1);
-            }
-
-
-            /*
-            //if in game draw game
-            {
-                DrawMain(gameTime);
-
-                DrawFog(gameTime);
-
-                GraphicsDevice.Clear(Color.Black);
-
-                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-                fogeffect.Parameters["lightMask"].SetValue(fog);
-                fogeffect.CurrentTechnique.Passes[0].Apply();
-                spriteBatch.Draw(mainscene, new Vector2(0, 0), Color.White);
-                spriteBatch.End();
-
-
-                #region interface
-                spriteBatch.Begin();
-
-                UI.Draw(spriteBatch, font1, players[0], Input.MousePosition);
-
-                //draw pointer to be drawn last so its over top everything
-                spriteBatch.Draw(mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
-
-                spriteBatch.End();
-                #endregion
-            }
-             */
-
-            base.Draw(gameTime);
-        }
     }
 }

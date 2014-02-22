@@ -185,7 +185,7 @@ namespace MobaGame2
             }
 
             //if everyone is ready start game!
-            if(Networking.networkSession.IsHost)
+            if(Networking.networkSession!=null && Networking.networkSession.IsHost)
             {
                 if (Networking.networkSession.IsEveryoneReady)
                     Networking.networkSession.StartGame();

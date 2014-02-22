@@ -29,7 +29,7 @@ namespace MobaGame2
         }
         public static void CreateSession()
         {
-            networkSession = NetworkSession.Create(NetworkSessionType.SystemLink, 1, 10, 1, null);
+            networkSession = NetworkSession.Create(NetworkSessionType.SystemLink, 1, 10, 2, null);
 
             networkSession.AllowHostMigration = true;
             networkSession.AllowJoinInProgress= true;
