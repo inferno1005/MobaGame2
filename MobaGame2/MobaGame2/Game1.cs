@@ -25,9 +25,12 @@ namespace MobaGame2
 {
     public class Game1 : Microsoft.Xna.Framework.Game
     {
+
+        #region vars
         //needed
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Networking networking;
 
         //screen
         int SCREENHEIGHT = 720;
@@ -66,10 +69,8 @@ namespace MobaGame2
         //buffer
         String buffer;
 
-
         Color drawcolor;
-
-
+        #endregion
 
 
         public Game1()
@@ -77,12 +78,13 @@ namespace MobaGame2
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             this.IsFixedTimeStep = false;
+            networking = new Networking();
 
             // add gamer services
             Components.Add(new GamerServicesComponent(this));
 
             //respond to the signed in gamer event
-            SignedInGamer.SignedIn += new EventHandler<SignedInEventArgs>(Networking.SignedInGamer_SignedIn);
+            SignedInGamer.SignedIn += new EventHandler<SignedInEventArgs>(networking.SignedInGamer_SignedIn);
         }
 
         protected override void Initialize()
@@ -98,7 +100,6 @@ namespace MobaGame2
             GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
             this.Window.Title = "Moba";
             #endregion
-
 
             //fog
 
@@ -184,6 +185,7 @@ namespace MobaGame2
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
+            networking.EndSession();
         }
 
         protected override void Update(GameTime gameTime)
@@ -194,24 +196,25 @@ namespace MobaGame2
                 foreach (SignedInGamer signedInGamer in SignedInGamer.SignedInGamers)
                 {
 
-                    if (Networking.networkSession != null)
+                    if (networking.networkSession != null)
                     {
-                        if (Networking.networkSession.SessionState == NetworkSessionState.Lobby)
-                            UI.HandleLobbyInput();
+                        if (networking.networkSession.SessionState == NetworkSessionState.Lobby)
+                            UI.HandleLobbyInput(networking);
                     }
-                    else if (Networking.availableSessions != null)
+                    else if (networking.availableSessions != null)
                     {
                         // Handle the available sessions input here...
                     }
                     else
                     {
-                        UI.HandleTitleScreenInput(Input.MousePosition);
+                        UI.HandleTitleScreenInput(Input.MousePosition,networking);
                     }
                     //player.lastState = currentState;
                 }
             }
             base.Update(gameTime);
         }
+
         protected void GameUpdate(GameTime gameTime)
         {
             Input.Update();
@@ -365,12 +368,12 @@ namespace MobaGame2
         {
 
 
-            if (Networking.networkSession != null)
+            if (networking.networkSession != null)
             {
-                if (Networking.networkSession.SessionState == NetworkSessionState.Lobby)
-                    UI.DrawLobby(spriteBatch,font1);
+                if (networking.networkSession.SessionState == NetworkSessionState.Lobby)
+                    UI.DrawLobby(spriteBatch,font1,networking);
             }
-            else if (Networking.availableSessions != null)
+            else if (networking.availableSessions != null)
             {
             }
             else

@@ -121,32 +121,33 @@ namespace MobaGame2
 
             spriteBatch.End();
         }
-        public static void HandleTitleScreenInput(Vector2 mouse)
+        public static void HandleTitleScreenInput(Vector2 mouse,Networking networking)
         {
             //if create session
             if(MathHelper.ClickedOn(mouse,new Rectangle(10,10,100,20)))
             {
-                Networking.CreateSession();
+                networking.CreateSession();
             }
             //if finding session
             if(MathHelper.ClickedOn(mouse,new Rectangle(10,50,100,20)))
             {
-                Networking.availableSessions =
+                networking.availableSessions =
                     NetworkSession.Find(NetworkSessionType.SystemLink, 1, null);
 
-                Networking.selectedSessionIndex = 0;
+                networking.selectedSessionIndex = 0;
             }
         }
 
-        public static void DrawLobby(SpriteBatch spriteBatch, SpriteFont font)
+        public static void DrawLobby(SpriteBatch spriteBatch, SpriteFont font,Networking networking)
         {
+            Console.WriteLine("In draw lobby");
             spriteBatch.Begin();
 
             spriteBatch.DrawString(font,"LOBBY",new Vector2(10,10),Color.White);
 
             int y = 100;
 
-            foreach (NetworkGamer gamer in Networking.networkSession.AllGamers)
+            foreach (NetworkGamer gamer in networking.networkSession.AllGamers)
             {
                 string text = gamer.Gamertag;
 
@@ -163,16 +164,13 @@ namespace MobaGame2
                 y += 100;
             }
             spriteBatch.End();
-
-
-
         }
 
-        public static void HandleLobbyInput()
+        public static void HandleLobbyInput(Networking networking)
         {
             //if pressed
             {
-                foreach (LocalNetworkGamer gamer in Networking.networkSession.LocalGamers)
+                foreach (LocalNetworkGamer gamer in networking.networkSession.LocalGamers)
                 {
                     gamer.IsReady = true;
                 }
@@ -180,19 +178,20 @@ namespace MobaGame2
 
             //if esc or back button
             {
-                Networking.networkSession = null;
-                Networking.availableSessions = null;
+                networking.networkSession = null;
+                networking.availableSessions = null;
             }
 
             //if everyone is ready start game!
-            if(Networking.networkSession!=null && Networking.networkSession.IsHost)
+            if(networking.networkSession!=null && networking.networkSession.IsHost)
             {
-                if (Networking.networkSession.IsEveryoneReady)
-                    Networking.networkSession.StartGame();
+                if (networking.networkSession.IsEveryoneReady)
+                    networking.networkSession.StartGame();
             }
 
             //pump the underlying seesion object
-            Networking.networkSession.Update();
+            if(networking.networkSession!=null)
+                networking.networkSession.Update();
         }
 
     }
