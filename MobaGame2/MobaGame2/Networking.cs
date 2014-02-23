@@ -19,10 +19,14 @@ namespace MobaGame2
     class Networking
     {
         public enum PacketType { Enter, Leave, Data}
+        public enum GameMode { AllMiddle }
+        public enum SkillLevel{ Beginner,Intermediate,Advanced}
+        public enum SessionProperty{GameMode,SkillLevel,ScoreToWin}
 
 
         public NetworkSession networkSession;
         public AvailableNetworkSessionCollection availableSessions;
+        public AvailableNetworkSession availableSession;
         public int selectedSessionIndex;
         public PacketReader packetReader = new PacketReader();
         public PacketWriter packetWriter = new PacketWriter();
@@ -87,15 +91,87 @@ namespace MobaGame2
                 }
             }
         }
-
-        public static void SignIn()
-        {
+        public void SignIn()
+       {
             if (!Guide.IsVisible)
             {
                 Guide.ShowSignIn(1, false);
             }
         }
+        public void HostGame()
+        {
+            if (SignedInGamer.SignedInGamers.Count == 0)
+                SignIn();
+            else if (SignedInGamer.SignedInGamers.Count == 1)
+            {
+                NetworkSessionProperties sessionProperties = new NetworkSessionProperties();
 
+                sessionProperties[(int)SessionProperty.GameMode] = (int)GameMode.AllMiddle;
+
+                sessionProperties[(int)SessionProperty.SkillLevel] = (int)SkillLevel.Beginner;
+
+                sessionProperties[(int)SessionProperty.ScoreToWin] = 1; //kill base to win
+
+                int maximumGamers = 10;
+                int privateGamerSlots = 0;
+                int maximumLocalPlayers = 1;
+
+
+                networkSession = NetworkSession.Create(
+                    NetworkSessionType.SystemLink,
+                    maximumLocalPlayers,
+                    maximumGamers,
+                    privateGamerSlots,
+                    sessionProperties);
+
+                isServer = true;
+                networkSession.AllowHostMigration = true;
+                networkSession.AllowJoinInProgress= true;
+
+                //gameState= GameState.PlayGame;
+            }
+
+        }
+        public void FindGame()
+        {
+            if (SignedInGamer.SignedInGamers.Count == 0)
+                SignIn();
+            else if (SignedInGamer.SignedInGamers.Count == 1)
+            {
+                //gameState = GametState.FindeGame;
+
+                int maximumLocalPlayers = 1;
+
+                NetworkSessionProperties searchProperties = new NetworkSessionProperties();
+
+                searchProperties[(int)SessionProperty.GameMode] = (int)GameMode.AllMiddle;
+                searchProperties[(int)SessionProperty.SkillLevel] = (int)SkillLevel.Beginner;
+
+                availableSessions = NetworkSession.Find(
+                    NetworkSessionType.SystemLink,
+                    maximumLocalPlayers,
+                    searchProperties);
+
+                if (availableSessions.Count != 0)
+                {
+                    availableSession = availableSessions[selectedSessionIndex];
+                }
+                isServer = false;
+            }
+        }
+        public void JoinGame()
+        {
+
+        }
+        public void Update()
+        {
+            if(networkSession!=null)
+            {
+                networkSession.Update();
+            }
+        }
+
+        
         protected void AddNetworkingEvents()
         {
             networkSession.GamerJoined += new EventHandler<GamerJoinedEventArgs>(networkSession_GamerJoined);
@@ -104,7 +180,6 @@ namespace MobaGame2
             networkSession.GameEnded+= new EventHandler<GameEndedEventArgs>(networkSession_GameEnded);
             networkSession.SessionEnded+= new EventHandler<NetworkSessionEndedEventArgs>(networkSession_SessionEnded);
         }
-
         protected void RemoveNetworkingEvents()
         {
 
@@ -115,13 +190,6 @@ namespace MobaGame2
             networkSession.SessionEnded-= new EventHandler<NetworkSessionEndedEventArgs>(networkSession_SessionEnded);
         }
 
-        public void Update()
-        {
-            if(networkSession!=null)
-            {
-                networkSession.Update();
-            }
-        }
 
 
         //private void HookSessionEvents()
