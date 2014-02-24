@@ -154,19 +154,19 @@ namespace MobaGame2
             #region textures
             foreach (var Player in players)
             {
-                Player.champ.texture = Content.Load<Texture2D>(Player.champ.texturename);
+                Player.champ.texture.texture = Content.Load<Texture2D>(Player.champ.texture.name);
                 Player.champ.attribute.texture = Content.Load<Texture2D>(Player.champ.attribute.texturename);
                 for (int i = 0; i < 7; i++)
                 {
-                    Player.champ.abilities[i].texture = Content.Load<Texture2D>(Player.champ.abilities[0].texturename);
-                    Player.champ.abilities[i].icon = Content.Load<Texture2D>(Player.champ.abilities[0].iconname);
+                    Player.champ.abilities[i].texture.texture = Content.Load<Texture2D>(Player.champ.abilities[0].castedtexture.name);
+                    Player.champ.abilities[i].uitexture.texture= Content.Load<Texture2D>(Player.champ.abilities[0].uitexture.name);
                 }
             }
 
             foreach (var Minion in minions)
             {
-                Minion.texture = Content.Load<Texture2D>(Minion.texturename);
-                Minion.abilities[0].texture = Content.Load<Texture2D>(Minion.abilities[0].texturename);
+                Minion.texture.texture = Content.Load<Texture2D>(Minion.texture.name);
+                Minion.abilities[0].texture.texture = Content.Load<Texture2D>(Minion.abilities[0].texture.name);
             }
 
             //foreach (var tower in Towers)
@@ -175,7 +175,7 @@ namespace MobaGame2
             //}
 
 
-            map.texture = Content.Load<Texture2D>(map.texturename);
+            map.texture.texture = Content.Load<Texture2D>(map.texture.name);
             UI.mouseTexture = Content.Load<Texture2D>("texture\\pointer");
             UI.background= Content.Load<Texture2D>("background");
 
@@ -287,7 +287,7 @@ namespace MobaGame2
                     if (!foundobject)
                         if (MathHelper.ClickedOn(Input.MousePosition + camera.position, map.rect))
                         {
-                            players[0].champ.direction = players[0].champ.CalcDirection(Input.MousePosition + camera.position);
+                            players[0].champ.position.CalcDirection(Input.MousePosition + camera.position);
                             players[0].champ.FocusObject(null);
 
                         }
@@ -316,7 +316,7 @@ namespace MobaGame2
             //center camera to champ and follow
             if (Input.KeyHeld(Keys.Space))
             {
-                camera.Center(players[0].champ.center);
+                camera.Center(players[0].champ.position.center);
             }
 
             //debug respawn and insta kill
@@ -466,9 +466,9 @@ namespace MobaGame2
                 );
 
             //draw map
-            spriteBatch.Draw(map.texture,
+            spriteBatch.Draw(map.texture.texture,
                 map.rect,
-                new Rectangle((int)map.position.X,(int)map.position.Y,map.texturewidth,map.textureheight),
+                new Rectangle((int)map.position.position.X,(int)map.position.position.Y,map.texturewidth,map.textureheight),
                drawcolor);
 
             spriteBatch.End();

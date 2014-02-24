@@ -64,15 +64,15 @@ namespace MobaGame2
                  */
 
 
-                spriteBatch.Draw(this.texture, this.rect, color);
-                attribute.Draw(spriteBatch, this.position);
+                spriteBatch.Draw(this.texture.texture, this.texture.rect, color);
+                attribute.Draw(spriteBatch, this.position.position);
             }
         }
 
         public void BasicAttack()
         {
             if (focus != null &&        //if focused on object
-                focus.distance < this.attribute.range && //if in range
+                focus.position.distance < this.attribute.range && //if in range
                 !this.abilities[0].cast) //if timer is good
             {
                 this.abilities[0].cast = true;
@@ -91,7 +91,7 @@ namespace MobaGame2
         {
 
             if (focus != null &&        //if focused on object
-                focus.distance < this.attribute.range && //if in range
+                focus.position.distance < this.attribute.range && //if in range
                 !this.abilities[0].cast) //if timer is good
             {
                 this.abilities[0].cast = true;
