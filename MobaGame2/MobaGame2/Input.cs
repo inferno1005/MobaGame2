@@ -101,6 +101,16 @@ namespace MobaGame2
                 networking.networkSession.Update();
         }
 
+        public static Champ SelectChamp(int x, int y, List<Champ> champs)
+        {
+            if (LeftMouseButton())
+            {
+                //click on the grid and select champ
+                return champs[i];
+            }
+
+        }
+
         public static void HandleAvailableSessionsInput(Networking networking)
         {
             //if esc or back button
