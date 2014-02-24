@@ -22,6 +22,7 @@ namespace MobaGame2
         static Vector2 manapos;
         static Vector2 healthStringPos;
         static Vector2 manaStringPos;
+        static Vector2 abilityPos;
         static int barwidth;
 
         //menu
@@ -45,8 +46,11 @@ namespace MobaGame2
             width=w;
             height=h;
 
-            healthpos=new Vector2(300,height-50);
-            manapos=new Vector2(300,height-25);
+            healthpos=new Vector2(300,height-50-100);
+            manapos=new Vector2(300,height-25-100);
+
+
+            abilityPos=new Vector2(300,height-100);
 
 
             healthStringPos = new Vector2(500, 0) + healthpos;
@@ -62,8 +66,7 @@ namespace MobaGame2
             int healthbarpercent = (int)(barwidth*((player.champ.attribute.Health / player.champ.attribute.maxhealth)));
             int manabarpercent = (int)(barwidth*((player.champ.attribute.mana/ player.champ.attribute.maxmana)));
 
-
-
+            #region bars
             //draw healh bars  
             spritebatch.Draw(player.champ.attribute.texture, new Rectangle((int)healthpos.X, (int)healthpos.Y ,barwidth , 20), Color.Black);
             spritebatch.Draw(player.champ.attribute.texture,
@@ -96,7 +99,34 @@ namespace MobaGame2
                 spritebatch.DrawString(font, ((int)player.champ.attribute.mana).ToString(), new Vector2(manabarpercent + manapos.X - 55, manapos.Y - 3), Color.White);
             else
                 spritebatch.DrawString(font, ((int)player.champ.attribute.mana).ToString(), new Vector2( manapos.X, manapos.Y - 3), Color.White);
+            #endregion
 
+            Color color;
+
+            abilityPos=new Vector2(300,height-100);
+            #region abilities
+            //for(int i=0;i<player.champ.abilities.Count;i++)
+            for(int i=0;i<player.champ.abilities.Count;i++)
+            {
+                if (player.champ.abilities[i].cast || !player.champ.attribute.alive)
+                    color = Color.Gray;
+                else
+                {
+                    color = Color.White;
+                }
+
+
+                spritebatch.Draw(player.champ.abilities[i].icon,
+                new Rectangle(
+                    (int)abilityPos.X + (int)(i * player.champ.abilities[i].iconSize.X),
+                    (int)abilityPos.Y,
+                     (int)player.champ.abilities[i].iconSize.X,
+                     (int)player.champ.abilities[i].iconSize.Y),
+                    color);
+            abilityPos.X += 2;
+            }
+
+            #endregion
             //draw options menu
             if (escMenuOpen)
             {

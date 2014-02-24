@@ -26,7 +26,10 @@ namespace MobaGame2
         public bool cast=false;
         public bool ghost=false;
         public Texture2D texture;
+        public Texture2D icon;
+        public Vector2 iconSize=new Vector2(90,90);
         public string texturename;
+        public string iconname;
 
         public Ability()
         {

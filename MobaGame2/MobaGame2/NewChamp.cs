@@ -18,6 +18,7 @@ namespace MobaGame2
     {
         public string Name;
         public List<Ability> abilities;
+        public int activeability;
 
         private Map map;
         private List<Ability> globalabilities;
@@ -85,6 +86,26 @@ namespace MobaGame2
 
                 globalabilities.Add(temp);
             }
+        }
+        public void Q()
+        {
+
+            if (focus != null &&        //if focused on object
+                focus.distance < this.attribute.range && //if in range
+                !this.abilities[0].cast) //if timer is good
+            {
+                this.abilities[0].cast = true;
+                this.abilities[0].position = this.position;
+                this.abilities[0].focus = this.focus;
+                this.abilities[0].attribute.visible = true;
+                Ability temp = new Ability(this.abilities[0]);
+                temp.position = this.position;
+                temp.focus = this.focus;
+
+
+                globalabilities.Add(temp);
+            }
+
         }
     }
 }

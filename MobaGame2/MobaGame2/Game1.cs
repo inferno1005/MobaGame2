@@ -156,7 +156,11 @@ namespace MobaGame2
             {
                 Player.champ.texture = Content.Load<Texture2D>(Player.champ.texturename);
                 Player.champ.attribute.texture = Content.Load<Texture2D>(Player.champ.attribute.texturename);
-                Player.champ.abilities[0].texture = Content.Load<Texture2D>(Player.champ.abilities[0].texturename);
+                for (int i = 0; i < 7; i++)
+                {
+                    Player.champ.abilities[i].texture = Content.Load<Texture2D>(Player.champ.abilities[0].texturename);
+                    Player.champ.abilities[i].icon = Content.Load<Texture2D>(Player.champ.abilities[0].iconname);
+                }
             }
 
             foreach (var Minion in minions)
@@ -219,20 +223,22 @@ namespace MobaGame2
                     }
                     else
                     {
+                        /*
                         if (Input.HandleTitleScreenInput(networking))
                         {
                             Exit();
-                        }
+                        }*/
                     }
                     //player.lastState = currentState;
                 }
             }
+            GameUpdate(gameTime);
             base.Update(gameTime);
         }
 
         protected void GameUpdate(GameTime gameTime)
         {
-            Input.Update();
+            //Input.Update();
             bool foundobject;
 
 
@@ -325,6 +331,10 @@ namespace MobaGame2
                 }
 
             }
+            if (Input.KeyPressed(Keys.Q))
+            {
+                players[0].champ.Q();
+            }
 
             //display menu
             if (Input.KeyPressed(Keys.Escape))
@@ -392,9 +402,9 @@ namespace MobaGame2
             {
                 UI.DrawAvailableSessions(spriteBatch, font1, networking);
             }
-            else
             {
-                UI.DrawTitleScreen(spriteBatch,font1,networking);
+                //UI.DrawTitleScreen(spriteBatch,font1,networking);
+                DrawMain(gameTime);
             }
 
 
@@ -570,7 +580,10 @@ namespace MobaGame2
 
 
             foreach (var player in players)
-                spriteBatch.Draw(lightmask, player.champ.visionrect, Color.White);
+            {
+                if(player.champ.attribute.alive)
+                    spriteBatch.Draw(lightmask, player.champ.visionrect, Color.White);
+            }
 
             //draw minion 
             foreach (var minion in minions)

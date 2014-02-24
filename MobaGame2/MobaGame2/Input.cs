@@ -106,8 +106,9 @@ namespace MobaGame2
             if (LeftMouseButton())
             {
                 //click on the grid and select champ
-                return champs[i];
+                //return champs[i];
             }
+            return null;
 
         }
 
