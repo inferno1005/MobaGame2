@@ -190,7 +190,9 @@ namespace MobaGame2
 
         protected override void Update(GameTime gameTime)
         {
+
             Input.Update();
+
             if (!Guide.IsVisible)
             {
                 foreach (SignedInGamer signedInGamer in SignedInGamer.SignedInGamers)
@@ -373,9 +375,9 @@ namespace MobaGame2
                 if (networking.networkSession.SessionState == NetworkSessionState.Lobby)
                     UI.DrawLobby(spriteBatch,font1,networking);
             }
-            else if (networking.availableSessions != null)
-            {
-            }
+            //else if (networking.availableSessions != null)
+            //{
+            //}
             else
             {
                 UI.DrawTitleScreen(spriteBatch,font1);

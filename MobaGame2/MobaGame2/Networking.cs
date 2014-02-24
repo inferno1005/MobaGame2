@@ -24,7 +24,7 @@ namespace MobaGame2
         public enum SessionProperty{GameMode,SkillLevel,ScoreToWin}
 
 
-        public NetworkSession networkSession;
+        public NetworkSession networkSession { get; private set; }
         public AvailableNetworkSessionCollection availableSessions;
         public AvailableNetworkSession availableSession;
         public int selectedSessionIndex;
@@ -37,6 +37,7 @@ namespace MobaGame2
         {
             e.Gamer.Tag = new Player();
         }
+/*
         public void CreateSession()
         {
             if(networkSession!=null)
@@ -51,9 +52,14 @@ namespace MobaGame2
 
             AddNetworkingEvents();
         }
+*/
         public void EndSession()
         {
-            networkSession.Dispose();
+            if (networkSession != null)
+            {
+                networkSession.Dispose();
+                networkSession = null;
+            }
         }
         public void SendPackets(PacketType packetType)
         {
@@ -113,16 +119,17 @@ namespace MobaGame2
                 sessionProperties[(int)SessionProperty.ScoreToWin] = 1; //kill base to win
 
                 int maximumGamers = 10;
-                int privateGamerSlots = 0;
+                int privateGamerSlots = 1;
                 int maximumLocalPlayers = 1;
 
 
-                networkSession = NetworkSession.Create(
-                    NetworkSessionType.SystemLink,
-                    maximumLocalPlayers,
-                    maximumGamers,
-                    privateGamerSlots,
-                    sessionProperties);
+                networkSession= NetworkSession.Create(
+                        NetworkSessionType.SystemLink,
+                        maximumLocalPlayers,
+                        maximumGamers,
+                        privateGamerSlots,
+                        sessionProperties);
+
 
                 isServer = true;
                 networkSession.AllowHostMigration = true;
@@ -161,6 +168,14 @@ namespace MobaGame2
         }
         public void JoinGame()
         {
+            if(availableSessions.Count -1 >=selectedSessionIndex)
+            {
+                networkSession = NetworkSession.Join(availableSessions[selectedSessionIndex]);
+
+                AddNetworkingEvents();
+
+                //gameState = GameState.PlayGame;
+            }
 
         }
         public void Update()

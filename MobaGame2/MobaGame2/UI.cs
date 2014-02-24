@@ -121,20 +121,18 @@ namespace MobaGame2
 
             spriteBatch.End();
         }
+
         public static void HandleTitleScreenInput(Vector2 mouse,Networking networking)
         {
             //if create session
             if(MathHelper.ClickedOn(mouse,new Rectangle(10,10,100,20)))
             {
-                networking.CreateSession();
+                networking.HostGame();
             }
             //if finding session
             if(MathHelper.ClickedOn(mouse,new Rectangle(10,50,100,20)))
             {
-                networking.availableSessions =
-                    NetworkSession.Find(NetworkSessionType.SystemLink, 1, null);
-
-                networking.selectedSessionIndex = 0;
+                networking.FindGame();
             }
         }
 
@@ -163,7 +161,10 @@ namespace MobaGame2
 
                 y += 100;
             }
+
+            spriteBatch.Draw(mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
             spriteBatch.End();
+
         }
 
         public static void HandleLobbyInput(Networking networking)
@@ -178,7 +179,7 @@ namespace MobaGame2
 
             //if esc or back button
             {
-                networking.networkSession = null;
+                //networking.networkSession = null;
                 networking.availableSessions = null;
             }
 
