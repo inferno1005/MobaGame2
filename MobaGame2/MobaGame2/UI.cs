@@ -28,13 +28,23 @@ namespace MobaGame2
         public static bool escMenuOpen = false;
         static Vector2 menupos;
         static Vector2 menusize;
-        //mouse
+
+        //textures
         public static Texture2D mouseTexture;
+        public static Texture2D background;
+        public static List<Texture2D> ChampIcons;
+
+        //size of ui
+        private static int width;
+        private static int height;
 
 
-
-        static public void SetPos(int width,int height)
+        static public void SetPos(int w,int h)
         {
+
+            width=w;
+            height=h;
+
             healthpos=new Vector2(300,height-50);
             manapos=new Vector2(300,height-25);
 
@@ -105,18 +115,18 @@ namespace MobaGame2
         }
 
 
-        public static void DrawTitleScreen(SpriteBatch spriteBatch,SpriteFont font)
+        public static void DrawTitleScreen(SpriteBatch spriteBatch,SpriteFont font,Networking networking)
         {
-            Console.WriteLine("In draw title screen");
             spriteBatch.Begin();
+            spriteBatch.Draw(background, new Rectangle(0,0,width,height), Color.White);
             if (SignedInGamer.SignedInGamers.Count == 0)
             {
-                spriteBatch.DrawString(font, "no one signed in\n in order to play hit the home button on the keyboard\n then create a new account\n scroll down and create a local account", new Vector2(10, 10), Color.White);
+                networking.SignIn();
             }
             else
             {
-                spriteBatch.DrawString(font, "Create New Lobby", new Vector2(10, 10), Color.White);
-                spriteBatch.DrawString(font, "Find a game", new Vector2(10, 50), Color.White);
+                spriteBatch.DrawString(font, "Create New Lobby", new Vector2(width-530, 200), Color.White);
+                spriteBatch.DrawString(font, "Find a game", new Vector2(width-530, 250), Color.White);
             }
             spriteBatch.Draw(mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
 
@@ -128,10 +138,11 @@ namespace MobaGame2
         {
             Console.WriteLine("In draw lobby");
             spriteBatch.Begin();
+            spriteBatch.Draw(background, new Rectangle(0,0,width,height), Color.White);
 
-            spriteBatch.DrawString(font,"LOBBY",new Vector2(10,10),Color.White);
+            spriteBatch.DrawString(font, "Lobby", new Vector2(width - 530, 200), Color.White);
 
-            int y = 100;
+            int y = 0;
 
             foreach (NetworkGamer gamer in networking.networkSession.AllGamers)
             {
@@ -140,17 +151,19 @@ namespace MobaGame2
                 Player player = gamer.Tag as Player;
 
                 //picture stuff
+                DisplayChampSelect(spriteBatch, font,40, 40);
+
 
                 if (gamer.IsReady)
                     text += " - ready";
 
-                spriteBatch.DrawString(font, text, new Vector2(10, y), Color.White);
+                spriteBatch.DrawString(font, text, new Vector2(width - 530, y+300), Color.White);
 
 
                 y += 100;
             }
 
-            spriteBatch.DrawString(font, "READY", new Vector2(10, 50), Color.White);
+            spriteBatch.DrawString(font, "Ready", new Vector2(width - 430,  200), Color.White);
 
             spriteBatch.Draw(mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
             spriteBatch.End();
@@ -160,15 +173,41 @@ namespace MobaGame2
         public static void DrawAvailableSessions(SpriteBatch spriteBatch, SpriteFont font,Networking networking)
         {
             spriteBatch.Begin();
-            spriteBatch.DrawString(font, "Available Sessions",new Vector2(10,10),Color.White);
+            spriteBatch.Draw(background, new Rectangle(0,0,width,height), Color.White);
+            spriteBatch.DrawString(font, "Available Sessions", new Vector2(width - 530, 200), Color.White);
 
             //int selectedSessionIndex = 0;
             for (int i = 0,y=100; i < networking.availableSessions.Count; i++,y+=100)
             {
-                spriteBatch.DrawString(font, networking.availableSessions[i].HostGamertag, new Vector2(20, y), Color.White);
+                spriteBatch.DrawString(font, networking.availableSessions[i].HostGamertag, new Vector2(width-530, y+300), Color.White);
             }
             spriteBatch.Draw(mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
             spriteBatch.End();
+        }
+
+        private static void DisplayChampSelect(SpriteBatch spriteBatch,SpriteFont font, int x,int y)
+        {
+            int lastwidth=0;
+            int lastheight=0;
+
+
+
+            //spriteBatch.Begin();
+            for (int i = 0; i < ChampIcons.Count; i++)
+            {
+                spriteBatch.Draw(ChampIcons[i], new Rectangle(x + lastwidth, y + lastheight, 50, 50), Color.White);
+                spriteBatch.DrawString(font,i.ToString(), new Vector2(x + lastwidth, y + lastheight), Color.White);
+                if ((i+1) % 10 == 0) 
+                {
+                    lastwidth = 0;
+                    lastheight += 50;
+                }
+                else
+                {
+                    lastwidth += 50;
+                }
+            }
+            //spriteBatch.End();
         }
 
     }

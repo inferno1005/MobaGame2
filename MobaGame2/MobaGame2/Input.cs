@@ -45,64 +45,80 @@ namespace MobaGame2
         public static bool LeftMouseButton()
         { return lastmousesState.LeftButton== ButtonState.Pressed && mouseState.LeftButton== ButtonState.Released; }
 
-        public static void HandleTitleScreenInput(Networking networking)
+        public static bool HandleTitleScreenInput(Networking networking)
         {
             //if create session
             if (LeftMouseButton())
             {
-                if (MathHelper.ClickedOn(MousePosition, new Rectangle(10, 10, 100, 20)))
+                if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280-530, 200, 400, 20)))
                 {
                     networking.HostGame();
                 }
                 //if finding session
-                if (MathHelper.ClickedOn(MousePosition, new Rectangle(10, 50, 100, 20)))
+                if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280-530, 250, 100, 20)))
                 {
                     networking.FindGame();
                 }
             }
+            if (KeyPressed(Keys.Escape))
+            {
+                return true;
+            }
+            return false;
         }
 
         public static void HandleLobbyInput(Networking networking)
         {
-
             //if pressed
-
             if (LeftMouseButton())
-                if (MathHelper.ClickedOn(MousePosition, new Rectangle(10, 50, 100, 20)))
+            {
+                //check if clicking ready
+                if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280 - 430, 200, 100, 20)))
                 {
                     foreach (LocalNetworkGamer gamer in networking.networkSession.LocalGamers)
                     {
                         gamer.IsReady = !gamer.IsReady;
                     }
                 }
+                //check if clicking on champ icon that they want to play as
+            }
 
             //if esc or back button
-            if(KeyPressed(Keys.Escape))
+            if (KeyPressed(Keys.Escape))
             {
                 networking.EndSession();
             }
 
             //if everyone is ready start game!
-            if(networking.networkSession!=null && networking.networkSession.IsHost)
+            if (networking.networkSession != null && networking.networkSession.IsHost)
             {
                 if (networking.networkSession.IsEveryoneReady)
                     networking.networkSession.StartGame();
             }
 
             //pump the underlying seesion object
-            if(networking.networkSession!=null)
+            if (networking.networkSession != null)
                 networking.networkSession.Update();
         }
 
         public static void HandleAvailableSessionsInput(Networking networking)
         {
-            for (int i = 0,y=100; i < networking.availableSessions.Count; i++,y+=100)
+            //if esc or back button
+            if (KeyPressed(Keys.Escape))
             {
-                if (MathHelper.ClickedOn(MousePosition, new Rectangle(10, y, 100, 20)))
-                {
-                    networking.selectedSessionIndex = i;
-                    networking.JoinGame();
-                }
+                networking.EndSession();
+            }
+
+
+
+            for (int i = 0, y = 100; i < networking.availableSessions.Count; i++, y += 100)
+            {
+                if (LeftMouseButton())
+                    if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280-530, y+200, 100, 20)))
+                    {
+                        networking.selectedSessionIndex = i;
+                        networking.JoinGame();
+                    }
             }
         }
     }

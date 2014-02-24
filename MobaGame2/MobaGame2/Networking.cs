@@ -61,6 +61,11 @@ namespace MobaGame2
                 networkSession.Dispose();
                 networkSession = null;
             }
+            if (availableSessions != null)
+            {
+                availableSessions.Dispose();
+                availableSessions = null;
+            }
         }
         public void SendPackets(PacketType packetType)
         {

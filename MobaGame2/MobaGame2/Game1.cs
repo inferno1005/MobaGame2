@@ -113,6 +113,7 @@ namespace MobaGame2
 
             //ui
             UI.SetPos(SCREENWIDTH, SCREENHEIGHT);
+            UI.ChampIcons = new List<Texture2D>();
 
 
             // TODO: Add your initialization logic here
@@ -172,6 +173,13 @@ namespace MobaGame2
 
             map.texture = Content.Load<Texture2D>(map.texturename);
             UI.mouseTexture = Content.Load<Texture2D>("texture\\pointer");
+            UI.background= Content.Load<Texture2D>("background");
+
+            Texture2D temp;
+            temp=Content.Load<Texture2D>("texture\\FiddlesticksSquare");
+            for(int i=0;i<50;i++)
+                UI.ChampIcons.Add(temp);
+
             //lightmask = Content.Load<Texture2D>("texture\\lightmask");
             lightmask = Content.Load<Texture2D>("texture\\whitemask");
             #endregion
@@ -203,15 +211,18 @@ namespace MobaGame2
                         if (networking.networkSession.SessionState == NetworkSessionState.Lobby)
                             Input.HandleLobbyInput(networking);
                     }
-                    //else if (networking.availableSessions != null)
-                    //{
+                    else if (networking.availableSessions != null)
+                    {
                         // Handle the available sessions input here...
-                            //UI.HandleLobbyInput(Input.MousePosition,networking);
+                            Input.HandleLobbyInput(networking);
                         
-                    //}
+                    }
                     else
                     {
-                        Input.HandleTitleScreenInput(networking);
+                        if (Input.HandleTitleScreenInput(networking))
+                        {
+                            Exit();
+                        }
                     }
                     //player.lastState = currentState;
                 }
@@ -377,13 +388,13 @@ namespace MobaGame2
                     UI.DrawLobby(spriteBatch, font1, networking);
             }
             //if looking for a session
-            //else if (networking.availableSessions != null)
-            //{
-                //UI.DrawAvailableSessions(spriteBatch, font1, networking);
-            //}
+            else if (networking.availableSessions != null)
+            {
+                UI.DrawAvailableSessions(spriteBatch, font1, networking);
+            }
             else
             {
-                UI.DrawTitleScreen(spriteBatch,font1);
+                UI.DrawTitleScreen(spriteBatch,font1,networking);
             }
 
 
