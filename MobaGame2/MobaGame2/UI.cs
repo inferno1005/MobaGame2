@@ -107,6 +107,7 @@ namespace MobaGame2
 
         public static void DrawTitleScreen(SpriteBatch spriteBatch,SpriteFont font)
         {
+            Console.WriteLine("In draw title screen");
             spriteBatch.Begin();
             if (SignedInGamer.SignedInGamers.Count == 0)
             {
@@ -122,19 +123,6 @@ namespace MobaGame2
             spriteBatch.End();
         }
 
-        public static void HandleTitleScreenInput(Vector2 mouse,Networking networking)
-        {
-            //if create session
-            if(MathHelper.ClickedOn(mouse,new Rectangle(10,10,100,20)))
-            {
-                networking.HostGame();
-            }
-            //if finding session
-            if(MathHelper.ClickedOn(mouse,new Rectangle(10,50,100,20)))
-            {
-                networking.FindGame();
-            }
-        }
 
         public static void DrawLobby(SpriteBatch spriteBatch, SpriteFont font,Networking networking)
         {
@@ -162,37 +150,25 @@ namespace MobaGame2
                 y += 100;
             }
 
+            spriteBatch.DrawString(font, "READY", new Vector2(10, 50), Color.White);
+
             spriteBatch.Draw(mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
             spriteBatch.End();
-
         }
 
-        public static void HandleLobbyInput(Networking networking)
+
+        public static void DrawAvailableSessions(SpriteBatch spriteBatch, SpriteFont font,Networking networking)
         {
-            //if pressed
-            {
-                foreach (LocalNetworkGamer gamer in networking.networkSession.LocalGamers)
-                {
-                    gamer.IsReady = true;
-                }
-            }
+            spriteBatch.Begin();
+            spriteBatch.DrawString(font, "Available Sessions",new Vector2(10,10),Color.White);
 
-            //if esc or back button
+            //int selectedSessionIndex = 0;
+            for (int i = 0,y=100; i < networking.availableSessions.Count; i++,y+=100)
             {
-                //networking.networkSession = null;
-                networking.availableSessions = null;
+                spriteBatch.DrawString(font, networking.availableSessions[i].HostGamertag, new Vector2(20, y), Color.White);
             }
-
-            //if everyone is ready start game!
-            if(networking.networkSession!=null && networking.networkSession.IsHost)
-            {
-                if (networking.networkSession.IsEveryoneReady)
-                    networking.networkSession.StartGame();
-            }
-
-            //pump the underlying seesion object
-            if(networking.networkSession!=null)
-                networking.networkSession.Update();
+            spriteBatch.Draw(mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
+            spriteBatch.End();
         }
 
     }

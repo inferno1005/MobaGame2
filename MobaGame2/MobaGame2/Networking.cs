@@ -30,7 +30,8 @@ namespace MobaGame2
         public int selectedSessionIndex;
         public PacketReader packetReader = new PacketReader();
         public PacketWriter packetWriter = new PacketWriter();
-        bool isServer = false;
+        public NetworkSessionState networkSessionState;
+        public bool isServer = false;
 
 
         public void SignedInGamer_SignedIn(object sender, SignedInEventArgs e)
@@ -134,6 +135,7 @@ namespace MobaGame2
                 isServer = true;
                 networkSession.AllowHostMigration = true;
                 networkSession.AllowJoinInProgress= true;
+                networkSessionState = NetworkSessionState.Lobby;
 
                 //gameState= GameState.PlayGame;
             }
@@ -164,6 +166,7 @@ namespace MobaGame2
                     availableSession = availableSessions[selectedSessionIndex];
                 }
                 isServer = false;
+
             }
         }
         public void JoinGame()
@@ -171,6 +174,7 @@ namespace MobaGame2
             if(availableSessions.Count -1 >=selectedSessionIndex)
             {
                 networkSession = NetworkSession.Join(availableSessions[selectedSessionIndex]);
+                networkSessionState = NetworkSessionState.Lobby;
 
                 AddNetworkingEvents();
 

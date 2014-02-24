@@ -201,15 +201,17 @@ namespace MobaGame2
                     if (networking.networkSession != null)
                     {
                         if (networking.networkSession.SessionState == NetworkSessionState.Lobby)
-                            UI.HandleLobbyInput(networking);
+                            Input.HandleLobbyInput(networking);
                     }
-                    else if (networking.availableSessions != null)
-                    {
+                    //else if (networking.availableSessions != null)
+                    //{
                         // Handle the available sessions input here...
-                    }
+                            //UI.HandleLobbyInput(Input.MousePosition,networking);
+                        
+                    //}
                     else
                     {
-                        UI.HandleTitleScreenInput(Input.MousePosition,networking);
+                        Input.HandleTitleScreenInput(networking);
                     }
                     //player.lastState = currentState;
                 }
@@ -368,15 +370,16 @@ namespace MobaGame2
 
         protected override void Draw(GameTime gameTime)
         {
-
-
+            //if in a lobby
             if (networking.networkSession != null)
             {
-                if (networking.networkSession.SessionState == NetworkSessionState.Lobby)
-                    UI.DrawLobby(spriteBatch,font1,networking);
+                if (networking.networkSessionState == NetworkSessionState.Lobby)
+                    UI.DrawLobby(spriteBatch, font1, networking);
             }
+            //if looking for a session
             //else if (networking.availableSessions != null)
             //{
+                //UI.DrawAvailableSessions(spriteBatch, font1, networking);
             //}
             else
             {
@@ -384,10 +387,12 @@ namespace MobaGame2
             }
 
 
-            /*
-            //if in game draw game
-            {
-                DrawMain(gameTime);
+            base.Draw(gameTime);
+        }
+
+        protected void DrawMain(GameTime gameTime)
+        {
+                DrawGame(gameTime);
 
                 DrawFog(gameTime);
 
@@ -406,16 +411,14 @@ namespace MobaGame2
                 UI.Draw(spriteBatch, font1, players[0], Input.MousePosition);
 
                 //draw pointer to be drawn last so its over top everything
-                spriteBatch.Draw(mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
+                spriteBatch.Draw(UI.mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
 
                 spriteBatch.End();
                 #endregion
-            }
-             */
-
-            base.Draw(gameTime);
+                base.Draw(gameTime);
         }
-        protected void DrawMain(GameTime gameTime)
+
+        protected void DrawGame(GameTime gameTime)
         {
             //GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.SetRenderTarget(mainscene);
