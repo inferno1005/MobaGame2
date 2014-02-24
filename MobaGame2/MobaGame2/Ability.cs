@@ -25,44 +25,36 @@ namespace MobaGame2
         public float timer=0f;
         public bool cast=false;
         public bool ghost=false;
-        public Texture castedtexture;
-        public Texture uitexture;
-
-        //public string texturename;
-        //public string iconname;
+        public Texture2D texture;
+        public Texture2D icon;
+        public Vector2 iconSize=new Vector2(90,90);
+        public string texturename;
+        public string iconname;
 
         public Ability()
         {
-            castedtexture = new Texture();
-            uitexture = new Texture();
-
-            this.castedtexture.width = 10;
-            this.castedtexture.height= 10;
-
-            this.uitexture.width = 90;
-            this.uitexture.height= 90;
-
+            this.width = 10;
+            this.height= 10;
             this.attribute.speed = 10;
         }
         public Ability(Ability copy)
         {
-            castedtexture = new Texture();
 
-            this.castedtexture.width = copy.castedtexture.width;
-            this.castedtexture.height= copy.castedtexture.height;
+            this.width = 10;
+            this.height= 10;
             this.attribute.speed = 10;
 
-            this.name=copy.name;
-            this.manaCost=copy.manaCost;
-            this.healthCost=copy.healthCost;
-            this.physicalDamage=copy.physicalDamage;
-            this.magicDamage=copy.magicDamage;
-            this.coolDown = copy.coolDown;
-            this.timer = copy.timer;
-            this.cast = true;
-            this.ghost = false;
-            this.texture=copy.texture;
-            this.texture.name=copy.texture.name;
+            name=copy.name;
+            manaCost=copy.manaCost;
+            healthCost=copy.healthCost;
+            physicalDamage=copy.physicalDamage;
+            magicDamage=copy.magicDamage;
+            coolDown = copy.coolDown;
+            timer = copy.timer;
+            cast = true;
+            ghost = false;
+            texture=copy.texture;
+            texturename=copy.texturename;
         }
         public void Update(GameTime gametime)
         {
@@ -80,11 +72,15 @@ namespace MobaGame2
             //move
             if (focus != null)
             {
-                position.Move(focus.position.center, this.attribute.speed);
+                //Console.WriteLine("Should be moving!");
+                direction = CalcDirection(focus.center);
+                distance -= this.attribute.speed;
+                position += ((float)(this.attribute.speed) * direction);
+                //Console.WriteLine(position);
             }
 
             //we have hit the target , we should apply damage and remove this casted ability 
-            if (position.Distance()< 3)
+            if (distance < 3)
             {
                 if (focus != null && !ghost)
                 {
@@ -102,7 +98,7 @@ namespace MobaGame2
         {
             if (this.attribute.visible)
             {
-                spriteBatch.Draw(this.castedtexture.texture, this.castedtexture.rect, this.castedtexture.color);
+                spriteBatch.Draw(this.texture, this.rect, color);
             }
         }
     }

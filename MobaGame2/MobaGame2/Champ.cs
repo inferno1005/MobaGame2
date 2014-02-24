@@ -47,13 +47,13 @@ namespace MobaGame2
                  */
 
 
-                spriteBatch.Draw(this.texture.texture, this.texture.rect, color);
+                spriteBatch.Draw(this.texture, this.rect, color);
                 foreach (var ability in abilities)
                 {
-                    //if (ability.texture != null && ability.rect != null && ability.color != null)
-                        spriteBatch.Draw(ability.castedtexture.texture, ability.rect, ability.castedtexture.color);
+                    if (ability.texture != null && ability.rect != null && ability.color != null)
+                        spriteBatch.Draw(ability.texture, ability.rect, ability.color);
                 }
-                attribute.Draw(spriteBatch, this.position.position);
+                attribute.Draw(spriteBatch, this.position);
             }
         }
         public void Updater(Rectangle rect,GameTime gametime)
@@ -64,7 +64,7 @@ namespace MobaGame2
             //attack focused object
             if (focus != null && focus.attribute.alive)
             {
-                if (focus.position.distance < this.attribute.range)
+                if (focus.distance < this.attribute.range)
                 {
                     if (!this.abilities[0].cast)
                     {

@@ -15,61 +15,132 @@ namespace MobaGame2
 {
     class GameEntity
     {
+        public Vector2 position;        //current position
+        public Vector2 center           //center of the icon
+        { get { return new Vector2(position.X + (width / (float)2), position.Y + (height / (float)2)); } }
+
         public Attributes attribute;
-        public Movement position;
-        public Texture texture;
-     
+
+        public int height;              //height of this object
+        public int width;               //width of this object
+
+        public Vector2 direction;       //direction from position to destination
+        public Vector2 destination;     //current destination
+        public double distance;         //distance from poisition to destination
+
+
+        //drawing
+        public float rotation=0;        //rotation to draw this texture in
+        public Texture2D texture;       //default texture  for this object
+        public string texturename;      //texture name for this object
+        public Color color=Color.White; //default color for this object, usually white
+
+
         //focus
         public GameEntity focus;        //the focus of this object
 
         //returns a rectangle the shape of this object
         public Rectangle rect
-        { get { return new Rectangle((int)position.position.X, (int)position.position.Y, (int)texture.width, (int)texture.height); } }
+        { get { return new Rectangle((int)position.X, (int)position.Y, (int)width, (int)height); } }
 
 
         public Rectangle visionrect
-        { get { return new Rectangle((int)(position.center.X-this.attribute.visionrange), (int)(position.center.Y-this.attribute.visionrange), (int)(this.attribute.visionrange*2), (int)(this.attribute.visionrange*2)); } }
+        { get { return new Rectangle((int)(center.X-this.attribute.visionrange), (int)(center.Y-this.attribute.visionrange), (int)(this.attribute.visionrange*2), (int)(this.attribute.visionrange*2)); } }
 
 
         public GameEntity()
         {
             attribute = new Attributes();
-            position= new Movement();
-            texture = new Texture();
         }
 
+        //Finds the direction the object needs to move to goto the target location
+        public Vector2 CalcDirection(Vector2 target)
+        {
+            destination = target;
 
+            Vector2 direction = target - this.center;
+
+            distance = Vector2.Distance(this.center, target);
+
+            if (Vector2.Zero == direction)
+            {
+                return Vector2.Zero;
+            }
+            else
+            {
+                return Vector2.Normalize(direction);
+            }
+        }
+
+        //finds the distance from this object to its set destination
+        public double Distance()
+        {
+                return Vector2.Distance(destination, this.position);
+        }
 
         public void Update(Rectangle map)
         {
             #region moving and map bounds
 
             //if focus or within range
-            if (null != focus && this.attribute.range < position.distance)
+            if (null != focus && this.attribute.range < distance)
             {
-                position.CalcDirection(focus.position.center);
-                position.MoveWithinBounds(map,attribute.speed);
+                direction = CalcDirection(focus.center);
+                MoveWithinBounds(map);
             }
 
             //if moving to an object that we want to hit
-            else if (null != focus && position.distance > 0 && this.attribute.range < position.distance)
+            else if (null != focus && distance > 0 && this.attribute.range < distance)
             {
-                position.MoveWithinBounds(map,attribute.speed);
+                MoveWithinBounds(map);
             }
 
             //if moving to a point on the map
-            else if (position.distance > 0 && null == focus)
+            else if (distance > 0 && null == focus)
             {
-                position.MoveWithinBounds(map,attribute.speed);
+                MoveWithinBounds(map);
             }
 
             #endregion
 
             attribute.Update();
 
+            rotation= (float)Math.Atan2(direction.Y, direction.X);
         }
 
         //ensures this object moves only within the map
+        public void MoveWithinBounds(Rectangle map)
+        {
+
+            //check bounds
+            if (MathHelper.Bounds(this.rect, map))
+            {
+                //Console.WriteLine("trying to move!");
+                distance -= this.attribute.speed;
+                position += ((float)(this.attribute.speed )* direction);
+            }
+            //if not push him back in the map
+            else
+            {
+                if ((position.Y + height) >= (map.Y + map.Height))
+                {
+                    position.Y = map.Height + map.Y - height-1;
+                }
+                if (position.Y <= map.Y)
+                {
+                    position.Y = map.Y+1;
+                }
+                if ((position.X + width) >= (map.X + map.Width))
+                {
+                    position.X = map.Width + map.X - width-1;
+                }
+                if (position.X <= map.X)
+                {
+                    position.X = map.X+1;
+                }
+            }
+
+        }
 
         //sets the focus for this object
         public void FocusObject(GameEntity f)
@@ -77,7 +148,7 @@ namespace MobaGame2
             focus = f;
             if (null != focus)
             {
-                 position.CalcDirection(focus.position.center);
+                direction = CalcDirection(focus.center);
             }
         }
 

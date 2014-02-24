@@ -83,7 +83,6 @@
     <Compile Include="Map.cs" />
     <Compile Include="MathHelper.cs" />
     <Compile Include="Minion.cs" />
-    <Compile Include="Movement.cs" />
     <Compile Include="Networking.cs" />
     <Compile Include="NewChamp.cs" />
     <Compile Include="Player.cs" />
@@ -91,7 +90,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Ability.cs" />
-    <Compile Include="Texture.cs" />
     <Compile Include="Tower.cs" />
     <Compile Include="UI.cs" />
   </ItemGroup>

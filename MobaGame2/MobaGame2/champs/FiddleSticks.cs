@@ -19,14 +19,14 @@ namespace MobaGame2
         public FiddleSticks(Map m,List<Ability> ga) : base(m,ga)
         {
             this.Name = "Fiddle Sticks";
-            this.texture.name= "texture\\Fiddle-Pumpkin";
+            this.texturename = "texture\\Fiddle-Pumpkin";
             //this.texturename = "FiddleSticksSquare";
-            this.texture.height = 32;
-            this.texture.width = 64;
+            this.height = 32;
+            this.width = 64;
             this.attribute.range = 250;
             this.attribute.visionrange = 450;
             this.attribute.speed = 5;
-            this.position.position = new Vector2(290, 290);
+            this.position = new Vector2(290, 290);
 
             this.attribute.maxhealth = 1000;
             this.attribute.health = 750;
@@ -45,8 +45,8 @@ namespace MobaGame2
                 this.abilities[i].attribute.visible = false;
 
 
-                this.abilities[0].castedtexture.name= "texture\\fireball";
-                this.abilities[0].uitexture.name= "texture\\fireball";
+                this.abilities[0].texturename = "texture\\fireball";
+                this.abilities[0].iconname = "texture\\fireball";
             }
 
             //this.abilities[0].attribute.speed= 10;

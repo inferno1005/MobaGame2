@@ -38,22 +38,22 @@ namespace MobaGame2
         {
             e.Gamer.Tag = new Player();
         }
-        /*
-                public void CreateSession()
-                {
-                    if(networkSession!=null)
-                        networkSession.Dispose();
-                    networkSession = NetworkSession.Create(NetworkSessionType.SystemLink, 1, 10, 2, null);
+/*
+        public void CreateSession()
+        {
+            if(networkSession!=null)
+                networkSession.Dispose();
+            networkSession = NetworkSession.Create(NetworkSessionType.SystemLink, 1, 10, 2, null);
 
-                    if (networkSession == null)
-                        Console.WriteLine("failed to create session");
+            if (networkSession == null)
+                Console.WriteLine("failed to create session");
 
-                    networkSession.AllowHostMigration = true;
-                    networkSession.AllowJoinInProgress= true;
+            networkSession.AllowHostMigration = true;
+            networkSession.AllowJoinInProgress= true;
 
-                    AddNetworkingEvents();
-                }
-        */
+            AddNetworkingEvents();
+        }
+*/
         public void EndSession()
         {
             if (networkSession != null)
@@ -81,7 +81,7 @@ namespace MobaGame2
                         }
 
 
-                        break;
+                    break;
                     }
             }
         }
@@ -104,7 +104,7 @@ namespace MobaGame2
             }
         }
         public void SignIn()
-        {
+       {
             if (!Guide.IsVisible)
             {
                 Guide.ShowSignIn(1, false);
@@ -129,7 +129,7 @@ namespace MobaGame2
                 int maximumLocalPlayers = 1;
 
 
-                networkSession = NetworkSession.Create(
+                networkSession= NetworkSession.Create(
                         NetworkSessionType.SystemLink,
                         maximumLocalPlayers,
                         maximumGamers,
@@ -139,7 +139,7 @@ namespace MobaGame2
 
                 isServer = true;
                 networkSession.AllowHostMigration = true;
-                networkSession.AllowJoinInProgress = true;
+                networkSession.AllowJoinInProgress= true;
                 networkSessionState = NetworkSessionState.Lobby;
 
                 //gameState= GameState.PlayGame;
@@ -176,7 +176,7 @@ namespace MobaGame2
         }
         public void JoinGame()
         {
-            if (availableSessions.Count - 1 >= selectedSessionIndex)
+            if(availableSessions.Count -1 >=selectedSessionIndex)
             {
                 networkSession = NetworkSession.Join(availableSessions[selectedSessionIndex]);
                 networkSessionState = NetworkSessionState.Lobby;
@@ -189,36 +189,36 @@ namespace MobaGame2
         }
         public void Update()
         {
-            if (networkSession != null)
+            if(networkSession!=null)
             {
                 networkSession.Update();
             }
         }
 
-
+        
         protected void AddNetworkingEvents()
         {
             networkSession.GamerJoined += new EventHandler<GamerJoinedEventArgs>(networkSession_GamerJoined);
-            networkSession.GamerLeft += new EventHandler<GamerLeftEventArgs>(networkSession_GamerLeft);
-            networkSession.GameStarted += new EventHandler<GameStartedEventArgs>(networkSession_GameStarted);
-            networkSession.GameEnded += new EventHandler<GameEndedEventArgs>(networkSession_GameEnded);
-            networkSession.SessionEnded += new EventHandler<NetworkSessionEndedEventArgs>(networkSession_SessionEnded);
+            networkSession.GamerLeft+= new EventHandler<GamerLeftEventArgs>(networkSession_GamerLeft);
+            networkSession.GameStarted+= new EventHandler<GameStartedEventArgs>(networkSession_GameStarted);
+            networkSession.GameEnded+= new EventHandler<GameEndedEventArgs>(networkSession_GameEnded);
+            networkSession.SessionEnded+= new EventHandler<NetworkSessionEndedEventArgs>(networkSession_SessionEnded);
         }
         protected void RemoveNetworkingEvents()
         {
 
             networkSession.GamerJoined -= new EventHandler<GamerJoinedEventArgs>(networkSession_GamerJoined);
-            networkSession.GamerLeft -= new EventHandler<GamerLeftEventArgs>(networkSession_GamerLeft);
-            networkSession.GameStarted -= new EventHandler<GameStartedEventArgs>(networkSession_GameStarted);
-            networkSession.GameEnded -= new EventHandler<GameEndedEventArgs>(networkSession_GameEnded);
-            networkSession.SessionEnded -= new EventHandler<NetworkSessionEndedEventArgs>(networkSession_SessionEnded);
+            networkSession.GamerLeft-= new EventHandler<GamerLeftEventArgs>(networkSession_GamerLeft);
+            networkSession.GameStarted-= new EventHandler<GameStartedEventArgs>(networkSession_GameStarted);
+            networkSession.GameEnded-= new EventHandler<GameEndedEventArgs>(networkSession_GameEnded);
+            networkSession.SessionEnded-= new EventHandler<NetworkSessionEndedEventArgs>(networkSession_SessionEnded);
         }
 
 
 
         //private void HookSessionEvents()
         //{
-        //networkSession.GamerJoined += new EventHandler<GamerJoinedEventArgs>(networkSession_GamerJoined);
+            //networkSession.GamerJoined += new EventHandler<GamerJoinedEventArgs>(networkSession_GamerJoined);
         //}
         private void networkSession_GamerJoined(object sender, GamerJoinedEventArgs e)
         {

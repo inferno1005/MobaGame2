@@ -116,12 +116,12 @@ namespace MobaGame2
                 }
 
 
-                spritebatch.Draw(player.champ.abilities[i].uitexture.texture,
+                spritebatch.Draw(player.champ.abilities[i].icon,
                 new Rectangle(
-                    (int)abilityPos.X + (int)(i * player.champ.abilities[i].uitexture.width),
+                    (int)abilityPos.X + (int)(i * player.champ.abilities[i].iconSize.X),
                     (int)abilityPos.Y,
-                     (int)player.champ.abilities[i].uitexture.width,
-                     (int)player.champ.abilities[i].uitexture.width),
+                     (int)player.champ.abilities[i].iconSize.X,
+                     (int)player.champ.abilities[i].iconSize.Y),
                     color);
             abilityPos.X += 2;
             }

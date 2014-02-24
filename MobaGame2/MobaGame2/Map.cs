@@ -23,12 +23,12 @@ namespace MobaGame2
 
         public Map()
         {
-            this.position.position = new Vector2(30, 30);
+            this.position = new Vector2(30, 30);
             this.attribute.clickable = true;
 
-            this.texture.height = 800;
-            this.texture.width = 5000;
-            this.texture.name= "texture\\seamless_ground";
+            this.height = 800;
+            this.width = 5000;
+            texturename = "texture\\seamless_ground";
         }
     }
 }
