@@ -93,8 +93,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="texture\turret.png">
-      <Name>turret</Name>
+    <Compile Include="texture\tower.png">
+      <Name>tower</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

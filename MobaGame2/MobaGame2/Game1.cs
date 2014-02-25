@@ -125,7 +125,7 @@ namespace MobaGame2
             abilities = new List<Ability>();
 
             towers = new List<Tower>();
-            towers.Add(new Tower());
+            towers.Add(new Tower(map,abilities));
 
 
             players[0].champ = new FiddleSticks(map,abilities);
@@ -169,10 +169,11 @@ namespace MobaGame2
                 Minion.abilities[0].texture = Content.Load<Texture2D>(Minion.abilities[0].texturename);
             }
 
-            //foreach (var tower in Towers)
-            //{
-            //tower.texture = Content.Load<Texture2D>(tower.texturename);
-            //}
+            foreach (var tower in towers)
+            {
+                tower.texture = Content.Load<Texture2D>(tower.texturename);
+                tower.abilities[0].texture = Content.Load<Texture2D>(tower.abilities[0].texturename);
+            }
 
 
             map.texture = Content.Load<Texture2D>(map.texturename);
@@ -374,6 +375,19 @@ namespace MobaGame2
                 }
             }
 
+            for (int i = 0; i < towers.Count; i++)
+            {
+
+                foreach (var minion in minions)
+                {
+                    minions[i].Agro(minion);
+                }
+                foreach (var player in players)
+                {
+                    minions[i].Agro(player.champ);
+                }
+            }
+
             for (int i = 0; i < abilities.Count; i++)
             {
                 abilities[i].Update(gameTime);
@@ -494,6 +508,10 @@ namespace MobaGame2
             foreach (var minion in minions)
                 minion.Draw(spriteBatch, drawcolor);
 
+            //tower
+            foreach (var tower in towers)
+                tower.Draw(spriteBatch, drawcolor);
+
             //draw abilities
             foreach (var ability in abilities)
                 ability.Draw(spriteBatch, drawcolor);
@@ -588,6 +606,9 @@ namespace MobaGame2
             //draw minion 
             foreach (var minion in minions)
                 spriteBatch.Draw(lightmask, minion.visionrect, Color.White);
+
+            foreach (var tower in towers)
+                spriteBatch.Draw(lightmask, tower.visionrect, Color.White);
 
             spriteBatch.End();
             #endregion
