@@ -33,6 +33,10 @@ namespace MobaGame2
 
         public void Updater(GameTime gametime)
         {
+            if (focus!=null && !focus.attribute.alive)
+            {
+                FocusObject(null);
+            }
             this.Update(rect);
             BasicAttack();
 
@@ -87,25 +91,24 @@ namespace MobaGame2
                 globalabilities.Add(temp);
             }
         }
-        public void Q()
-        {
 
+        public void ability()
+        {
             if (focus != null &&        //if focused on object
                 focus.distance < this.attribute.range && //if in range
-                !this.abilities[0].cast) //if timer is good
+                !this.abilities[activeability].cast) //if timer is good
             {
-                this.abilities[0].cast = true;
-                this.abilities[0].position = this.position;
-                this.abilities[0].focus = this.focus;
-                this.abilities[0].attribute.visible = true;
-                Ability temp = new Ability(this.abilities[0]);
+                this.abilities[activeability].cast = true;
+                this.abilities[activeability].position = this.position;
+                this.abilities[activeability].focus = this.focus;
+                this.abilities[activeability].attribute.visible = true;
+                Ability temp = new Ability(this.abilities[activeability]);
                 temp.position = this.position;
                 temp.focus = this.focus;
 
-
                 globalabilities.Add(temp);
             }
-
         }
+
     }
 }

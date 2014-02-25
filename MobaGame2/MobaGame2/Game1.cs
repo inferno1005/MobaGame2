@@ -251,44 +251,15 @@ namespace MobaGame2
                 //right click
                 if (Input.RightMouseButton() && players[0].champ.attribute.alive)
                 {
-                    foundobject = false;
 
                     //prefer plays over other objects, because they can kill you!
-                    foreach (var player in players)
-                    {
-                        if (!foundobject)
-                        {
-                            if (MathHelper.ClickedOn(Input.MousePosition + camera.position, player.champ.rect))
-                            {
-                                //focus this player
-                                foundobject = true;
-                            }
-                        }
-                    }
+                    players[0].champ.FocusObject(Input.FindUnderMouse(camera, players, minions, towers));
 
-
-                    if (!foundobject)
-                        foreach (var minion in minions)
-                        {
-                            if (!foundobject)
-                                if (MathHelper.ClickedOn(Input.MousePosition + camera.position, minion.rect))
-                                {
-                                    foundobject = true;
-                                    players[0].champ.FocusObject(minion);
-                                    if (players[0].champ.abilities[0].cast)
-                                    {
-                                        Console.WriteLine("CASTED");
-                                    }
-                                }
-
-                        }
-
-
-                    if (!foundobject)
+                    if (players[0].champ.focus == null)
                         if (MathHelper.ClickedOn(Input.MousePosition + camera.position, map.rect))
                         {
                             players[0].champ.direction = players[0].champ.CalcDirection(Input.MousePosition + camera.position);
-                            players[0].champ.FocusObject(null);
+                            //players[0].champ.FocusObject(null);
 
                         }
                 }
@@ -331,9 +302,36 @@ namespace MobaGame2
                 }
 
             }
+
             if (Input.KeyPressed(Keys.Q))
             {
-                players[0].champ.Q();
+                players[0].champ.activeability = 1;
+                players[0].champ.ability();
+            }
+            if (Input.KeyPressed(Keys.W))
+            {
+                players[0].champ.activeability = 2;
+                players[0].champ.ability();
+            }
+            if (Input.KeyPressed(Keys.E))
+            {
+                players[0].champ.activeability = 3;
+                players[0].champ.ability();
+            }
+            if (Input.KeyPressed(Keys.R))
+            {
+                players[0].champ.activeability = 4;
+                players[0].champ.ability();
+            }
+            if (Input.KeyPressed(Keys.D))
+            {
+                players[0].champ.activeability = 5;
+                players[0].champ.ability();
+            }
+            if (Input.KeyPressed(Keys.F))
+            {
+                players[0].champ.activeability = 6;
+                players[0].champ.ability();
             }
 
             //display menu
@@ -402,10 +400,12 @@ namespace MobaGame2
             {
                 UI.DrawAvailableSessions(spriteBatch, font1, networking);
             }
+            else
             {
                 //UI.DrawTitleScreen(spriteBatch,font1,networking);
                 DrawMain(gameTime);
             }
+
 
 
             base.Draw(gameTime);

@@ -132,5 +132,41 @@ namespace MobaGame2
                     }
             }
         }
+
+        public static GameEntity FindUnderMouse(
+            Camera camera,
+            List<Player> players,
+            List<Minion> minions,
+            List<Tower> towers)
+        {
+            foreach (var player in players)
+            {
+                if (MathHelper.ClickedOn(Input.MousePosition + camera.position, player.champ.rect))
+                {
+                    //focus this player
+                    return player.champ;
+                }
+            }
+
+
+            
+            foreach (var minion in minions)
+            {
+                if (MathHelper.ClickedOn(Input.MousePosition + camera.position, minion.rect))
+                {
+                    return minion;
+                }
+
+            }
+            foreach (var tower in towers)
+            {
+                if (MathHelper.ClickedOn(Input.MousePosition + camera.position, tower.rect))
+                {
+                    return tower;
+                }
+
+            }
+            return null;
+        }
     }
 }
