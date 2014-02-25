@@ -33,11 +33,14 @@ namespace MobaGame2
 
         public void Updater(GameTime gametime)
         {
+            //make sure we arent attacking a dead thing
             if (focus!=null && !focus.attribute.alive)
             {
                 FocusObject(null);
             }
+
             this.Update(rect);
+
             BasicAttack();
 
             if (this.attribute.health < 0)
@@ -94,9 +97,9 @@ namespace MobaGame2
 
         public void ability()
         {
-            if (focus != null &&        //if focused on object
+            if (focus != null &&                         //if focused on object
                 focus.distance < this.attribute.range && //if in range
-                !this.abilities[activeability].cast) //if timer is good
+                !this.abilities[activeability].cast)     //if timer is good
             {
                 this.abilities[activeability].cast = true;
                 this.abilities[activeability].position = this.position;

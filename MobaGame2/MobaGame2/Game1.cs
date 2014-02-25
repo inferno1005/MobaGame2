@@ -158,8 +158,8 @@ namespace MobaGame2
                 Player.champ.attribute.texture = Content.Load<Texture2D>(Player.champ.attribute.texturename);
                 for (int i = 0; i < 7; i++)
                 {
-                    Player.champ.abilities[i].texture = Content.Load<Texture2D>(Player.champ.abilities[0].texturename);
-                    Player.champ.abilities[i].icon = Content.Load<Texture2D>(Player.champ.abilities[0].iconname);
+                    Player.champ.abilities[i].texture = Content.Load<Texture2D>(Player.champ.abilities[i].texturename);
+                    Player.champ.abilities[i].icon = Content.Load<Texture2D>(Player.champ.abilities[i].iconname);
                 }
             }
 
@@ -238,10 +238,6 @@ namespace MobaGame2
 
         protected void GameUpdate(GameTime gameTime)
         {
-            //Input.Update();
-            bool foundobject;
-
-
             #region controls
             //right button selects and targets, if not on anything but map, moves there
             #region mouse
@@ -306,16 +302,20 @@ namespace MobaGame2
             if (Input.KeyPressed(Keys.Q))
             {
                 players[0].champ.activeability = 1;
+
+                players[0].champ.FocusObject(Input.FindUnderMouse(camera, players, minions, towers));
                 players[0].champ.ability();
             }
             if (Input.KeyPressed(Keys.W))
             {
                 players[0].champ.activeability = 2;
+                players[0].champ.FocusObject(Input.FindUnderMouse(camera, players, minions, towers));
                 players[0].champ.ability();
             }
             if (Input.KeyPressed(Keys.E))
             {
                 players[0].champ.activeability = 3;
+                players[0].champ.FocusObject(Input.FindUnderMouse(camera, players, minions, towers));
                 players[0].champ.ability();
             }
             if (Input.KeyPressed(Keys.R))

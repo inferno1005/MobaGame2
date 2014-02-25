@@ -45,9 +45,51 @@ namespace MobaGame2
                 this.abilities[i].attribute.visible = false;
 
 
-                this.abilities[0].texturename = "texture\\fireball";
-                this.abilities[0].iconname = "texture\\fireball";
+                this.abilities[i].texturename = "texture\\fireball";
+                this.abilities[i].iconname = "texture\\fireball";
             }
+
+
+
+            this.abilities[1].name = "Terrify";
+            this.abilities[1].attribute.range = this.attribute.range;
+            this.abilities[1].physicalDamage = this.attribute.attackDamage;
+            this.abilities[1].magicDamage = 0;
+            this.abilities[1].coolDown = 3;
+            this.abilities[1].attribute.visible = false;
+            this.abilities[1].texturename = "texture\\fiddlesticks-terrify";
+            this.abilities[1].iconname = "texture\\fiddlesticks-terrify";
+
+            this.abilities[2].name = "Drain";
+            this.abilities[2].attribute.range = this.attribute.range;
+            this.abilities[2].physicalDamage = this.attribute.attackDamage;
+            this.abilities[2].magicDamage = 0;
+            this.abilities[2].coolDown = 3;
+            this.abilities[2].attribute.visible = false;
+            this.abilities[2].texturename = "texture\\fiddlesticks-drain";
+            this.abilities[2].iconname = "texture\\fiddlesticks-drain";
+
+            this.abilities[3].name = "Dark Wind";
+            this.abilities[3].attribute.range = this.attribute.range;
+            this.abilities[3].physicalDamage = this.attribute.attackDamage;
+            this.abilities[3].magicDamage = 0;
+            this.abilities[3].coolDown = 3;
+            this.abilities[3].attribute.visible = false;
+            this.abilities[3].texturename = "texture\\fiddlesticks-dark-wind";
+            this.abilities[3].iconname = "texture\\fiddlesticks-dark-wind";
+
+            this.abilities[4].name = "Crow Storm";
+            this.abilities[4].attribute.range = this.attribute.range;
+            this.abilities[4].physicalDamage = this.attribute.attackDamage;
+            this.abilities[4].magicDamage = 0;
+            this.abilities[4].coolDown = 3;
+            this.abilities[4].attribute.visible = false;
+            this.abilities[4].texturename = "texture\\fiddlesticks-crowstorm";
+            this.abilities[4].iconname = "texture\\fiddlesticks-crowstorm";
+
+
+
+
 
             //this.abilities[0].attribute.speed= 10;
 

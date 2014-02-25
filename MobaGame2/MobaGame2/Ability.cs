@@ -23,6 +23,7 @@ namespace MobaGame2
         public double magicDamage;
         public float coolDown=2f;
         public float timer=0f;
+        public float cooldowntimer { get { return coolDown - timer; } }
         public bool cast=false;
         public bool ghost=false;
         public Texture2D texture;
