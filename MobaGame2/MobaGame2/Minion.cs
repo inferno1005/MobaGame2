@@ -51,6 +51,13 @@ namespace MobaGame2
         }
         public void Updater(Rectangle rect, GameTime gametime)
         {
+            if (focus != null && !focus.attribute.alive)
+            {
+                FocusObject(null);
+            }
+
+
+
 
             this.Update(rect);
             attribute.Update();

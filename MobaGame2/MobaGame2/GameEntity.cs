@@ -78,6 +78,12 @@ namespace MobaGame2
                 return Vector2.Distance(destination, this.position);
         }
 
+        public double Distance(Vector2 target)
+        {
+
+                return Vector2.Distance(target, this.position);
+        }
+
         public void Update(Rectangle map)
         {
             #region moving and map bounds

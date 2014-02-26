@@ -21,7 +21,7 @@ namespace MobaGame2
         public int activeability;
 
         private Map map;
-        private List<Ability> globalabilities;
+        protected List<Ability> globalabilities;
 
         public NewChamp(Map m,List<Ability> ga)
         {
@@ -78,10 +78,11 @@ namespace MobaGame2
 
         public void BasicAttack()
         {
-            if (focus != null &&        //if focused on object
-                focus.distance < this.attribute.range && //if in range
+            if (this.focus != null &&        //if focused on object
+                this.focus.Distance(this.position)< this.attribute.range && //if in range
                 !this.abilities[0].cast) //if timer is good
             {
+                Console.WriteLine("{2}range checker {0} < {1}", focus.distance ,this.attribute.range,focus.texturename);
                 this.abilities[0].cast = true;
                 this.abilities[0].position= this.position;
                 this.abilities[0].focus= this.focus;

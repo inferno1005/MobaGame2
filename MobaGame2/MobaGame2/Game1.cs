@@ -378,13 +378,15 @@ namespace MobaGame2
             for (int i = 0; i < towers.Count; i++)
             {
 
+                towers[i].Updater(map.rect, gameTime);
+
                 foreach (var minion in minions)
                 {
-                    minions[i].Agro(minion);
+                    towers[i].Agro(minion);
                 }
                 foreach (var player in players)
                 {
-                    minions[i].Agro(player.champ);
+                    towers[i].Agro(player.champ);
                 }
             }
 
