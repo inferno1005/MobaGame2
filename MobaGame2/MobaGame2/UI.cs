@@ -39,6 +39,12 @@ namespace MobaGame2
         private static int width;
         private static int height;
 
+        //fps
+        private static float fps;
+        private static float updateInterval = 1.0f;
+        private static float timeSinceLastUpdate = 0.0f;
+        private static float framecount = 0;
+
 
         static public void SetPos(int w,int h)
         {
@@ -61,12 +67,12 @@ namespace MobaGame2
             menusize = new Vector2(width - 80, height - 80);
         }
 
-        static public void Draw(SpriteBatch spritebatch,SpriteFont font,Player player,Vector2 mousepos)
+        static public void Draw(SpriteBatch spritebatch,SpriteFont font,Player player,Vector2 mousepos,GameTime gametime)
         {
+            #region bars
             int healthbarpercent = (int)(barwidth*((player.champ.attribute.Health / player.champ.attribute.maxhealth)));
             int manabarpercent = (int)(barwidth*((player.champ.attribute.mana/ player.champ.attribute.maxmana)));
 
-            #region bars
             //draw healh bars  
             spritebatch.Draw(player.champ.attribute.texture, new Rectangle((int)healthpos.X, (int)healthpos.Y ,barwidth , 20), Color.Black);
             spritebatch.Draw(player.champ.attribute.texture,
@@ -101,10 +107,10 @@ namespace MobaGame2
                 spritebatch.DrawString(font, ((int)player.champ.attribute.mana).ToString(), new Vector2( manapos.X, manapos.Y - 3), Color.White);
             #endregion
 
+            #region abilities
             Color color;
 
             abilityPos=new Vector2(300,height-100);
-            #region abilities
             //for(int i=0;i<player.champ.abilities.Count;i++)
             for(int i=0;i<player.champ.abilities.Count;i++)
             {
@@ -127,6 +133,24 @@ namespace MobaGame2
             }
 
             #endregion
+
+
+            #region fps
+
+            float elapsed = (float)gametime.ElapsedGameTime.TotalSeconds;
+
+            framecount++;
+            timeSinceLastUpdate += elapsed;
+            if (timeSinceLastUpdate > updateInterval)
+            {
+                fps = framecount / timeSinceLastUpdate;
+                spritebatch.DrawString(font, fps.ToString(), new Vector2(width - 40, 10),Color.White);
+                framecount = 0;
+                timeSinceLastUpdate -= updateInterval;
+            }
+
+            #endregion
+
             //draw options menu
             if (escMenuOpen)
             {
@@ -166,7 +190,6 @@ namespace MobaGame2
 
         public static void DrawLobby(SpriteBatch spriteBatch, SpriteFont font,Networking networking)
         {
-            Console.WriteLine("In draw lobby");
             spriteBatch.Begin();
             spriteBatch.Draw(background, new Rectangle(0,0,width,height), Color.White);
 
@@ -205,6 +228,9 @@ namespace MobaGame2
             spriteBatch.Begin();
             spriteBatch.Draw(background, new Rectangle(0,0,width,height), Color.White);
             spriteBatch.DrawString(font, "Available Sessions", new Vector2(width - 530, 200), Color.White);
+
+            if(networking.availableSessions.Count==0)
+                spriteBatch.DrawString(font, "No Sessions", new Vector2(width - 530, 300), Color.White);
 
             //int selectedSessionIndex = 0;
             for (int i = 0,y=100; i < networking.availableSessions.Count; i++,y+=100)

@@ -70,6 +70,9 @@ namespace MobaGame2
         String buffer;
 
         Color drawcolor;
+
+
+        bool GameStarted = false;
         #endregion
 
 
@@ -222,17 +225,20 @@ namespace MobaGame2
                             Input.HandleLobbyInput(networking);
                         
                     }
-                    else
+                    else if (!GameStarted)
                     {
-                        if (Input.HandleTitleScreenInput(networking))
+                        if (Input.HandleTitleScreenInput(networking,GameStarted))
                         {
                             Exit();
                         }
                     }
+                    else
+                    {
+                        GameUpdate(gameTime);
+                    }
                     //player.lastState = currentState;
                 }
             }
-            //GameUpdate(gameTime);
             base.Update(gameTime);
         }
 
@@ -415,10 +421,13 @@ namespace MobaGame2
             {
                 UI.DrawAvailableSessions(spriteBatch, font1, networking);
             }
+            else if (!GameStarted)
+            {
+                UI.DrawTitleScreen(spriteBatch, font1, networking);
+            }
             else
             {
-                UI.DrawTitleScreen(spriteBatch,font1,networking);
-                //DrawMain(gameTime);
+                DrawMain(gameTime);
             }
 
 
@@ -444,7 +453,7 @@ namespace MobaGame2
                 #region interface
                 spriteBatch.Begin();
 
-                UI.Draw(spriteBatch, font1, players[0], Input.MousePosition);
+                UI.Draw(spriteBatch, font1, players[0], Input.MousePosition,gameTime);
 
                 //draw pointer to be drawn last so its over top everything
                 spriteBatch.Draw(UI.mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);

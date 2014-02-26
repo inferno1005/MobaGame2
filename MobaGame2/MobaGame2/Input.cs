@@ -45,7 +45,7 @@ namespace MobaGame2
         public static bool LeftMouseButton()
         { return lastmousesState.LeftButton== ButtonState.Pressed && mouseState.LeftButton== ButtonState.Released; }
 
-        public static bool HandleTitleScreenInput(Networking networking)
+        public static bool HandleTitleScreenInput(Networking networking,bool startgame)
         {
             //if create session
             if (LeftMouseButton())

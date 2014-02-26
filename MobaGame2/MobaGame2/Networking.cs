@@ -164,7 +164,8 @@ namespace MobaGame2
                 availableSessions = NetworkSession.Find(
                     NetworkSessionType.SystemLink,
                     maximumLocalPlayers,
-                    searchProperties);
+                    //searchProperties);
+                    null);
 
                 if (availableSessions.Count != 0)
                 {
