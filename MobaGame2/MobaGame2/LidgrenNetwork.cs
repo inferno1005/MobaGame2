@@ -20,6 +20,7 @@ namespace MobaGame2
         }
         public void HostGame()
         {
+            Console.WriteLine("HOSTING GAME");
             config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
             server = new NetServer(config);
             server.Start();
@@ -45,6 +46,7 @@ namespace MobaGame2
         }
         public void FindGame()
         {
+            client = new NetClient(config);
             client.DiscoverLocalPeers(port);
 
             NetIncomingMessage inc;

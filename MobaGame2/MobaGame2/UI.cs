@@ -169,15 +169,14 @@ namespace MobaGame2
         }
 
 
-        public static void DrawTitleScreen(SpriteBatch spriteBatch,SpriteFont font,Networking networking)
+        public static void DrawTitleScreen(SpriteBatch spriteBatch,SpriteFont font,LidgrenNetwork networking)
         {
             spriteBatch.Begin();
             spriteBatch.Draw(background, new Rectangle(0,0,width,height), Color.White);
-            if (SignedInGamer.SignedInGamers.Count == 0)
-            {
-                networking.SignIn();
-            }
-            else
+            ///if (SignedInGamer.SignedInGamers.Count == 0)
+            ///{
+                //////networking.SignIn();
+            ///}
             {
                 spriteBatch.DrawString(font, "Create New Lobby", new Vector2(width-530, 200), Color.White);
                 spriteBatch.DrawString(font, "Find a game", new Vector2(width-530, 250), Color.White);

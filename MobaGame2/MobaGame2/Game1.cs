@@ -82,13 +82,13 @@ namespace MobaGame2
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             this.IsFixedTimeStep = false;
-            networking = new Networking();
+            networking = new LidgrenNetwork();
 
             // add gamer services
             Components.Add(new GamerServicesComponent(this));
 
             //respond to the signed in gamer event
-            SignedInGamer.SignedIn += new EventHandler<SignedInEventArgs>(networking.SignedInGamer_SignedIn);
+            //SignedInGamer.SignedIn += new EventHandler<SignedInEventArgs>(networking.SignedInGamer_SignedIn);
         }
 
         protected override void Initialize()
@@ -202,7 +202,7 @@ namespace MobaGame2
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
-            networking.EndSession();
+            //networking.EndSession();
         }
 
         protected override void Update(GameTime gameTime)
@@ -215,6 +215,7 @@ namespace MobaGame2
                 foreach (SignedInGamer signedInGamer in SignedInGamer.SignedInGamers)
                 {
 
+                    /*
                     if (networking.networkSession != null)
                     {
                         if (networking.networkSession.SessionState == NetworkSessionState.Lobby)
@@ -228,10 +229,10 @@ namespace MobaGame2
                     }
                     else if (!GameStarted)
                     {
-                        if (Input.HandleTitleScreenInput(networking,GameStarted))
-                        {
-                            Exit();
-                        }
+                     */
+                    if (Input.HandleTitleScreenInput(networking,GameStarted))
+                    {
+                        Exit();
                     }
                     else
                     {
@@ -411,6 +412,7 @@ namespace MobaGame2
 
         protected override void Draw(GameTime gameTime)
         {
+            /*
             //if in a lobby
             if (networking.networkSession != null)
             {
@@ -422,7 +424,8 @@ namespace MobaGame2
             {
                 UI.DrawAvailableSessions(spriteBatch, font1, networking);
             }
-            else if (!GameStarted)
+                */
+            if (!GameStarted)
             {
                 UI.DrawTitleScreen(spriteBatch, font1, networking);
             }
