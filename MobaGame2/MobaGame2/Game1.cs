@@ -224,16 +224,15 @@ namespace MobaGame2
                     }
                     else
                     {
-                        /*
                         if (Input.HandleTitleScreenInput(networking))
                         {
                             Exit();
-                        }*/
+                        }
                     }
                     //player.lastState = currentState;
                 }
             }
-            GameUpdate(gameTime);
+            //GameUpdate(gameTime);
             base.Update(gameTime);
         }
 
@@ -418,8 +417,8 @@ namespace MobaGame2
             }
             else
             {
-                //UI.DrawTitleScreen(spriteBatch,font1,networking);
-                DrawMain(gameTime);
+                UI.DrawTitleScreen(spriteBatch,font1,networking);
+                //DrawMain(gameTime);
             }
 
 
