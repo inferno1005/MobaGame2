@@ -11,17 +11,18 @@ namespace MobaGame2
         public NetPeerConfiguration config;
         private NetServer server;
         private NetClient client;
-        private int port = 14242;
+        //private int port = 14242;
         
         public LidgrenNetwork()
         {
             config = new NetPeerConfiguration("MOBA");
-            config.Port = port;
+            config.Port = 14242;
+
         }
         public void HostGame()
         {
             Console.WriteLine("HOSTING GAME");
-            config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
+            config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
             server = new NetServer(config);
             server.Start();
 
@@ -44,11 +45,15 @@ namespace MobaGame2
 
 
         }
+
         public void FindGame()
         {
+            config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
             client = new NetClient(config);
             client.DiscoverLocalPeers(port);
+            client.Start();
 
+            Console.WriteLine("trying to find game");
             NetIncomingMessage inc;
             while((inc=client.ReadMessage()) !=null)
             {
@@ -59,6 +64,16 @@ namespace MobaGame2
                         break;
                 }
             }
+        }
+
+        public void ConnectToHost()
+        {
+            Console.WriteLine("Trying to connect to host");
+            client = new NetClient(config);
+            client.Start();
+            NetOutgoingMessage outmsg=client.CreateMessage();
+            outmsg.Write("TEST");
+            client.Connect("192.168.43.147",port,outmsg);
         }
 
 

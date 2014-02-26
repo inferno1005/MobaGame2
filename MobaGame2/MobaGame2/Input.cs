@@ -57,6 +57,7 @@ namespace MobaGame2
                 //if finding session
                 if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280-530, 250, 100, 20)))
                 {
+                    //networking.ConnectToHost();
                     networking.FindGame();
                 }
             }
