@@ -17,6 +17,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
+using Lidgren.Network;
 
 
 
@@ -30,7 +31,7 @@ namespace MobaGame2
         //needed
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Networking networking;
+        LidgrenNetwork networking;
 
         //screen
         int SCREENHEIGHT = 720;

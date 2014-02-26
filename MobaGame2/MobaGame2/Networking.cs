@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
+using Lidgren.Network;
 
 
 
@@ -163,10 +164,11 @@ namespace MobaGame2
 
                 availableSessions = NetworkSession.Find(
                     NetworkSessionType.SystemLink,
-                    maximumLocalPlayers,
+                    1,
                     //searchProperties);
                     null);
 
+                Console.WriteLine("Count of sessions  {0}", availableSessions.Count);
                 if (availableSessions.Count != 0)
                 {
                     availableSession = availableSessions[selectedSessionIndex];
