@@ -11,7 +11,7 @@ namespace MobaGame2
         public NetPeerConfiguration config;
         private NetServer server;
         private NetClient client;
-        //private int port = 14242;
+        private int port = 14242;
         
         public LidgrenNetwork()
         {
