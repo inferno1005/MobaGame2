@@ -30,6 +30,7 @@ namespace MobaGame2
 
             while ((inc = server.ReadMessage()) != null)
             {
+                Console.WriteLine("GOT A MESSAGE");
                 switch (inc.MessageType)
                 {
                     case NetIncomingMessageType.DiscoveryRequest:
@@ -48,15 +49,17 @@ namespace MobaGame2
 
         public void FindGame()
         {
-            config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
+            client = null;
+            config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
             client = new NetClient(config);
-            client.DiscoverLocalPeers(port);
+            client.DiscoverLocalPeers(14242);
             client.Start();
 
             Console.WriteLine("trying to find game");
             NetIncomingMessage inc;
             while((inc=client.ReadMessage()) !=null)
             {
+                Console.WriteLine("GOT A MESSAGE");
                 switch(inc.MessageType)
                 {
                     case NetIncomingMessageType.DiscoveryResponse:
