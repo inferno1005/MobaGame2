@@ -8,54 +8,84 @@ namespace MobaGame2
 {
     class LidgrenNetwork
     {
-        public NetPeerConfiguration config;
+        public NetPeerConfiguration sconf;
+        public NetPeerConfiguration cconf;
         private NetServer server;
         private NetClient client;
         private int port = 14242;
+
+        public bool isServer = false;
+        public bool searching= false;
         
         public LidgrenNetwork()
         {
-            config = new NetPeerConfiguration("MOBA");
-            config.Port = 14242;
+            sconf= new NetPeerConfiguration("MOBA");
+            sconf.Port = 8080;
+            sconf.EnableMessageType(NetIncomingMessageType.DiscoveryRequest );
+            sconf.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
 
+
+
+            cconf= new NetPeerConfiguration("MOBA");
+            cconf.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
+
+            //client = new NetClient(config);
         }
         public void HostGame()
         {
+            isServer = true;
             Console.WriteLine("HOSTING GAME");
-            config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
-            server = new NetServer(config);
+            //sconf.LocalAddress = NetUtility.Resolve("localhost");
+            sconf.MaximumConnections = 32;
+            server = new NetServer(sconf);
             server.Start();
 
-            NetIncomingMessage inc;
 
+        
+        }
+        public void ListenForBroadcast()
+        {
+            NetIncomingMessage inc;
             while ((inc = server.ReadMessage()) != null)
             {
-                Console.WriteLine("GOT A MESSAGE");
-                switch (inc.MessageType)
-                {
-                    case NetIncomingMessageType.DiscoveryRequest:
-                        //create a response and write some example data to it
-                        NetOutgoingMessage response = server.CreateMessage();
-                        response.Write("Server Name");
+                    switch (inc.MessageType)
+                    {
+                        case NetIncomingMessageType.DiscoveryRequest:
+                            Console.WriteLine("got a discovery request");
+                            //create a response and write some example data to it
+                            NetOutgoingMessage response = server.CreateMessage();
+                            response.Write("Server Name");
 
-                        //send the response to the sender of the req
-                        server.SendDiscoveryResponse(response, inc.SenderEndPoint);
-                        break;
-                }
+                            //send the response to the sender of the req
+                            server.SendDiscoveryResponse(response, inc.SenderEndPoint);
+                            break;
+                        case NetIncomingMessageType.Data:
+                            Console.WriteLine("server got data!");
+                            break;
+
+                        case NetIncomingMessageType.ConnectionApproval:
+                            Console.WriteLine("connection approved");
+                            break;
+                    }
+
+                    server.Recycle(inc);
             }
-
-
         }
 
         public void FindGame()
         {
-            client = null;
-            config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
-            client = new NetClient(config);
-            client.DiscoverLocalPeers(14242);
+            searching = true;
+            //client = null;
+            client = new NetClient(cconf);
+
             client.Start();
+            client.DiscoverLocalPeers(8080);
 
             Console.WriteLine("trying to find game");
+            
+        }
+        public void ListenForResponse()
+        {
             NetIncomingMessage inc;
             while((inc=client.ReadMessage()) !=null)
             {
@@ -72,11 +102,19 @@ namespace MobaGame2
         public void ConnectToHost()
         {
             Console.WriteLine("Trying to connect to host");
-            client = new NetClient(config);
+            client = new NetClient(cconf);
             client.Start();
             NetOutgoingMessage outmsg=client.CreateMessage();
             outmsg.Write("TEST");
-            client.Connect("192.168.43.147",port,outmsg);
+            client.Connect("127.0.0.1",port,outmsg);
+        }
+
+        public void EndSession()
+        {
+            if(isServer)
+                server.Shutdown("shutting down");
+            else if(searching)
+                client.Shutdown("shutting down");
         }
 
 

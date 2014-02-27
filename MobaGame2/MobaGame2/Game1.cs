@@ -16,7 +16,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
+//using Microsoft.Xna.Framework.Net;
 using Lidgren.Network;
 
 
@@ -85,7 +85,7 @@ namespace MobaGame2
             networking = new LidgrenNetwork();
 
             // add gamer services
-            Components.Add(new GamerServicesComponent(this));
+            //Components.Add(new GamerServicesComponent(this));
 
             //respond to the signed in gamer event
             //SignedInGamer.SignedIn += new EventHandler<SignedInEventArgs>(networking.SignedInGamer_SignedIn);
@@ -210,38 +210,30 @@ namespace MobaGame2
 
             Input.Update();
 
-            if (!Guide.IsVisible)
+            if (networking.isServer)
             {
-                foreach (SignedInGamer signedInGamer in SignedInGamer.SignedInGamers)
-                {
-
-                    /*
-                    if (networking.networkSession != null)
-                    {
-                        if (networking.networkSession.SessionState == NetworkSessionState.Lobby)
-                            Input.HandleLobbyInput(networking);
-                    }
-                    else if (networking.availableSessions != null)
-                    {
-                        // Handle the available sessions input here...
-                            Input.HandleLobbyInput(networking);
-                        
-                    }
-                    else if (!GameStarted)
-                    {
-                     */
-                    if (Input.HandleTitleScreenInput(networking,GameStarted))
-                    {
-                        Exit();
-                    }
-                    else
-                    {
-                        GameUpdate(gameTime);
-                    }
-                    //player.lastState = currentState;
-                }
+                Input.HandleLobbyInput(networking);
+                networking.ListenForBroadcast();
             }
-            base.Update(gameTime);
+            else if (networking.searching)
+            {
+                // Handle the available sessions input here...
+                Input.HandleLobbyInput(networking);
+                networking.ListenForResponse();
+            }
+            else if (!GameStarted)
+            {
+                if (Input.HandleTitleScreenInput(networking, GameStarted))
+                {
+                    Exit();
+                }
+                else
+                {
+                    //GameUpdate(gameTime);
+                }
+                //player.lastState = currentState;
+                base.Update(gameTime);
+            }
         }
 
         protected void GameUpdate(GameTime gameTime)
@@ -412,20 +404,17 @@ namespace MobaGame2
 
         protected override void Draw(GameTime gameTime)
         {
-            /*
             //if in a lobby
-            if (networking.networkSession != null)
+            if (networking.isServer)
             {
-                if (networking.networkSessionState == NetworkSessionState.Lobby)
-                    UI.DrawLobby(spriteBatch, font1, networking);
+                UI.DrawLobby(spriteBatch, font1, networking);
             }
             //if looking for a session
-            else if (networking.availableSessions != null)
+            else if (networking.searching)
             {
                 UI.DrawAvailableSessions(spriteBatch, font1, networking);
             }
-                */
-            if (!GameStarted)
+            else if (!GameStarted)
             {
                 UI.DrawTitleScreen(spriteBatch, font1, networking);
             }

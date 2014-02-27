@@ -187,7 +187,7 @@ namespace MobaGame2
         }
 
 
-        public static void DrawLobby(SpriteBatch spriteBatch, SpriteFont font,Networking networking)
+        public static void DrawLobby(SpriteBatch spriteBatch, SpriteFont font,LidgrenNetwork networking)
         {
             spriteBatch.Begin();
             spriteBatch.Draw(background, new Rectangle(0,0,width,height), Color.White);
@@ -196,24 +196,6 @@ namespace MobaGame2
 
             int y = 0;
 
-            foreach (NetworkGamer gamer in networking.networkSession.AllGamers)
-            {
-                string text = gamer.Gamertag;
-
-                Player player = gamer.Tag as Player;
-
-                //picture stuff
-                DisplayChampSelect(spriteBatch, font,40, 40);
-
-
-                if (gamer.IsReady)
-                    text += " - ready";
-
-                spriteBatch.DrawString(font, text, new Vector2(width - 530, y+300), Color.White);
-
-
-                y += 100;
-            }
 
             spriteBatch.DrawString(font, "Ready", new Vector2(width - 430,  200), Color.White);
 
@@ -222,20 +204,12 @@ namespace MobaGame2
         }
 
 
-        public static void DrawAvailableSessions(SpriteBatch spriteBatch, SpriteFont font,Networking networking)
+        public static void DrawAvailableSessions(SpriteBatch spriteBatch, SpriteFont font,LidgrenNetwork networking)
         {
             spriteBatch.Begin();
             spriteBatch.Draw(background, new Rectangle(0,0,width,height), Color.White);
             spriteBatch.DrawString(font, "Available Sessions", new Vector2(width - 530, 200), Color.White);
 
-            if(networking.availableSessions.Count==0)
-                spriteBatch.DrawString(font, "No Sessions", new Vector2(width - 530, 300), Color.White);
-
-            //int selectedSessionIndex = 0;
-            for (int i = 0,y=100; i < networking.availableSessions.Count; i++,y+=100)
-            {
-                spriteBatch.DrawString(font, networking.availableSessions[i].HostGamertag, new Vector2(width-530, y+300), Color.White);
-            }
             spriteBatch.Draw(mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
             spriteBatch.End();
         }

@@ -68,7 +68,7 @@ namespace MobaGame2
             return false;
         }
 
-        public static void HandleLobbyInput(Networking networking)
+        public static void HandleLobbyInput(LidgrenNetwork networking)
         {
             //if pressed
             if (LeftMouseButton())
@@ -76,10 +76,10 @@ namespace MobaGame2
                 //check if clicking ready
                 if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280 - 430, 200, 100, 20)))
                 {
-                    foreach (LocalNetworkGamer gamer in networking.networkSession.LocalGamers)
-                    {
-                        gamer.IsReady = !gamer.IsReady;
-                    }
+                    //foreach (LocalNetworkGamer gamer in networking.networkSession.LocalGamers)
+                    //{
+                        //gamer.IsReady = !gamer.IsReady;
+                    //}
                 }
                 //check if clicking on champ icon that they want to play as
             }
@@ -91,15 +91,15 @@ namespace MobaGame2
             }
 
             //if everyone is ready start game!
-            if (networking.networkSession != null && networking.networkSession.IsHost)
-            {
-                if (networking.networkSession.IsEveryoneReady)
-                    networking.networkSession.StartGame();
-            }
+            //if (networking.networkSession != null && networking.networkSession.IsHost)
+            //{
+                //if (networking.networkSession.IsEveryoneReady)
+                    //networking.networkSession.StartGame();
+            //}
 
             //pump the underlying seesion object
-            if (networking.networkSession != null)
-                networking.networkSession.Update();
+            //if (networking.networkSession != null)
+                //networking.networkSession.Update();
         }
 
         public static Champ SelectChamp(int x, int y, List<Champ> champs)
@@ -113,7 +113,7 @@ namespace MobaGame2
 
         }
 
-        public static void HandleAvailableSessionsInput(Networking networking)
+        public static void HandleAvailableSessionsInput(LidgrenNetwork networking)
         {
             //if esc or back button
             if (KeyPressed(Keys.Escape))
@@ -123,6 +123,7 @@ namespace MobaGame2
 
 
 
+            /*
             for (int i = 0, y = 100; i < networking.availableSessions.Count; i++, y += 100)
             {
                 if (LeftMouseButton())
@@ -132,6 +133,7 @@ namespace MobaGame2
                         networking.JoinGame();
                     }
             }
+             */
         }
 
         public static GameEntity FindUnderMouse(
