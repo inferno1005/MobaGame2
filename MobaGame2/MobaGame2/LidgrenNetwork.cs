@@ -81,19 +81,16 @@ namespace MobaGame2
                             server.SendDiscoveryResponse(response, inc.SenderEndPoint);
                             break;
                         case NetIncomingMessageType.Data:
-                            Console.WriteLine("server got data!");
+                            //Console.WriteLine("server got data!");
                             Console.WriteLine(DeserializeObject<string>(inc.Data));
 
                             break;
 
                         case NetIncomingMessageType.ConnectionApproval:
                             //clients.Add(inc.SenderEndPoint);
-                            Console.WriteLine("connection approved");
                             inc.SenderConnection.Approve();
+                            Console.WriteLine("connection from {0}approved",inc.SenderEndPoint);
                             //need to send world state from server to client
-                            break;
-                        default:
-                            Console.WriteLine("got some kind of message, not sure what kind");
                             break;
                     }
 
