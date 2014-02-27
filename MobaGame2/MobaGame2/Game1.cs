@@ -214,14 +214,14 @@ namespace MobaGame2
             {
                 Input.HandleLobbyInput(networking);
                 if (networking.isServer)
-                    networking.ListenForBroadcast();
+                    networking.ListenMessage();
             }
             else if (networking.searching)
             {
                 // Handle the available sessions input here...
                 //Input.HandleLobbyInput(networking);
                 Input.HandleAvailableSessionsInput(networking);
-                networking.ListenForResponse();
+                networking.ListenMessage();
             }
             else if (!GameStarted)
             {
