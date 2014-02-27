@@ -213,7 +213,8 @@ namespace MobaGame2
             if (networking.isServer)
             {
                 Input.HandleLobbyInput(networking);
-                networking.ListenForBroadcast();
+                if (networking.isServer)
+                    networking.ListenForBroadcast();
             }
             else if (networking.searching)
             {

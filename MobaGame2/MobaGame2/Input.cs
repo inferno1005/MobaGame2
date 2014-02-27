@@ -84,6 +84,7 @@ namespace MobaGame2
                 //check if clicking on champ icon that they want to play as
             }
 
+
             //if esc or back button
             if (KeyPressed(Keys.Escape))
             {
@@ -118,27 +119,25 @@ namespace MobaGame2
             //if esc or back button
             if (KeyPressed(Keys.Escape))
             {
+                networking.searching = false;
                 networking.EndSession();
             }
 
 
 
-            for (int i = 0, y = 100; i < networking.availsessions.Count; i++, y += 100)
-            {
-                if (LeftMouseButton())
-                    if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280-530, y+200, 100, 20)))
-                    {
-                        Console.WriteLine("joining server!");
-                        networking.ConnectToHost(networking.availsessions[i].ip);
-                    }
-            }
+            if (networking.searching)
+                for (int i = 0, y = 100; i < networking.availsessions.Count; i++, y += 100)
+                {
+                    if (LeftMouseButton())
+                        if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280 - 530, y + 200, 100, 20)))
+                        {
+                            Console.WriteLine("joining server!");
+                            networking.ConnectToHost(networking.availsessions[i].ip);
+                        }
+                }
         }
 
-        public static GameEntity FindUnderMouse(
-            Camera camera,
-            List<Player> players,
-            List<Minion> minions,
-            List<Tower> towers)
+        public static GameEntity FindUnderMouse( Camera camera, List<Player> players, List<Minion> minions, List<Tower> towers)
         {
             foreach (var player in players)
             {
@@ -169,5 +168,16 @@ namespace MobaGame2
             }
             return null;
         }
+
+        /*
+        public static string GetKeyboardString()
+        {
+            string temp="";
+
+
+            if(KeyPressed(Keys.Enter))
+                return temp;
+        }
+         */
     }
 }
