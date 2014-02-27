@@ -6,6 +6,12 @@ using Lidgren.Network;
 
 namespace MobaGame2
 {
+    public struct AvailableSessions
+    {
+        public System.Net.IPEndPoint ip;
+        public string name;
+    }
+
     class LidgrenNetwork
     {
         public NetPeerConfiguration sconf;
@@ -14,11 +20,16 @@ namespace MobaGame2
         private NetClient client;
         private int port = 14242;
 
+
+        public List<AvailableSessions> availsessions;
         public bool isServer = false;
         public bool searching= false;
         
         public LidgrenNetwork()
         {
+
+            availsessions = new List<AvailableSessions>();
+
             sconf= new NetPeerConfiguration("MOBA");
             sconf.Port = 8080;
             sconf.EnableMessageType(NetIncomingMessageType.DiscoveryRequest );
@@ -54,7 +65,7 @@ namespace MobaGame2
                             Console.WriteLine("got a discovery request");
                             //create a response and write some example data to it
                             NetOutgoingMessage response = server.CreateMessage();
-                            response.Write("Server Name");
+                            response.Write("Remote Game Server!");
 
                             //send the response to the sender of the req
                             server.SendDiscoveryResponse(response, inc.SenderEndPoint);
@@ -93,9 +104,16 @@ namespace MobaGame2
                 switch(inc.MessageType)
                 {
                     case NetIncomingMessageType.DiscoveryResponse:
-                        Console.WriteLine("Found server at " + inc.SenderEndPoint + "name: " + inc.ReadString());
+
+                        AvailableSessions tempsession=new AvailableSessions();
+                        tempsession.ip = inc.SenderEndPoint;
+                        tempsession.name=inc.ReadString();
+                        availsessions.Add(tempsession);
+                        Console.WriteLine("Found server at " + tempsession.ip+ "name: " + tempsession.name);
                         break;
+
                 }
+                client.Recycle(inc);
             }
         }
 

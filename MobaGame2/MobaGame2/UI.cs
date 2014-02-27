@@ -210,6 +210,12 @@ namespace MobaGame2
             spriteBatch.Draw(background, new Rectangle(0,0,width,height), Color.White);
             spriteBatch.DrawString(font, "Available Sessions", new Vector2(width - 530, 200), Color.White);
 
+            foreach (var session in networking.availsessions)
+            {
+                spriteBatch.DrawString(font, session.name, new Vector2(width - 530, 300), Color.White);
+            }
+
+
             spriteBatch.Draw(mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
             spriteBatch.End();
         }
