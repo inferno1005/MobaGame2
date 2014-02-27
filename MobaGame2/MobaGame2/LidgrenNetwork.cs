@@ -117,14 +117,14 @@ namespace MobaGame2
             }
         }
 
-        public void ConnectToHost()
+        public void ConnectToHost(System.Net.IPEndPoint ip)
         {
             Console.WriteLine("Trying to connect to host");
-            client = new NetClient(cconf);
-            client.Start();
+            //client = new NetClient(cconf);
+            //client.Start();
             NetOutgoingMessage outmsg=client.CreateMessage();
             outmsg.Write("TEST");
-            client.Connect("127.0.0.1",port,outmsg);
+            client.Connect(ip,outmsg);
         }
 
         public void EndSession()

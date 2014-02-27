@@ -123,17 +123,15 @@ namespace MobaGame2
 
 
 
-            /*
-            for (int i = 0, y = 100; i < networking.availableSessions.Count; i++, y += 100)
+            for (int i = 0, y = 100; i < networking.availsessions.Count; i++, y += 100)
             {
                 if (LeftMouseButton())
                     if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280-530, y+200, 100, 20)))
                     {
-                        networking.selectedSessionIndex = i;
-                        networking.JoinGame();
+                        Console.WriteLine("joining server!");
+                        networking.ConnectToHost(networking.availsessions[i].ip);
                     }
             }
-             */
         }
 
         public static GameEntity FindUnderMouse(
