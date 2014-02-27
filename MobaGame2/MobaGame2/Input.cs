@@ -133,6 +133,7 @@ namespace MobaGame2
                         {
                             Console.WriteLine("joining server!");
                             networking.ConnectToHost(networking.availsessions[i].ip);
+                            networking.SendObject("inferno1005");
                         }
                 }
         }

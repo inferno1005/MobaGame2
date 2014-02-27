@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 using Lidgren.Network;
+
 
 namespace MobaGame2
 {
@@ -26,7 +29,7 @@ namespace MobaGame2
 
 
         public List<AvailableSessions> availsessions;
-        public List<System.Net.IPEndPoint> clients;
+        //public List<NetConnection> clients;
         public string ServerName;
         public bool isServer = false;
         public bool searching= false;
@@ -41,19 +44,18 @@ namespace MobaGame2
         }
         public void HostGame()
         {
+            //setup server config
             sconf= new NetPeerConfiguration(GameName);
             sconf.Port = port;
             sconf.EnableMessageType(NetIncomingMessageType.DiscoveryRequest );
             sconf.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
+            sconf.EnableMessageType(NetIncomingMessageType.Data);
 
             isServer = true;
             Console.WriteLine("HOSTING GAME");
 
             sconf.MaximumConnections = 32;
             server = new NetServer(sconf);
-
-
-            clients = new List<System.Net.IPEndPoint>();
 
             server.Start();
 
@@ -80,12 +82,18 @@ namespace MobaGame2
                             break;
                         case NetIncomingMessageType.Data:
                             Console.WriteLine("server got data!");
+                            Console.WriteLine(DeserializeObject<string>(inc.Data));
+
                             break;
 
                         case NetIncomingMessageType.ConnectionApproval:
-                            clients.Add(inc.SenderEndPoint);
+                            //clients.Add(inc.SenderEndPoint);
                             Console.WriteLine("connection approved");
+                            inc.SenderConnection.Approve();
                             //need to send world state from server to client
+                            break;
+                        default:
+                            Console.WriteLine("got some kind of message, not sure what kind");
                             break;
                     }
 
@@ -126,6 +134,7 @@ namespace MobaGame2
 
             cconf = new NetPeerConfiguration(GameName);
             cconf.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
+            cconf.EnableMessageType(NetIncomingMessageType.Data);
 
             searching = true;
             client = new NetClient(cconf);
@@ -143,6 +152,51 @@ namespace MobaGame2
             outmsg.Write("Connecting");
             client.Connect(ip,outmsg);
         }
+
+        public void SendObject(object Object)
+        {
+            NetOutgoingMessage sendMsg;
+            if (isServer)
+                sendMsg=server.CreateMessage();
+            else
+                sendMsg=client.CreateMessage();
+
+            sendMsg.Write(SerializeObject(Object));
+
+            if (isServer)
+            {
+                server.SendMessage(sendMsg, server.Connections, NetDeliveryMethod.ReliableOrdered, 0);
+            }
+            else
+            {
+                client.SendMessage(sendMsg, NetDeliveryMethod.ReliableOrdered);
+            }
+        }
+
+
+
+        private static byte[] SerializeObject(object pObjectToSerialize)
+        {
+            BinaryFormatter lFormatter = new BinaryFormatter();
+            MemoryStream lStream = new MemoryStream();
+            lFormatter.Serialize(lStream, pObjectToSerialize);
+            byte[] lRet = new byte[lStream.Length];
+            lStream.Position = 0;
+            lStream.Read(lRet, 0, (int)lStream.Length);
+            lStream.Close();
+            return lRet;
+        }
+        public static T DeserializeObject<T>(byte[] pData)
+        {
+            if (pData == null)
+                return default(T);
+            BinaryFormatter lFormatter = new BinaryFormatter();
+            MemoryStream lStream = new MemoryStream(pData);
+            object lRet = lFormatter.Deserialize(lStream);
+            lStream.Close();
+            return (T)lRet;
+        }
+
 
         public void EndSession()
         {
