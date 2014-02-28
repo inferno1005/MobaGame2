@@ -99,7 +99,7 @@ namespace MobaGame2
         public void ability()
         {
             if (focus != null &&                         //if focused on object
-                focus.distance < this.attribute.range && //if in range
+                this.focus.Distance(this.position)< this.attribute.range && //if in range
                 !this.abilities[activeability].cast)     //if timer is good
             {
                 this.abilities[activeability].cast = true;

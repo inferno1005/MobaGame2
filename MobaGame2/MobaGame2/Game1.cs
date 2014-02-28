@@ -209,13 +209,23 @@ namespace MobaGame2
                 {
                     switch (Input.MenuChoice(Input.MousePosition,UI.menupos))
                     {
-                        case 1:
+                        case 1:     //exit
                             networking.GameIsRunning = false;
                             networking.EndSession();
                             UI.escMenuOpen = false;
                             gstate = null;
-                            return;
+                            return; //return so that we dont try to update a null game
                             break;
+                        case 2:
+                            //networking.GameIsRunning = false;
+                            //networking.EndSession();
+                            UI.escMenuOpen = false;
+                            gstate = null;
+                            gstate = new GameState(map);
+                            gstate.LoadContent(Content);
+                            break;
+ 
+
                     }
 
                 }

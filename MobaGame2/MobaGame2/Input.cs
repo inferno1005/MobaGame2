@@ -174,10 +174,10 @@ namespace MobaGame2
             {
                 return 1;
             }
-            //else if (MathHelper.ClickedOn(mouse, new Rectangle((int)menupos.X + 30, (int)menupos.Y + 30, 30, 30)))
-            //{
-                //return 2;
-            //}
+            else if (MathHelper.ClickedOn(mouse, new Rectangle((int)menupos.X + 30, (int)menupos.Y + 60, 30, 30)))
+            {
+                return 2;
+            }
             return 0;
         }
 

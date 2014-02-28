@@ -23,7 +23,6 @@ namespace MobaGame2
             public List<Tower> towers;
             public List<GameEntity> entities;
             public List<Ability> abilities;
-            public bool running;
             private Map map;
 
             public GameState(Map map)

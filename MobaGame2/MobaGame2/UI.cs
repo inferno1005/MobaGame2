@@ -159,6 +159,7 @@ namespace MobaGame2
             {
                 spritebatch.Draw(player.champ.attribute.texture, new Rectangle((int)menupos.X, (int)menupos.Y, (int)menusize.X, (int)menusize.Y), Color.Black);
                 spritebatch.DrawString(font, "Exit", new Vector2(menupos.X + 30, menupos.Y + 30), Color.White);
+                spritebatch.DrawString(font, "Reset", new Vector2(menupos.X + 30, menupos.Y + 60), Color.White);
             }
         }
 
