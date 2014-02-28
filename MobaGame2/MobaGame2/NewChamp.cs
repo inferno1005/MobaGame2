@@ -96,21 +96,45 @@ namespace MobaGame2
             }
         }
 
+        //stuff that travels across the map
         public void ability()
         {
             if (focus != null &&                         //if focused on object
                 this.focus.Distance(this.position)< this.attribute.range && //if in range
-                !this.abilities[activeability].cast)     //if timer is good
+                !this.abilities[activeability].cast  &&
+                this.abilities[activeability].manaCost<attribute.mana)
             {
+                this.attribute.mana -= this.abilities[activeability].manaCost;
                 this.abilities[activeability].cast = true;
                 this.abilities[activeability].position = this.position;
                 this.abilities[activeability].focus = this.focus;
-                this.abilities[activeability].attribute.visible = true;
+                this.abilities[activeability].attribute.visible =
+                    this.abilities[activeability].castvisibile;
+
                 Ability temp = new Ability(this.abilities[activeability]);
                 temp.position = this.position;
                 temp.focus = this.focus;
 
                 globalabilities.Add(temp);
+            }
+        }
+        //stuff that applies to this champ 
+        public void Spell()
+        {
+            if (!this.abilities[activeability].cast)
+            {
+                this.abilities[activeability].cast = true;
+                this.abilities[activeability].position = this.position;
+                this.attribute.mana -= this.abilities[activeability].manaCost;
+
+                Ability temp = new Ability(this.abilities[activeability]);
+
+                temp.attribute.visible = this.abilities[activeability].castvisibile;
+                temp.position=this.position;
+                temp.focus = this;
+
+                globalabilities.Add(temp);
+
             }
         }
 

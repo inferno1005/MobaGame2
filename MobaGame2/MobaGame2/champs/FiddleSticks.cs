@@ -43,6 +43,8 @@ namespace MobaGame2
                 this.abilities[i].magicDamage = 0;
                 this.abilities[i].coolDown = 3;
                 this.abilities[i].attribute.visible = false;
+                this.abilities[i].manaCost = 100;
+
 
 
                 this.abilities[i].texturename = "texture\\fireball";
@@ -87,11 +89,33 @@ namespace MobaGame2
             this.abilities[4].texturename = "texture\\fiddlesticks-crowstorm";
             this.abilities[4].iconname = "texture\\fiddlesticks-crowstorm";
 
+            this.abilities[5].name = "Heal";
+            this.abilities[5].attribute.range = this.attribute.range;
+            this.abilities[5].physicalDamage = -100;
+            this.abilities[5].magicDamage = 0;
+            this.abilities[5].coolDown = 0;
+            this.abilities[5].castvisibile= false;
+            this.abilities[5].attribute.visible = false; 
+            this.abilities[5].manaCost = 0;
+            //this.abilities[4].texturename = "texture\\fiddlesticks-crowstorm";
+            this.abilities[5].iconname = "texture\\Heal";
+
+
+            this.abilities[6].name = "Clarity";
+            this.abilities[6].attribute.range = this.attribute.range;
+            this.abilities[6].physicalDamage = 0;
+            this.abilities[6].magicDamage = 0;
+            this.abilities[6].coolDown = 0;
+            this.abilities[6].castvisibile= false;
+            this.abilities[6].attribute.visible = false; 
+            this.abilities[6].manaCost = -100;
+            //this.abilities[4].texturename = "texture\\fiddlesticks-crowstorm";
+            this.abilities[6].iconname = "texture\\Clarity";
 
 
 
 
-            //this.abilities[0].attribute.speed= 10;
+
 
             this.attribute.maxmana= 1000;
             this.attribute.mana= 1000;

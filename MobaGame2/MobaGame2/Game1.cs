@@ -142,7 +142,7 @@ namespace MobaGame2
         {
             Input.Update();
 
-            if (networking.isServer && !networking.GameIsRunning) 
+            if (networking.isServer && !networking.GameIsRunning)
             {
                 Input.HandleLobbyInput(networking);
                 if (networking.isServer)
@@ -207,7 +207,7 @@ namespace MobaGame2
             {
                 if (Input.LeftMouseButton())
                 {
-                    switch (Input.MenuChoice(Input.MousePosition,UI.menupos))
+                    switch (Input.MenuChoice(Input.MousePosition, UI.menupos))
                     {
                         case 1:     //exit
                             networking.GameIsRunning = false;
@@ -224,7 +224,7 @@ namespace MobaGame2
                             gstate = new GameState(map);
                             gstate.LoadContent(Content);
                             break;
- 
+
 
                     }
 
@@ -283,12 +283,12 @@ namespace MobaGame2
             if (Input.KeyPressed(Keys.D))
             {
                 gstate.players[0].champ.activeability = 5;
-                gstate.players[0].champ.ability();
+                gstate.players[0].champ.Spell();
             }
             if (Input.KeyPressed(Keys.F))
             {
                 gstate.players[0].champ.activeability = 6;
-                gstate.players[0].champ.ability();
+                gstate.players[0].champ.Spell();
             }
 
             //display menu
@@ -319,22 +319,22 @@ namespace MobaGame2
         protected override void Draw(GameTime gameTime)
         {
             //if in a lobby
-            if (networking.isServer && !networking.GameIsRunning) 
+            if (networking.isServer && !networking.GameIsRunning)
             {
-                UI.DrawLobby(spriteBatch,  networking);
+                UI.DrawLobby(spriteBatch, networking);
             }
             //if looking for a session
             else if (networking.searching)
             {
-                UI.DrawAvailableSessions(spriteBatch,  networking);
+                UI.DrawAvailableSessions(spriteBatch, networking);
             }
             else if (!networking.GameIsRunning)
             {
-                UI.DrawTitleScreen(spriteBatch,  networking);
+                UI.DrawTitleScreen(spriteBatch, networking);
             }
-            else if(networking.GameIsRunning)
+            else if (networking.GameIsRunning)
             {
-                if(gstate!=null)
+                if (gstate != null)
                     DrawMain(gameTime);
             }
 
@@ -361,7 +361,7 @@ namespace MobaGame2
             #region interface
             spriteBatch.Begin();
 
-            UI.Draw(spriteBatch,  gstate.players[0], Input.MousePosition, gameTime);
+            UI.Draw(spriteBatch, gstate.players[0], Input.MousePosition, gameTime);
 
             //draw pointer to be drawn last so its over top everything
             spriteBatch.Draw(UI.mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);

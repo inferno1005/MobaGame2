@@ -21,41 +21,42 @@ namespace MobaGame2
         public double healthCost;
         public double physicalDamage;
         public double magicDamage;
-        public float coolDown=2f;
-        public float timer=0f;
+        public float coolDown = 2f;
+        public float timer = 0f;
         public float cooldowntimer { get { return coolDown - timer; } }
-        public bool cast=false;
-        public bool ghost=false;
+        public bool cast = false;
+        public bool ghost = false;
+        public bool castvisibile = true;
         public Texture2D texture;
         public Texture2D icon;
-        public Vector2 iconSize=new Vector2(90,90);
+        public Vector2 iconSize = new Vector2(90, 90);
         public string texturename;
         public string iconname;
 
         public Ability()
         {
             this.width = 10;
-            this.height= 10;
+            this.height = 10;
             this.attribute.speed = 10;
         }
         public Ability(Ability copy)
         {
 
             this.width = 10;
-            this.height= 10;
+            this.height = 10;
             this.attribute.speed = 10;
 
-            name=copy.name;
-            manaCost=copy.manaCost;
-            healthCost=copy.healthCost;
-            physicalDamage=copy.physicalDamage;
-            magicDamage=copy.magicDamage;
+            name = copy.name;
+            manaCost = copy.manaCost;
+            healthCost = copy.healthCost;
+            physicalDamage = copy.physicalDamage;
+            magicDamage = copy.magicDamage;
             coolDown = copy.coolDown;
             timer = copy.timer;
             cast = true;
             ghost = false;
-            texture=copy.texture;
-            texturename=copy.texturename;
+            texture = copy.texture;
+            texturename = copy.texturename;
         }
         public void Update(GameTime gametime)
         {

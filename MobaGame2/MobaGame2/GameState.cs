@@ -18,33 +18,33 @@ namespace MobaGame2
 {
     class GameState
     {
-            public List<Player> players;
-            public List<Minion> minions;
-            public List<Tower> towers;
-            public List<GameEntity> entities;
-            public List<Ability> abilities;
-            private Map map;
+        public List<Player> players;
+        public List<Minion> minions;
+        public List<Tower> towers;
+        public List<GameEntity> entities;
+        public List<Ability> abilities;
+        private Map map;
 
-            public GameState(Map map)
-            {
-                map = new Map();
-                this.map = map;
-
-
-                players = new List<Player>();
-                players.Add(new Player());
-                players[0].name = "inferno1005";
-
-                abilities = new List<Ability>();
-
-                towers = new List<Tower>();
-                towers.Add(new Tower(map, abilities));
+        public GameState(Map map)
+        {
+            map = new Map();
+            this.map = map;
 
 
-                players[0].champ = new FiddleSticks(map, abilities);
-                minions = new List<Minion>();
-                minions.Add(new Minion(towers[0], map, abilities));
-            }
+            players = new List<Player>();
+            players.Add(new Player());
+            players[0].name = "inferno1005";
+
+            abilities = new List<Ability>();
+
+            towers = new List<Tower>();
+            towers.Add(new Tower(map, abilities));
+
+
+            players[0].champ = new FiddleSticks(map, abilities);
+            minions = new List<Minion>();
+            minions.Add(new Minion(towers[0], map, abilities));
+        }
 
         public void LoadContent(ContentManager Content)
         {
@@ -77,101 +77,101 @@ namespace MobaGame2
 
         }
 
-            public void Draw(SpriteBatch spriteBatch, SpriteFont font, Color drawcolor)
+        public void Draw(SpriteBatch spriteBatch, SpriteFont font, Color drawcolor)
+        {
+            //draw players champs
+            foreach (var player in players)
+                player.Draw(spriteBatch, font, drawcolor);
+
+            //draw minion 
+            foreach (var minion in minions)
+                minion.Draw(spriteBatch, drawcolor);
+
+            //tower
+            foreach (var tower in towers)
+                tower.Draw(spriteBatch, drawcolor);
+
+            //draw abilities
+            foreach (var ability in abilities)
+                ability.Draw(spriteBatch, drawcolor);
+
+
+        }
+
+        public void DrawVision(SpriteBatch spriteBatch, Color drawcolor, Texture2D lightmask)
+        {
+            foreach (var player in players)
             {
-                //draw players champs
-                foreach (var player in players)
-                    player.Draw(spriteBatch, font, drawcolor);
-
-                //draw minion 
-                foreach (var minion in minions)
-                    minion.Draw(spriteBatch, drawcolor);
-
-                //tower
-                foreach (var tower in towers)
-                    tower.Draw(spriteBatch, drawcolor);
-
-                //draw abilities
-                foreach (var ability in abilities)
-                    ability.Draw(spriteBatch, drawcolor);
-
-
+                if (player.champ.attribute.alive)
+                    spriteBatch.Draw(lightmask, player.champ.visionrect, Color.White);
             }
 
-            public void DrawVision(SpriteBatch spriteBatch, Color drawcolor,Texture2D lightmask)
+            //draw minion 
+            foreach (var minion in minions)
+                spriteBatch.Draw(lightmask, minion.visionrect, Color.White);
+
+            foreach (var tower in towers)
+                spriteBatch.Draw(lightmask, tower.visionrect, Color.White);
+
+
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            foreach (var player in this.players)
             {
-                foreach (var player in players)
-                {
-                    if (player.champ.attribute.alive)
-                        spriteBatch.Draw(lightmask, player.champ.visionrect, Color.White);
-                }
-
-                //draw minion 
-                foreach (var minion in minions)
-                    spriteBatch.Draw(lightmask, minion.visionrect, Color.White);
-
-                foreach (var tower in towers)
-                    spriteBatch.Draw(lightmask, tower.visionrect, Color.White);
-
-
+                player.Update(this.map.rect, gameTime, this.abilities);
             }
 
-            public void Update(GameTime gameTime)
+            for (int i = 0; i < minions.Count; i++)
             {
-                foreach (var player in this.players)
+
+                this.minions[i].Updater(map.rect, gameTime);
+
+                if (!this.minions[i].attribute.alive)
                 {
-                    player.Update(this.map.rect, gameTime, this.abilities);
+                    this.minions.RemoveAt(i);
                 }
-
-                for (int i = 0; i < minions.Count; i++)
+                else
                 {
-
-                    this.minions[i].Updater(map.rect, gameTime);
-
-                    if (!this.minions[i].attribute.alive)
+                    foreach (var player in this.players)
                     {
-                        this.minions.RemoveAt(i);
-                    }
-                    else
-                    {
-                        foreach (var player in this.players)
-                        {
-                            this.minions[i].Agro(player.champ);
-                        }
-                    }
-
-                }
-
-                for (int i = 0; i < this.towers.Count; i++)
-                {
-
-                    this.towers[i].Updater(this.map.rect, gameTime);
-
-                    //remove if dead
-                    if (!this.towers[i].attribute.alive)
-                        this.towers.RemoveAt(i);
-                    else
-                    {
-                        foreach (var minion in this.minions)
-                        {
-                            this.towers[i].Agro(minion);
-                        }
-                        foreach (var player in this.players)
-                        {
-                            this.towers[i].Agro(player.champ);
-                        }
+                        this.minions[i].Agro(player.champ);
                     }
                 }
 
-                for (int i = 0; i < abilities.Count; i++)
-                {
-                    this.abilities[i].Update(gameTime);
-                    if (this.abilities[i].ghost)
-                        this.abilities.RemoveAt(i);
-                }
-
-
             }
+
+            for (int i = 0; i < this.towers.Count; i++)
+            {
+
+                this.towers[i].Updater(this.map.rect, gameTime);
+
+                //remove if dead
+                if (!this.towers[i].attribute.alive)
+                    this.towers.RemoveAt(i);
+                else
+                {
+                    foreach (var minion in this.minions)
+                    {
+                        this.towers[i].Agro(minion);
+                    }
+                    foreach (var player in this.players)
+                    {
+                        this.towers[i].Agro(player.champ);
+                    }
+                }
+            }
+
+            for (int i = 0; i < abilities.Count; i++)
+            {
+                this.abilities[i].Update(gameTime);
+                if (this.abilities[i].ghost)
+                    this.abilities.RemoveAt(i);
+            }
+
+
+        }
 
     }
 }
