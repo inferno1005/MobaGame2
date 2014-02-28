@@ -63,6 +63,7 @@ namespace MobaGame2
             }
             if (KeyPressed(Keys.Escape))
             {
+                //need to return true to tell game to close
                 return true;
             }
             return false;
@@ -76,12 +77,17 @@ namespace MobaGame2
                 //check if clicking ready
                 if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280 - 430, 200, 100, 20)))
                 {
-                    //foreach (LocalNetworkGamer gamer in networking.networkSession.LocalGamers)
-                    //{
-                    //gamer.IsReady = !gamer.IsReady;
-                    //}
+                    //make this player ready
+                }
+
+                //if clicking start game
+                if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280 - 230, 200, 100, 20)))
+                {
+                    Console.WriteLine("clicled on start game");
+                    networking.GameIsRunning = true;
                 }
                 //check if clicking on champ icon that they want to play as
+
             }
 
 
@@ -90,17 +96,6 @@ namespace MobaGame2
             {
                 networking.EndSession();
             }
-
-            //if everyone is ready start game!
-            //if (networking.networkSession != null && networking.networkSession.IsHost)
-            //{
-            //if (networking.networkSession.IsEveryoneReady)
-            //networking.networkSession.StartGame();
-            //}
-
-            //pump the underlying seesion object
-            //if (networking.networkSession != null)
-            //networking.networkSession.Update();
         }
 
         public static Champ SelectChamp(int x, int y, List<Champ> champs)
@@ -144,6 +139,7 @@ namespace MobaGame2
             {
                 if (MathHelper.ClickedOn(Input.MousePosition + camera.position, player.champ.rect))
                 {
+                    Console.WriteLine("FOCUSED CHAMP");
                     //focus this player
                     return player.champ;
                 }
@@ -155,6 +151,7 @@ namespace MobaGame2
             {
                 if (MathHelper.ClickedOn(Input.MousePosition + camera.position, minion.rect))
                 {
+                    Console.WriteLine("FOCUSED minion");
                     return minion;
                 }
 
@@ -163,11 +160,25 @@ namespace MobaGame2
             {
                 if (MathHelper.ClickedOn(Input.MousePosition + camera.position, tower.rect))
                 {
+                    Console.WriteLine("FOCUSED tower");
                     return tower;
                 }
 
             }
             return null;
+        }
+
+        public static int MenuChoice(Vector2 mouse,Vector2 menupos)
+        {
+            if( MathHelper.ClickedOn(mouse,new Rectangle( (int)menupos.X + 30, (int)menupos.Y + 30,30,30)))
+            {
+                return 1;
+            }
+            //else if (MathHelper.ClickedOn(mouse, new Rectangle((int)menupos.X + 30, (int)menupos.Y + 30, 30, 30)))
+            //{
+                //return 2;
+            //}
+            return 0;
         }
 
         /*

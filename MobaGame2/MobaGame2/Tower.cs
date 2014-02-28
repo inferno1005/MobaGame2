@@ -50,8 +50,6 @@ namespace MobaGame2
                 FocusObject(null);
             }
 
-
-
             this.Update(rect);
             attribute.Update();
             BasicAttack();

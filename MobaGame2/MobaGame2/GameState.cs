@@ -23,11 +23,14 @@ namespace MobaGame2
             public List<Tower> towers;
             public List<GameEntity> entities;
             public List<Ability> abilities;
+            public bool running;
             private Map map;
 
             public GameState(Map map)
             {
+                map = new Map();
                 this.map = map;
+
 
                 players = new List<Player>();
                 players.Add(new Player());
@@ -43,6 +46,37 @@ namespace MobaGame2
                 minions = new List<Minion>();
                 minions.Add(new Minion(towers[0], map, abilities));
             }
+
+        public void LoadContent(ContentManager Content)
+        {
+            foreach (var Player in players)
+            {
+                Player.champ.texture = Content.Load<Texture2D>(Player.champ.texturename);
+                Player.champ.attribute.texture = Content.Load<Texture2D>(Player.champ.attribute.texturename);
+                for (int i = 0; i < 7; i++)
+                {
+                    Player.champ.abilities[i].texture = Content.Load<Texture2D>(Player.champ.abilities[i].texturename);
+                    Player.champ.abilities[i].icon = Content.Load<Texture2D>(Player.champ.abilities[i].iconname);
+                }
+            }
+
+            foreach (var Minion in minions)
+            {
+                Minion.texture = Content.Load<Texture2D>(Minion.texturename);
+                Minion.abilities[0].texture = Content.Load<Texture2D>(Minion.abilities[0].texturename);
+            }
+
+            foreach (var tower in towers)
+            {
+                tower.texture = Content.Load<Texture2D>(tower.texturename);
+                tower.abilities[0].texture = Content.Load<Texture2D>(tower.abilities[0].texturename);
+            }
+
+
+
+
+
+        }
 
             public void Draw(SpriteBatch spriteBatch, SpriteFont font, Color drawcolor)
             {
@@ -85,47 +119,56 @@ namespace MobaGame2
 
             public void Update(GameTime gameTime)
             {
-
-                foreach (var player in players)
+                foreach (var player in this.players)
                 {
-                    player.Update(map.rect, gameTime, abilities);
+                    player.Update(this.map.rect, gameTime, this.abilities);
                 }
 
                 for (int i = 0; i < minions.Count; i++)
                 {
-                    foreach (var player in players)
+
+                    this.minions[i].Updater(map.rect, gameTime);
+
+                    if (!this.minions[i].attribute.alive)
                     {
-                        minions[i].Agro(player.champ);
+                        this.minions.RemoveAt(i);
+                    }
+                    else
+                    {
+                        foreach (var player in this.players)
+                        {
+                            this.minions[i].Agro(player.champ);
+                        }
                     }
 
-                    minions[i].Updater(map.rect, gameTime);
-
-                    if (!minions[i].attribute.alive)
-                    {
-                        minions.RemoveAt(i);
-                    }
                 }
 
-                for (int i = 0; i < towers.Count; i++)
+                for (int i = 0; i < this.towers.Count; i++)
                 {
 
-                    towers[i].Updater(map.rect, gameTime);
+                    this.towers[i].Updater(this.map.rect, gameTime);
 
-                    foreach (var minion in minions)
+                    //remove if dead
+                    if (!this.towers[i].attribute.alive)
+                        this.towers.RemoveAt(i);
+                    else
                     {
-                        towers[i].Agro(minion);
-                    }
-                    foreach (var player in players)
-                    {
-                        towers[i].Agro(player.champ);
+                        foreach (var minion in this.minions)
+                        {
+                            this.towers[i].Agro(minion);
+                        }
+                        foreach (var player in this.players)
+                        {
+                            this.towers[i].Agro(player.champ);
+                        }
                     }
                 }
 
                 for (int i = 0; i < abilities.Count; i++)
                 {
-                    abilities[i].Update(gameTime);
-                    if (abilities[i].ghost)
-                        abilities.RemoveAt(i);
+                    this.abilities[i].Update(gameTime);
+                    if (this.abilities[i].ghost)
+                        this.abilities.RemoveAt(i);
                 }
 
 

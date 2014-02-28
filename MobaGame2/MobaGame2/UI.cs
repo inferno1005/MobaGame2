@@ -27,13 +27,17 @@ namespace MobaGame2
 
         //menu
         public static bool escMenuOpen = false;
-        static Vector2 menupos;
+        public static Vector2 menupos;
         static Vector2 menusize;
 
         //textures
         public static Texture2D mouseTexture;
         public static Texture2D background;
         public static List<Texture2D> ChampIcons;
+
+
+        //fonts
+        public static SpriteFont font;
 
         //size of ui
         private static int width;
@@ -67,7 +71,7 @@ namespace MobaGame2
             menusize = new Vector2(width - 80, height - 80);
         }
 
-        static public void Draw(SpriteBatch spritebatch,SpriteFont font,Player player,Vector2 mousepos,GameTime gametime)
+        static public void Draw(SpriteBatch spritebatch,Player player,Vector2 mousepos,GameTime gametime)
         {
             #region bars
             int healthbarpercent = (int)(barwidth*((player.champ.attribute.Health / player.champ.attribute.maxhealth)));
@@ -134,7 +138,6 @@ namespace MobaGame2
 
             #endregion
 
-
             #region fps
 
             float elapsed = (float)gametime.ElapsedGameTime.TotalSeconds;
@@ -144,11 +147,11 @@ namespace MobaGame2
             if (timeSinceLastUpdate > updateInterval)
             {
                 fps = framecount / timeSinceLastUpdate;
-                spritebatch.DrawString(font, fps.ToString(), new Vector2(width - 40, 10),Color.White);
                 framecount = 0;
                 timeSinceLastUpdate -= updateInterval;
             }
 
+            spritebatch.DrawString(font, "FPS:"+((int)fps).ToString(), new Vector2(width - 80, 10), Color.White);
             #endregion
 
             //draw options menu
@@ -159,17 +162,26 @@ namespace MobaGame2
             }
         }
 
-        public static int MenuChoice(Vector2 mouse)
+        static public void LoadContent(ContentManager Content)
         {
-            if( MathHelper.ClickedOn(mouse,new Rectangle( (int)menupos.X + 30, (int)menupos.Y + 30,30,30)))
-            {
-                return 1;
-            }
-            return 0;
+
+            //textures
+            UI.mouseTexture = Content.Load<Texture2D>("texture\\pointer");
+            UI.background = Content.Load<Texture2D>("background");
+
+            Texture2D temp;
+            temp = Content.Load<Texture2D>("texture\\FiddlesticksSquare");
+            for (int i = 0; i < 50; i++)
+                ChampIcons.Add(temp);
+
+
+            //fonts
+            font= Content.Load<SpriteFont>("DefaultFont");
         }
 
 
-        public static void DrawTitleScreen(SpriteBatch spriteBatch,SpriteFont font,LidgrenNetwork networking)
+
+        public static void DrawTitleScreen(SpriteBatch spriteBatch,LidgrenNetwork networking)
         {
             spriteBatch.Begin();
             spriteBatch.Draw(background, new Rectangle(0,0,width,height), Color.White);
@@ -187,7 +199,7 @@ namespace MobaGame2
         }
 
 
-        public static void DrawLobby(SpriteBatch spriteBatch, SpriteFont font,LidgrenNetwork networking)
+        public static void DrawLobby(SpriteBatch spriteBatch, LidgrenNetwork networking)
         {
             spriteBatch.Begin();
             spriteBatch.Draw(background, new Rectangle(0,0,width,height), Color.White);
@@ -198,13 +210,14 @@ namespace MobaGame2
 
 
             spriteBatch.DrawString(font, "Ready", new Vector2(width - 430,  200), Color.White);
+            spriteBatch.DrawString(font, "Start", new Vector2(width - 230,  200), Color.White);
 
             spriteBatch.Draw(mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
             spriteBatch.End();
         }
 
 
-        public static void DrawAvailableSessions(SpriteBatch spriteBatch, SpriteFont font,LidgrenNetwork networking)
+        public static void DrawAvailableSessions(SpriteBatch spriteBatch, LidgrenNetwork networking)
         {
             spriteBatch.Begin();
             spriteBatch.Draw(background, new Rectangle(0,0,width,height), Color.White);
@@ -221,7 +234,7 @@ namespace MobaGame2
             spriteBatch.End();
         }
 
-        private static void DisplayChampSelect(SpriteBatch spriteBatch,SpriteFont font, int x,int y)
+        private static void DisplayChampSelect(SpriteBatch spriteBatch, int x,int y)
         {
             int lastwidth=0;
             int lastheight=0;

@@ -34,6 +34,7 @@ namespace MobaGame2
         public bool isServer = false;
         public bool searching= false;
         public bool joined = false;
+        public bool GameIsRunning = false;
         
         public LidgrenNetwork()
         {

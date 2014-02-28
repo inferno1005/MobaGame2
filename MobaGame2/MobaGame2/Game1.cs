@@ -54,7 +54,6 @@ namespace MobaGame2
         Map map;
 
 
-        SpriteFont font1;
         //Texture2D mouseTexture;
         Texture2D lightmask;
 
@@ -104,7 +103,7 @@ namespace MobaGame2
 
             //game state
             #region game entity lists
-            gstate = new GameState(map);
+            //gstate = new GameState(map);
             #endregion
 
             camera = new Camera(new Vector2(0, 0), SCREENHEIGHT, SCREENWIDTH, 8);
@@ -123,47 +122,14 @@ namespace MobaGame2
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             #region textures
-            foreach (var Player in gstate.players)
-            {
-                Player.champ.texture = Content.Load<Texture2D>(Player.champ.texturename);
-                Player.champ.attribute.texture = Content.Load<Texture2D>(Player.champ.attribute.texturename);
-                for (int i = 0; i < 7; i++)
-                {
-                    Player.champ.abilities[i].texture = Content.Load<Texture2D>(Player.champ.abilities[i].texturename);
-                    Player.champ.abilities[i].icon = Content.Load<Texture2D>(Player.champ.abilities[i].iconname);
-                }
-            }
-
-            foreach (var Minion in gstate.minions)
-            {
-                Minion.texture = Content.Load<Texture2D>(Minion.texturename);
-                Minion.abilities[0].texture = Content.Load<Texture2D>(Minion.abilities[0].texturename);
-            }
-
-            foreach (var tower in gstate.towers)
-            {
-                tower.texture = Content.Load<Texture2D>(tower.texturename);
-                tower.abilities[0].texture = Content.Load<Texture2D>(tower.abilities[0].texturename);
-            }
-
 
             map.texture = Content.Load<Texture2D>(map.texturename);
-            UI.mouseTexture = Content.Load<Texture2D>("texture\\pointer");
-            UI.background = Content.Load<Texture2D>("background");
 
-            Texture2D temp;
-            temp = Content.Load<Texture2D>("texture\\FiddlesticksSquare");
-            for (int i = 0; i < 50; i++)
-                UI.ChampIcons.Add(temp);
+            UI.LoadContent(Content);
 
             //lightmask = Content.Load<Texture2D>("texture\\lightmask");
             lightmask = Content.Load<Texture2D>("texture\\whitemask");
             #endregion
-
-            #region fonts
-            font1 = Content.Load<SpriteFont>("DefaultFont");
-            #endregion
-
         }
 
         protected override void UnloadContent()
@@ -174,10 +140,9 @@ namespace MobaGame2
 
         protected override void Update(GameTime gameTime)
         {
-
             Input.Update();
 
-            if (networking.isServer)
+            if (networking.isServer && !networking.GameIsRunning) 
             {
                 Input.HandleLobbyInput(networking);
                 if (networking.isServer)
@@ -190,19 +155,27 @@ namespace MobaGame2
                 Input.HandleAvailableSessionsInput(networking);
                 networking.ListenMessage();
             }
-            else if (!GameStarted)
+            else if (!networking.GameIsRunning)
             {
                 if (Input.HandleTitleScreenInput(networking, GameStarted))
                 {
                     Exit();
                 }
-                else
-                {
-                    //GameUpdate(gameTime);
-                }
-                //player.lastState = currentState;
-                base.Update(gameTime);
             }
+            else if (networking.GameIsRunning)
+            {
+
+                if (gstate == null)
+                {
+                    gstate = new GameState(map);
+                    gstate.LoadContent(Content);
+                }
+
+                if (gstate != null)
+                    GameUpdate(gameTime);
+            }
+            //player.lastState = currentState;
+            base.Update(gameTime);
         }
 
         protected void GameUpdate(GameTime gameTime)
@@ -234,9 +207,14 @@ namespace MobaGame2
             {
                 if (Input.LeftMouseButton())
                 {
-                    switch (UI.MenuChoice(Input.MousePosition))
+                    switch (Input.MenuChoice(Input.MousePosition,UI.menupos))
                     {
-                        case 1: Exit();
+                        case 1:
+                            networking.GameIsRunning = false;
+                            networking.EndSession();
+                            UI.escMenuOpen = false;
+                            gstate = null;
+                            return;
                             break;
                     }
 
@@ -331,22 +309,23 @@ namespace MobaGame2
         protected override void Draw(GameTime gameTime)
         {
             //if in a lobby
-            if (networking.isServer)
+            if (networking.isServer && !networking.GameIsRunning) 
             {
-                UI.DrawLobby(spriteBatch, font1, networking);
+                UI.DrawLobby(spriteBatch,  networking);
             }
             //if looking for a session
             else if (networking.searching)
             {
-                UI.DrawAvailableSessions(spriteBatch, font1, networking);
+                UI.DrawAvailableSessions(spriteBatch,  networking);
             }
-            else if (!GameStarted)
+            else if (!networking.GameIsRunning)
             {
-                UI.DrawTitleScreen(spriteBatch, font1, networking);
+                UI.DrawTitleScreen(spriteBatch,  networking);
             }
-            else
+            else if(networking.GameIsRunning)
             {
-                DrawMain(gameTime);
+                if(gstate!=null)
+                    DrawMain(gameTime);
             }
 
 
@@ -372,7 +351,7 @@ namespace MobaGame2
             #region interface
             spriteBatch.Begin();
 
-            UI.Draw(spriteBatch, font1, gstate.players[0], Input.MousePosition, gameTime);
+            UI.Draw(spriteBatch,  gstate.players[0], Input.MousePosition, gameTime);
 
             //draw pointer to be drawn last so its over top everything
             spriteBatch.Draw(UI.mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
@@ -428,7 +407,7 @@ namespace MobaGame2
                             camera.calc_transformation(1, 1)
                     );
 
-            gstate.Draw(spriteBatch, font1, drawcolor);
+            gstate.Draw(spriteBatch, UI.font, drawcolor);
 
 
             spriteBatch.End();
@@ -495,20 +474,14 @@ namespace MobaGame2
             #region game camera
             //draw based off camera location
             spriteBatch.Begin(
-                //SpriteSortMode.BackToFront,
                 SpriteSortMode.Immediate,
                 BlendState.Additive,
                 null,
                 null,
                 null,
                 null,
-                //camera.calc_transformation(SCREENHEIGHT,SCREENWIDTH)
                 camera.calc_transformation(1, 1)
                 );
-            //draw map
-            //spriteBatch.Draw(map.texture, map.rect, drawcolor);
-
-            //spriteBatch.End();
 
             gstate.DrawVision(spriteBatch, Color.White, lightmask);
 
