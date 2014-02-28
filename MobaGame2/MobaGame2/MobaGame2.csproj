@@ -87,6 +87,7 @@
     <Compile Include="Champ.cs" />
     <Compile Include="champs\FiddleSticks.cs" />
     <Compile Include="GameEntity.cs" />
+    <Compile Include="GameState.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="LidgrenNetwork.cs" />
     <Compile Include="Map.cs" />

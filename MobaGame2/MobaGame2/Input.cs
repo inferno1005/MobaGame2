@@ -18,7 +18,7 @@ namespace MobaGame2
 {
     class Input
     {
- 
+
         private static KeyboardState keyboardState, lastkeyboardState;
         private static MouseState mouseState, lastmousesState;
 
@@ -37,25 +37,25 @@ namespace MobaGame2
         { return lastkeyboardState.IsKeyUp(key) && keyboardState.IsKeyDown(key); }
 
         public static bool KeyHeld(Keys key)
-        { return  keyboardState.IsKeyDown(key); }
+        { return keyboardState.IsKeyDown(key); }
 
         public static bool RightMouseButton()
-        { return lastmousesState.RightButton == ButtonState.Pressed && mouseState.RightButton == ButtonState.Released; } 
+        { return lastmousesState.RightButton == ButtonState.Pressed && mouseState.RightButton == ButtonState.Released; }
 
         public static bool LeftMouseButton()
-        { return lastmousesState.LeftButton== ButtonState.Pressed && mouseState.LeftButton== ButtonState.Released; }
+        { return lastmousesState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Released; }
 
-        public static bool HandleTitleScreenInput(LidgrenNetwork networking ,bool startgame)
+        public static bool HandleTitleScreenInput(LidgrenNetwork networking, bool startgame)
         {
             //if create session
             if (LeftMouseButton())
             {
-                if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280-530, 200, 400, 20)))
+                if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280 - 530, 200, 400, 20)))
                 {
                     networking.HostGame();
                 }
                 //if finding session
-                if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280-530, 250, 100, 20)))
+                if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280 - 530, 250, 100, 20)))
                 {
                     //networking.ConnectToHost();
                     networking.FindGame();
@@ -78,7 +78,7 @@ namespace MobaGame2
                 {
                     //foreach (LocalNetworkGamer gamer in networking.networkSession.LocalGamers)
                     //{
-                        //gamer.IsReady = !gamer.IsReady;
+                    //gamer.IsReady = !gamer.IsReady;
                     //}
                 }
                 //check if clicking on champ icon that they want to play as
@@ -94,13 +94,13 @@ namespace MobaGame2
             //if everyone is ready start game!
             //if (networking.networkSession != null && networking.networkSession.IsHost)
             //{
-                //if (networking.networkSession.IsEveryoneReady)
-                    //networking.networkSession.StartGame();
+            //if (networking.networkSession.IsEveryoneReady)
+            //networking.networkSession.StartGame();
             //}
 
             //pump the underlying seesion object
             //if (networking.networkSession != null)
-                //networking.networkSession.Update();
+            //networking.networkSession.Update();
         }
 
         public static Champ SelectChamp(int x, int y, List<Champ> champs)
@@ -138,9 +138,9 @@ namespace MobaGame2
                 }
         }
 
-        public static GameEntity FindUnderMouse( Camera camera, List<Player> players, List<Minion> minions, List<Tower> towers)
+        public static GameEntity FindUnderMouse(Camera camera, GameState gamestate)
         {
-            foreach (var player in players)
+            foreach (var player in gamestate.players)
             {
                 if (MathHelper.ClickedOn(Input.MousePosition + camera.position, player.champ.rect))
                 {
@@ -150,8 +150,8 @@ namespace MobaGame2
             }
 
 
-            
-            foreach (var minion in minions)
+
+            foreach (var minion in gamestate.minions)
             {
                 if (MathHelper.ClickedOn(Input.MousePosition + camera.position, minion.rect))
                 {
@@ -159,7 +159,7 @@ namespace MobaGame2
                 }
 
             }
-            foreach (var tower in towers)
+            foreach (var tower in gamestate.towers)
             {
                 if (MathHelper.ClickedOn(Input.MousePosition + camera.position, tower.rect))
                 {

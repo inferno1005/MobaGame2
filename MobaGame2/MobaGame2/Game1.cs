@@ -26,7 +26,6 @@ namespace MobaGame2
 {
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-
         #region vars
         //needed
         GraphicsDeviceManager graphics;
@@ -40,6 +39,7 @@ namespace MobaGame2
 
         //game objects
         Camera camera;
+        GameState gstate;
 
 
         //scene stuff
@@ -51,16 +51,7 @@ namespace MobaGame2
 
 
         //Camera minimap;
-
-        List<Player> players;
-        List<Minion> minions;
-        List<Tower> towers;
-        List<GameEntity> entities;
-        List<Ability> abilities;
-
         Map map;
-
-        //controls
 
 
         SpriteFont font1;
@@ -83,12 +74,6 @@ namespace MobaGame2
             Content.RootDirectory = "Content";
             this.IsFixedTimeStep = false;
             networking = new LidgrenNetwork();
-
-            // add gamer services
-            //Components.Add(new GamerServicesComponent(this));
-
-            //respond to the signed in gamer event
-            //SignedInGamer.SignedIn += new EventHandler<SignedInEventArgs>(networking.SignedInGamer_SignedIn);
         }
 
         protected override void Initialize()
@@ -106,13 +91,10 @@ namespace MobaGame2
             #endregion
 
             //fog
-
             fogeffect = Content.Load<Effect>("lighting");
-
             var pp = GraphicsDevice.PresentationParameters;
             mainscene = new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight);
             fog = new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight);
-
 
 
             //ui
@@ -120,22 +102,9 @@ namespace MobaGame2
             UI.ChampIcons = new List<Texture2D>();
 
 
-            // TODO: Add your initialization logic here
+            //game state
             #region game entity lists
-            players = new List<Player>();
-            players.Add(new Player());
-            players[0].name = "inferno1005";
-
-            abilities = new List<Ability>();
-
-            towers = new List<Tower>();
-            towers.Add(new Tower(map,abilities));
-
-
-            players[0].champ = new FiddleSticks(map,abilities);
-            minions = new List<Minion>();
-            minions.Add(new Minion(towers[0],map,abilities));
-
+            gstate = new GameState(map);
             #endregion
 
             camera = new Camera(new Vector2(0, 0), SCREENHEIGHT, SCREENWIDTH, 8);
@@ -144,8 +113,6 @@ namespace MobaGame2
             //minimap.zoom = .30f;
 
             map = new Map();
-
-
 
             base.Initialize();
         }
@@ -156,7 +123,7 @@ namespace MobaGame2
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             #region textures
-            foreach (var Player in players)
+            foreach (var Player in gstate.players)
             {
                 Player.champ.texture = Content.Load<Texture2D>(Player.champ.texturename);
                 Player.champ.attribute.texture = Content.Load<Texture2D>(Player.champ.attribute.texturename);
@@ -167,13 +134,13 @@ namespace MobaGame2
                 }
             }
 
-            foreach (var Minion in minions)
+            foreach (var Minion in gstate.minions)
             {
                 Minion.texture = Content.Load<Texture2D>(Minion.texturename);
                 Minion.abilities[0].texture = Content.Load<Texture2D>(Minion.abilities[0].texturename);
             }
 
-            foreach (var tower in towers)
+            foreach (var tower in gstate.towers)
             {
                 tower.texture = Content.Load<Texture2D>(tower.texturename);
                 tower.abilities[0].texture = Content.Load<Texture2D>(tower.abilities[0].texturename);
@@ -182,11 +149,11 @@ namespace MobaGame2
 
             map.texture = Content.Load<Texture2D>(map.texturename);
             UI.mouseTexture = Content.Load<Texture2D>("texture\\pointer");
-            UI.background= Content.Load<Texture2D>("background");
+            UI.background = Content.Load<Texture2D>("background");
 
             Texture2D temp;
-            temp=Content.Load<Texture2D>("texture\\FiddlesticksSquare");
-            for(int i=0;i<50;i++)
+            temp = Content.Load<Texture2D>("texture\\FiddlesticksSquare");
+            for (int i = 0; i < 50; i++)
                 UI.ChampIcons.Add(temp);
 
             //lightmask = Content.Load<Texture2D>("texture\\lightmask");
@@ -247,16 +214,16 @@ namespace MobaGame2
             if (!UI.escMenuOpen)
             {
                 //right click
-                if (Input.RightMouseButton() && players[0].champ.attribute.alive)
+                if (Input.RightMouseButton() && gstate.players[0].champ.attribute.alive)
                 {
 
                     //prefer plays over other objects, because they can kill you!
-                    players[0].champ.FocusObject(Input.FindUnderMouse(camera, players, minions, towers));
+                    gstate.players[0].champ.FocusObject(Input.FindUnderMouse(camera, gstate));
 
-                    if (players[0].champ.focus == null)
+                    if (gstate.players[0].champ.focus == null)
                         if (MathHelper.ClickedOn(Input.MousePosition + camera.position, map.rect))
                         {
-                            players[0].champ.direction = players[0].champ.CalcDirection(Input.MousePosition + camera.position);
+                            gstate.players[0].champ.direction = gstate.players[0].champ.CalcDirection(Input.MousePosition + camera.position);
                             //players[0].champ.FocusObject(null);
 
                         }
@@ -285,55 +252,55 @@ namespace MobaGame2
             //center camera to champ and follow
             if (Input.KeyHeld(Keys.Space))
             {
-                camera.Center(players[0].champ.center);
+                camera.Center(gstate.players[0].champ.center);
             }
 
             //debug respawn and insta kill
             if (Input.KeyPressed(Keys.K))
             {
-                if (players[0].champ.attribute.alive == true)
-                    players[0].champ.attribute.alive = false;
+                if (gstate.players[0].champ.attribute.alive == true)
+                    gstate.players[0].champ.attribute.alive = false;
                 else
                 {
-                    players[0].champ.attribute.alive = true;
-                    players[0].champ.attribute.Health = players[0].champ.attribute.maxhealth;
+                    gstate.players[0].champ.attribute.alive = true;
+                    gstate.players[0].champ.attribute.Health = gstate.players[0].champ.attribute.maxhealth;
                 }
 
             }
 
             if (Input.KeyPressed(Keys.Q))
             {
-                players[0].champ.activeability = 1;
+                gstate.players[0].champ.activeability = 1;
 
-                players[0].champ.FocusObject(Input.FindUnderMouse(camera, players, minions, towers));
-                players[0].champ.ability();
+                gstate.players[0].champ.FocusObject(Input.FindUnderMouse(camera, gstate));
+                gstate.players[0].champ.ability();
             }
             if (Input.KeyPressed(Keys.W))
             {
-                players[0].champ.activeability = 2;
-                players[0].champ.FocusObject(Input.FindUnderMouse(camera, players, minions, towers));
-                players[0].champ.ability();
+                gstate.players[0].champ.activeability = 2;
+                gstate.players[0].champ.FocusObject(Input.FindUnderMouse(camera, gstate));
+                gstate.players[0].champ.ability();
             }
             if (Input.KeyPressed(Keys.E))
             {
-                players[0].champ.activeability = 3;
-                players[0].champ.FocusObject(Input.FindUnderMouse(camera, players, minions, towers));
-                players[0].champ.ability();
+                gstate.players[0].champ.activeability = 3;
+                gstate.players[0].champ.FocusObject(Input.FindUnderMouse(camera, gstate));
+                gstate.players[0].champ.ability();
             }
             if (Input.KeyPressed(Keys.R))
             {
-                players[0].champ.activeability = 4;
-                players[0].champ.ability();
+                gstate.players[0].champ.activeability = 4;
+                gstate.players[0].champ.ability();
             }
             if (Input.KeyPressed(Keys.D))
             {
-                players[0].champ.activeability = 5;
-                players[0].champ.ability();
+                gstate.players[0].champ.activeability = 5;
+                gstate.players[0].champ.ability();
             }
             if (Input.KeyPressed(Keys.F))
             {
-                players[0].champ.activeability = 6;
-                players[0].champ.ability();
+                gstate.players[0].champ.activeability = 6;
+                gstate.players[0].champ.ability();
             }
 
             //display menu
@@ -354,50 +321,7 @@ namespace MobaGame2
             #endregion
 
 
-            #region updates
-
-            foreach (var player in players)
-            {
-                player.Update(map.rect, gameTime,abilities);
-            }
-
-            for (int i = 0; i < minions.Count;i++ )
-            {
-                foreach (var player in players)
-                {
-                    minions[i].Agro(player.champ);
-                }
-
-                minions[i].Updater(map.rect, gameTime);
-
-                if (!minions[i].attribute.alive)
-                {
-                    minions.RemoveAt(i);
-                }
-            }
-
-            for (int i = 0; i < towers.Count; i++)
-            {
-
-                towers[i].Updater(map.rect, gameTime);
-
-                foreach (var minion in minions)
-                {
-                    towers[i].Agro(minion);
-                }
-                foreach (var player in players)
-                {
-                    towers[i].Agro(player.champ);
-                }
-            }
-
-            for (int i = 0; i < abilities.Count; i++)
-            {
-                abilities[i].Update(gameTime);
-                if (abilities[i].ghost)
-                    abilities.RemoveAt(i);
-            }
-            #endregion
+            gstate.Update(gameTime);
 
             // TODO: Add your update logic here
 
@@ -432,30 +356,30 @@ namespace MobaGame2
 
         protected void DrawMain(GameTime gameTime)
         {
-                DrawGame(gameTime);
+            DrawGame(gameTime);
 
-                DrawFog(gameTime);
+            DrawFog(gameTime);
 
-                GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Color.Black);
 
-                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-                fogeffect.Parameters["lightMask"].SetValue(fog);
-                fogeffect.CurrentTechnique.Passes[0].Apply();
-                spriteBatch.Draw(mainscene, new Vector2(0, 0), Color.White);
-                spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            fogeffect.Parameters["lightMask"].SetValue(fog);
+            fogeffect.CurrentTechnique.Passes[0].Apply();
+            spriteBatch.Draw(mainscene, new Vector2(0, 0), Color.White);
+            spriteBatch.End();
 
 
-                #region interface
-                spriteBatch.Begin();
+            #region interface
+            spriteBatch.Begin();
 
-                UI.Draw(spriteBatch, font1, players[0], Input.MousePosition,gameTime);
+            UI.Draw(spriteBatch, font1, gstate.players[0], Input.MousePosition, gameTime);
 
-                //draw pointer to be drawn last so its over top everything
-                spriteBatch.Draw(UI.mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
+            //draw pointer to be drawn last so its over top everything
+            spriteBatch.Draw(UI.mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
 
-                spriteBatch.End();
-                #endregion
-                base.Draw(gameTime);
+            spriteBatch.End();
+            #endregion
+            base.Draw(gameTime);
         }
 
         protected void DrawGame(GameTime gameTime)
@@ -465,7 +389,7 @@ namespace MobaGame2
             GraphicsDevice.Clear(Color.Gray);
 
             //if player is alive draw normaly, otherwise dray grayed out
-            if (players[0].champ.attribute.alive)
+            if (gstate.players[0].champ.attribute.alive)
                 drawcolor = Color.White;
             else
                 drawcolor = Color.Gray;
@@ -487,7 +411,7 @@ namespace MobaGame2
             //draw map
             spriteBatch.Draw(map.texture,
                 map.rect,
-                new Rectangle((int)map.position.X,(int)map.position.Y,map.texturewidth,map.textureheight),
+                new Rectangle((int)map.position.X, (int)map.position.Y, map.texturewidth, map.textureheight),
                drawcolor);
 
             spriteBatch.End();
@@ -504,22 +428,8 @@ namespace MobaGame2
                             camera.calc_transformation(1, 1)
                     );
 
+            gstate.Draw(spriteBatch, font1, drawcolor);
 
-            //draw players champs
-            foreach (var player in players)
-                player.Draw(spriteBatch, font1, drawcolor);
-
-            //draw minion 
-            foreach (var minion in minions)
-                minion.Draw(spriteBatch, drawcolor);
-
-            //tower
-            foreach (var tower in towers)
-                tower.Draw(spriteBatch, drawcolor);
-
-            //draw abilities
-            foreach (var ability in abilities)
-                ability.Draw(spriteBatch, drawcolor);
 
             spriteBatch.End();
             #endregion
@@ -600,20 +510,7 @@ namespace MobaGame2
 
             //spriteBatch.End();
 
-
-
-            foreach (var player in players)
-            {
-                if(player.champ.attribute.alive)
-                    spriteBatch.Draw(lightmask, player.champ.visionrect, Color.White);
-            }
-
-            //draw minion 
-            foreach (var minion in minions)
-                spriteBatch.Draw(lightmask, minion.visionrect, Color.White);
-
-            foreach (var tower in towers)
-                spriteBatch.Draw(lightmask, tower.visionrect, Color.White);
+            gstate.DrawVision(spriteBatch, Color.White, lightmask);
 
             spriteBatch.End();
             #endregion
