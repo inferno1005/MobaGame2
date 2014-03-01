@@ -177,12 +177,17 @@ namespace MobaGame2
                     if (networking.isServer)
                     {
                         networking.ListenMessage();
-                        networking.SendObject(gstate.players[0].champ.destination);
+                        networking.SendObject(gstate.players[0].champ.position);
                     }
                     else
                     {
+                        Vector2 temp;
+                        temp=(Vector2)networking.ListenMessage();
                         //Console.WriteLine("should be getting player state");
-                        gstate.players[0].champ.direction = gstate.players[0].champ.CalcDirection((Vector2)networking.ListenMessage());
+                        //gstate.players[0].champ.position = (Vector2)networking.ListenMessage();
+                        if(temp!=null)
+                        gstate.players[0].champ.direction=
+                            gstate.players[0].champ.CalcDirection(temp);
                     }
 
 

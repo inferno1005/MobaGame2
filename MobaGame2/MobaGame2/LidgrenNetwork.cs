@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Lidgren.Network;
+using Lidgren.Network.Xna;
 
 
 namespace MobaGame2
@@ -125,8 +126,13 @@ namespace MobaGame2
 
 
                         case NetIncomingMessageType.Data:
+                            Console.WriteLine("client got data!");
                             object temp;
                             temp=DeserializeObject<object>(inc.Data);
+
+
+                            if (temp is Vector2)
+                                return (Vector2)temp;
 
                             //string
                             if (temp is string)
@@ -142,8 +148,6 @@ namespace MobaGame2
                                         break;
                                 }
                             }
-                            else if (temp is Vector2)
-                                return (Vector2)temp;
                             break;
 
                     }
@@ -194,14 +198,13 @@ namespace MobaGame2
             if (isServer)
             {
                 if(server.ConnectionsCount>0)
-                    server.SendMessage(sendMsg, server.Connections, NetDeliveryMethod.ReliableOrdered, 0);
+                    server.SendMessage(sendMsg, server.Connections, NetDeliveryMethod.ReliableUnordered, 0);
             }
             else
             {
                 client.SendMessage(sendMsg, NetDeliveryMethod.ReliableOrdered);
             }
         }
-
 
 
         private static byte[] SerializeObject(object pObjectToSerialize)
