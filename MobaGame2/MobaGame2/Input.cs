@@ -59,7 +59,12 @@ namespace MobaGame2
                 {
                     //networking.ConnectToHost();
                     //networking.FindGame();
-                    networking.ConnectToClint();
+                    {
+                        networking.ConnectToClint();
+
+                        networking.searching = false;
+                        networking.inLobby = true;
+                    }
                 }
             }
             if (KeyPressed(Keys.Escape))

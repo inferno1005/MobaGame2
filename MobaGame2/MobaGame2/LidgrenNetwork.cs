@@ -191,6 +191,7 @@ namespace MobaGame2
             cconf = new NetPeerConfiguration(GameName);
             cconf.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
             cconf.EnableMessageType(NetIncomingMessageType.Data);
+            Console.WriteLine("SHOULD BE CONNECTING TO  65.36.105.18 @ port 8080");
 
             //searching = true;
             client = new NetClient(cconf);
@@ -198,6 +199,7 @@ namespace MobaGame2
             client.Start();
 
             client.Connect("65.36.105.18", 8080); 
+            //client.Connect("192.168.1.118", 8080); 
         }
 
 
@@ -214,8 +216,11 @@ namespace MobaGame2
 
             if (isServer)
             {
-                if(server.ConnectionsCount>0)
-                    server.SendMessage(sendMsg, server.Connections, NetDeliveryMethod.ReliableUnordered, 0);
+                if (server.ConnectionsCount > 0)
+                {
+                    Console.WriteLine("sending message");
+                    server.SendMessage(sendMsg, server.Connections, NetDeliveryMethod.ReliableOrdered, 0);
+                }
             }
             else
             {
