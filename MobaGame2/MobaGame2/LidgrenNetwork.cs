@@ -185,6 +185,14 @@ namespace MobaGame2
             client.Connect(ip,outmsg);
         }
 
+        //client connect to known ip:port
+        public void ConnectToClint()
+        {
+            client.Connect("65.36.105.18", 8080); 
+        }
+
+
+
         public void SendObject(object Object)
         {
             NetOutgoingMessage sendMsg;
