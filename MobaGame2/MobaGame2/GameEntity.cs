@@ -14,6 +14,7 @@ using Lidgren.Network;
 
 namespace MobaGame2
 {
+    [Serializable]
     class GameEntity
     {
         public Vector2 position;        //current position
@@ -81,7 +82,6 @@ namespace MobaGame2
 
         public double Distance(Vector2 target)
         {
-
                 return Vector2.Distance(target, this.position);
         }
 

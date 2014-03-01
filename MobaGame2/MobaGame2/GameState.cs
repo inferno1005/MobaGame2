@@ -16,6 +16,7 @@ using Lidgren.Network;
 
 namespace MobaGame2
 {
+    [Serializable]
     class GameState
     {
         public List<Player> players;
@@ -70,11 +71,6 @@ namespace MobaGame2
                 tower.texture = Content.Load<Texture2D>(tower.texturename);
                 tower.abilities[0].texture = Content.Load<Texture2D>(tower.abilities[0].texturename);
             }
-
-
-
-
-
         }
 
         public void Draw(SpriteBatch spriteBatch, SpriteFont font, Color drawcolor)

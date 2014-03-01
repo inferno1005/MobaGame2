@@ -4,6 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.GamerServices;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using Lidgren.Network;
 
 
@@ -35,6 +42,7 @@ namespace MobaGame2
         public bool searching= false;
         public bool joined = false;
         public bool GameIsRunning = false;
+        public bool inLobby = false;
         
         public LidgrenNetwork()
         {
@@ -63,7 +71,7 @@ namespace MobaGame2
 
         
         }
-        public void ListenMessage()
+        public Object ListenMessage()
         {
             NetIncomingMessage inc;
             if (isServer)   //do server listening stuff
@@ -108,7 +116,6 @@ namespace MobaGame2
 
                         //response back from server after searching for a server
                         case NetIncomingMessageType.DiscoveryResponse:
-
                             AvailableSessions tempsession = new AvailableSessions();
                             tempsession.ip = inc.SenderEndPoint;
                             tempsession.name = inc.ReadString();
@@ -117,12 +124,35 @@ namespace MobaGame2
                             break;
 
 
+                        case NetIncomingMessageType.Data:
+                            object temp;
+                            temp=DeserializeObject<object>(inc.Data);
+
+                            //string
+                            if (temp is string)
+                            {
+                                switch ((string)temp)
+                                {
+                                    case "start game":
+                                        GameIsRunning = true;
+                                        inLobby = false;
+                                        break;
+                                    case "end game":
+                                        GameIsRunning = false;
+                                        break;
+                                }
+                            }
+                            else if (temp is Vector2)
+                                return (Vector2)temp;
+                            break;
 
                     }
 
                     client.Recycle(inc);
                 }
+
             }
+            return null;
         }
 
         //search the subnet for games 
@@ -163,7 +193,8 @@ namespace MobaGame2
 
             if (isServer)
             {
-                server.SendMessage(sendMsg, server.Connections, NetDeliveryMethod.ReliableOrdered, 0);
+                if(server.ConnectionsCount>0)
+                    server.SendMessage(sendMsg, server.Connections, NetDeliveryMethod.ReliableOrdered, 0);
             }
             else
             {

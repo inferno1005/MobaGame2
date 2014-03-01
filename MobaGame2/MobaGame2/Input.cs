@@ -83,7 +83,8 @@ namespace MobaGame2
                 //if clicking start game
                 if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280 - 230, 200, 100, 20)))
                 {
-                    Console.WriteLine("clicled on start game");
+                    Console.WriteLine("clicked on start game");
+                    networking.SendObject("start game");
                     networking.GameIsRunning = true;
                 }
                 //check if clicking on champ icon that they want to play as
@@ -128,7 +129,9 @@ namespace MobaGame2
                         {
                             Console.WriteLine("joining server!");
                             networking.ConnectToHost(networking.availsessions[i].ip);
-                            networking.SendObject("inferno1005");
+                            networking.searching = false;
+                            networking.inLobby = true;
+                            //networking.SendObject("inferno1005");
                         }
                 }
         }

@@ -142,11 +142,11 @@ namespace MobaGame2
         {
             Input.Update();
 
-            if (networking.isServer && !networking.GameIsRunning)
+            if ((networking.isServer && !networking.GameIsRunning) || networking.inLobby)
             {
                 Input.HandleLobbyInput(networking);
-                if (networking.isServer)
-                    networking.ListenMessage();
+                //if (networking.isServer)
+                networking.ListenMessage();
             }
             else if (networking.searching)
             {
@@ -172,7 +172,22 @@ namespace MobaGame2
                 }
 
                 if (gstate != null)
+                {
+                    //should send gamestate to clients
+                    if (networking.isServer)
+                    {
+                        networking.ListenMessage();
+                        networking.SendObject(gstate.players[0].champ.destination);
+                    }
+                    else
+                    {
+                        //Console.WriteLine("should be getting player state");
+                        gstate.players[0].champ.direction = gstate.players[0].champ.CalcDirection((Vector2)networking.ListenMessage());
+                    }
+
+
                     GameUpdate(gameTime);
+                }
             }
             //player.lastState = currentState;
             base.Update(gameTime);

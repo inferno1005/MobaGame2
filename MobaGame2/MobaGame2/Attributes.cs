@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace MobaGame2
 {
+    [Serializable]
     class Attributes
     {
         public double health;
