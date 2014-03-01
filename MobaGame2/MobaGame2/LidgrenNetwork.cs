@@ -188,6 +188,15 @@ namespace MobaGame2
         //client connect to known ip:port
         public void ConnectToClint()
         {
+            cconf = new NetPeerConfiguration(GameName);
+            cconf.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
+            cconf.EnableMessageType(NetIncomingMessageType.Data);
+
+            //searching = true;
+            client = new NetClient(cconf);
+
+            client.Start();
+
             client.Connect("65.36.105.18", 8080); 
         }
 
