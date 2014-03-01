@@ -132,7 +132,12 @@ namespace MobaGame2
 
 
                             if (temp is Vector2)
+                            {
+
+                                GameIsRunning = true;
+                                inLobby = false;
                                 return (Vector2)temp;
+                            }
 
                             //string
                             if (temp is string)
@@ -156,7 +161,7 @@ namespace MobaGame2
                 }
 
             }
-            return null;
+            return new object();
         }
 
         //search the subnet for games 
@@ -183,6 +188,11 @@ namespace MobaGame2
             NetOutgoingMessage outmsg=client.CreateMessage();
             outmsg.Write("Connecting");
             client.Connect(ip,outmsg);
+
+
+
+            searching = false;
+            inLobby = true;
         }
 
         //client connect to known ip:port
@@ -200,6 +210,10 @@ namespace MobaGame2
 
             client.Connect("65.36.105.18", 8080); 
             //client.Connect("192.168.1.118", 8080); 
+
+
+            searching = false;
+            inLobby = true;
         }
 
 

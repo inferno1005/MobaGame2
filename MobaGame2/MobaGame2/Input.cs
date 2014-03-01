@@ -62,8 +62,6 @@ namespace MobaGame2
                     {
                         networking.ConnectToClint();
 
-                        networking.searching = false;
-                        networking.inLobby = true;
                     }
                 }
             }
