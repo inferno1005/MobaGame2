@@ -17,34 +17,23 @@ namespace MobaGame2
 {
     class Bush :GameEntity
     {
+        private int textureheight;
+        private int texturewidth;
 
         public Bush()
         {
-            this.texturename = "texture\\bush";
+            this.texturename = "texture\\longbush";
             this.height = 100;
             this.width = 300;
+            this.texturewidth = 1536;
+            this.textureheight= 100;
         }
 
         public void Draw(SpriteBatch spriteBatch,Color color)
         {
             if (this.attribute.visible)
             {
-                /*
-                //so slow ;-;
-                this.rotation %= (float)Math.PI * 2 ;
-                this.rotation += (float)Math.PI / 2;
-
-                spriteBatch.Draw(this.texture,
-                    new Rectangle((int)this.center.X,(int)this.center.Y,(int)this.width,(int)this.height),
-                    null,
-                    this.color,
-                    this.rotation,
-                    new Vector2(this.width,this.height),
-                    SpriteEffects.None,0);
-                 */
-
-
-                spriteBatch.Draw(this.texture, this.rect, color);
+                spriteBatch.Draw(this.texture, this.rect,  color);
                 attribute.Draw(spriteBatch, this.position);
             }
         }
