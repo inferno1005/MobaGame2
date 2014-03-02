@@ -1,4 +1,11 @@
-﻿using System;
+﻿//todo 
+//add connection handshake, doesnt seem reliable
+//figure out why things are so slow, consider not sending updates as often, 
+//may be flodding the network sending 60 packets every second 
+
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -60,6 +67,8 @@ namespace MobaGame2
             sconf.EnableMessageType(NetIncomingMessageType.DiscoveryRequest );
             sconf.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             sconf.EnableMessageType(NetIncomingMessageType.Data);
+            //sconf.AutoFlushSendQueue = true;
+            //sconf.AutoFlushSendQueue = false;
 
             isServer = true;
             Console.WriteLine("HOSTING GAME");
@@ -126,7 +135,7 @@ namespace MobaGame2
 
 
                         case NetIncomingMessageType.Data:
-                            Console.WriteLine("client got data!");
+                            //Console.WriteLine("client got data!");
                             object temp;
                             temp=DeserializeObject<object>(inc.Data);
 
@@ -228,18 +237,23 @@ namespace MobaGame2
 
             sendMsg.Write(SerializeObject(Object));
 
+            Console.WriteLine(sendMsg.LengthBytes);
+
             if (isServer)
             {
                 if (server.ConnectionsCount > 0)
                 {
-                    Console.WriteLine("sending message");
+                    //Console.WriteLine("sending message");
                     server.SendMessage(sendMsg, server.Connections, NetDeliveryMethod.ReliableOrdered, 0);
+                    //server.FlushSendQueue();
                 }
             }
             else
             {
                 client.SendMessage(sendMsg, NetDeliveryMethod.ReliableOrdered);
+                //client.FlushSendQueue();
             }
+
         }
 
 

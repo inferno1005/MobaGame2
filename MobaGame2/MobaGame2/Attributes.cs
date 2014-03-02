@@ -59,6 +59,7 @@ namespace MobaGame2
         public bool visible=true;
         public bool clickable=true;
         public bool alive = true;
+        public bool team;               //determine which team an object belongs to
 
         public Attributes()
         {
@@ -92,6 +93,9 @@ namespace MobaGame2
             {
                 health = maxhealth;
             }
+
+            if (health < 0)
+                alive = false;
 
 
 

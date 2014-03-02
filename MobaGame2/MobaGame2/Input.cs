@@ -146,9 +146,12 @@ namespace MobaGame2
             {
                 if (MathHelper.ClickedOn(Input.MousePosition + camera.position, player.champ.rect))
                 {
-                    Console.WriteLine("FOCUSED CHAMP");
-                    //focus this player
-                    return player.champ;
+                    if (gamestate.players[0].champ.attribute.team != player.champ.attribute.team) ;
+                    {
+                        Console.WriteLine("FOCUSED CHAMP");
+                        //focus this player
+                        return player.champ;
+                    }
                 }
             }
 
@@ -158,8 +161,11 @@ namespace MobaGame2
             {
                 if (MathHelper.ClickedOn(Input.MousePosition + camera.position, minion.rect))
                 {
-                    Console.WriteLine("FOCUSED minion");
-                    return minion;
+                    if (gamestate.players[0].champ.attribute.team != minion.attribute.team) ;
+                    {
+                        Console.WriteLine("FOCUSED minion");
+                        return minion;
+                    }
                 }
 
             }
@@ -167,10 +173,20 @@ namespace MobaGame2
             {
                 if (MathHelper.ClickedOn(Input.MousePosition + camera.position, tower.rect))
                 {
-                    Console.WriteLine("FOCUSED tower");
-                    return tower;
+                    if (gamestate.players[0].champ.attribute.team != tower.attribute.team) ;
+                    {
+                        Console.WriteLine("FOCUSED tower");
+                        return tower;
+                    }
                 }
-
+            }
+            foreach (var nexus in gamestate.nexuses)
+            {
+                if (MathHelper.ClickedOn(Input.MousePosition + camera.position, nexus.rect))
+                {
+                    if (gamestate.players[0].champ.attribute.team != nexus.attribute.team)
+                        return nexus;
+                }
             }
             return null;
         }

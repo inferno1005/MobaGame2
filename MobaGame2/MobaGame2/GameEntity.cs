@@ -41,6 +41,11 @@ namespace MobaGame2
         //focus
         public GameEntity focus;        //the focus of this object
 
+        //last hit
+        public GameEntity lasthit;      //keeps track of who hit this entity last to give credit
+
+
+
         //returns a rectangle the shape of this object
         public Rectangle rect
         { get { return new Rectangle((int)position.X, (int)position.Y, (int)width, (int)height); } }

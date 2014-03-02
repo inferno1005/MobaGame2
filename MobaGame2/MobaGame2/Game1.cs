@@ -106,7 +106,7 @@ namespace MobaGame2
             //gstate = new GameState(map);
             #endregion
 
-            camera = new Camera(new Vector2(0, 0), SCREENHEIGHT, SCREENWIDTH, 8);
+            camera = new Camera(new Vector2(0, 0), SCREENHEIGHT, SCREENWIDTH, 12);
 
             //minimap = new Camera(new Vector2(0, 0), 50, 50, 8);
             //minimap.zoom = .30f;

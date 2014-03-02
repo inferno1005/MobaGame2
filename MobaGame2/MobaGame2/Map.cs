@@ -28,7 +28,7 @@ namespace MobaGame2
             this.attribute.clickable = true;
 
             this.height = 800;
-            this.width = 5000;
+            this.width =10000;
             texturename = "texture\\seamless_ground";
         }
     }

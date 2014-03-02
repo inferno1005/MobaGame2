@@ -24,9 +24,9 @@ namespace MobaGame2
 
             this.height = 132;
             this.width = 132;
-            this.position = new Vector2(100, 100);
+            //this.position = new Vector2(100, 100);
             this.attribute.speed = 0;
-            this.attribute.visionrange = 300;
+            this.attribute.visionrange = 500;
             this.attribute.attackDamage=100;
             this.attribute.maxhealth = 500;
             this.attribute.health= 500;
@@ -89,7 +89,8 @@ namespace MobaGame2
         {
             if (this.attribute.range > (distance = Vector2.Distance(this.position, target.position)))
             {
-                FocusObject(target);
+                if(this.attribute.team!=target.attribute.team)
+                    FocusObject(target);
             }
         }
     }

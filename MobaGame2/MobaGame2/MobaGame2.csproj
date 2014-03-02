@@ -108,6 +108,7 @@
     <Compile Include="Minion.cs" />
     <Compile Include="Networking.cs" />
     <Compile Include="NewChamp.cs" />
+    <Compile Include="Nexus.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />

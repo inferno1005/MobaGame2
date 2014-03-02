@@ -24,6 +24,7 @@ namespace MobaGame2
         public List<Tower> towers;
         public List<GameEntity> entities;
         public List<Ability> abilities;
+        public List<Nexus> nexuses;
         private Map map;
 
         public GameState(Map map)
@@ -32,19 +33,74 @@ namespace MobaGame2
             this.map = map;
 
 
+            abilities = new List<Ability>();
+
+            #region towers
+            towers = new List<Tower>();
+            for (int i = 0; i < 8; i++)
+                towers.Add(new Tower(map, abilities));
+
+            //four for each team
+            towers[0].position = new Vector2(map.position.X + 1000,map.position.Y+150);
+            towers[0].attribute.team = false;
+
+            towers[1].position = new Vector2(map.position.X + 1000,map.height-350);
+            towers[1].attribute.team = false;
+
+            towers[2].position = new Vector2(map.position.X + 2400,map.height/2-towers[3].height/2);
+            towers[2].attribute.team = false;
+
+            towers[3].position = new Vector2(map.position.X + 4000,map.height/2-towers[3].height/2);
+            towers[3].attribute.team = false;
+
+
+            towers[4].position = new Vector2(map.width - 1000,map.position.Y+150);
+            towers[4].attribute.team = true;
+
+            towers[5].position = new Vector2(map.width - 1000,map.height-350);
+            towers[5].attribute.team = true;
+
+            towers[6].position = new Vector2(map.width - 2400,map.height/2-towers[3].height/2);
+            towers[6].attribute.team = true;
+
+            towers[7].position = new Vector2(map.width - 4000,map.height/2-towers[3].height/2);
+            towers[7].attribute.team = true;
+
+
+
+            #endregion
+
+            #region nexus
+            nexuses = new List<Nexus>();
+            nexuses.Add(new Nexus());
+            nexuses.Add(new Nexus());
+
+            nexuses[0].position = new Vector2(map.position.X + 700, map.height / 2 - nexuses[0].height / 2);
+            nexuses[0].attribute.team = false;
+
+            nexuses[1].position = new Vector2(map.width - 700-nexuses[0].width/2, map.height / 2 - nexuses[0].height / 2);
+            nexuses[1].attribute.team = true;
+            #endregion
+
+
+            #region players
             players = new List<Player>();
             players.Add(new Player());
             players[0].name = "inferno1005";
 
-            abilities = new List<Ability>();
-
-            towers = new List<Tower>();
-            towers.Add(new Tower(map, abilities));
-
-
             players[0].champ = new FiddleSticks(map, abilities);
+            players[0].champ.attribute.team = false;
+
+            #endregion
+
+
+            #region minions
             minions = new List<Minion>();
             minions.Add(new Minion(towers[0], map, abilities));
+            #endregion
+
+
+
         }
 
         public void LoadContent(ContentManager Content)
@@ -71,6 +127,10 @@ namespace MobaGame2
                 tower.texture = Content.Load<Texture2D>(tower.texturename);
                 tower.abilities[0].texture = Content.Load<Texture2D>(tower.abilities[0].texturename);
             }
+            foreach (var nexus in nexuses)
+            {
+                nexus.texture = Content.Load<Texture2D>(nexus.texturename);
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch, SpriteFont font, Color drawcolor)
@@ -87,6 +147,9 @@ namespace MobaGame2
             foreach (var tower in towers)
                 tower.Draw(spriteBatch, drawcolor);
 
+            foreach (var nexus in nexuses)
+                nexus.Draw(spriteBatch, drawcolor);
+
             //draw abilities
             foreach (var ability in abilities)
                 ability.Draw(spriteBatch, drawcolor);
@@ -98,16 +161,30 @@ namespace MobaGame2
         {
             foreach (var player in players)
             {
-                if (player.champ.attribute.alive)
+                if (player.champ.attribute.alive &&
+                    players[0].champ.attribute.team==player.champ.attribute.team)
+
                     spriteBatch.Draw(lightmask, player.champ.visionrect, Color.White);
             }
 
             //draw minion 
             foreach (var minion in minions)
-                spriteBatch.Draw(lightmask, minion.visionrect, Color.White);
+            {
+                if (players[0].champ.attribute.team == minion.attribute.team)
+                    spriteBatch.Draw(lightmask, minion.visionrect, Color.White);
+            }
 
             foreach (var tower in towers)
-                spriteBatch.Draw(lightmask, tower.visionrect, Color.White);
+            {
+                if (players[0].champ.attribute.team == tower.attribute.team)
+                    spriteBatch.Draw(lightmask, tower.visionrect, Color.White);
+            }
+            foreach (var nexus in nexuses)
+            {
+
+                if (players[0].champ.attribute.team == nexus.attribute.team)
+                    spriteBatch.Draw(lightmask, nexus.visionrect, Color.White);
+            }
 
 
         }
