@@ -27,14 +27,15 @@ namespace MobaGame2
         public List<Nexus> nexuses;
         public List<Bush> bushes;
         public Map map;
-        public GameTime gametime;
+        //public GameTime gametime;
 
-        public GameState(Map map,GameTime gtime)
+        //public GameState(Map map,GameTime gtime)
+        public GameState(Map map)
         {
             map = new Map();
             this.map = map;
 
-            this.gametime = gtime;
+            //this.gametime = gtime;
 
             abilities = new List<Ability>();
 
@@ -295,7 +296,7 @@ namespace MobaGame2
                     this.abilities.RemoveAt(i);
             }
 
-            MinionSpawner.Update(this);
+            MinionSpawner.Update(this,gameTime);
 
         }
 

@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace MobaGame2
 {
+    [Serializable]
     class Minion : NewChamp
     {
         GameEntity enemybase;

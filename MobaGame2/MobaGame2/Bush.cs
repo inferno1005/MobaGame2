@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace MobaGame2
 {
+    [Serializable]
     class Bush :GameEntity
     {
         private int textureheight;

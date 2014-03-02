@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace MobaGame2
 {
+    [Serializable]
     class Tower:NewChamp
     {
         public Tower(Map m,List<Ability> ga): base(m,ga)

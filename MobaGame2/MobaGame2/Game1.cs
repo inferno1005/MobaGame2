@@ -168,7 +168,7 @@ namespace MobaGame2
 
                 if (gstate == null)
                 {
-                    gstate = new GameState(map,gameTime);
+                    gstate = new GameState(map);
                     gstate.LoadContent(Content);
                 }
 
@@ -178,17 +178,16 @@ namespace MobaGame2
                     if (networking.isServer)
                     {
                         networking.ListenMessage();
-                        networking.SendObject(gstate.players[0].champ.position);
+                        networking.SendObject(gstate);
                     }
                     else
                     {
-                        Vector2 temp;
-                        temp=(Vector2)networking.ListenMessage();
+                        GameState temp;
+                        temp=(GameState)networking.ListenMessage();
                         //Console.WriteLine("should be getting player state");
                         //gstate.players[0].champ.position = (Vector2)networking.ListenMessage();
-                        if(temp!=null)
-                        gstate.players[0].champ.direction=
-                            gstate.players[0].champ.CalcDirection(temp);
+                        if (temp != null)
+                            gstate = temp;
                     }
 
 
@@ -242,7 +241,7 @@ namespace MobaGame2
                             //networking.EndSession();
                             UI.escMenuOpen = false;
                             gstate = null;
-                            gstate = new GameState(map,gameTime);
+                            gstate = new GameState(map);
                             gstate.LoadContent(Content);
                             break;
 

@@ -23,12 +23,12 @@ namespace MobaGame2
         static private bool wave=false;
         static private bool firstwavewait=true;
 
-        static public void Update(GameState gamestate)
+        static public void Update(GameState gamestate,GameTime gametime)
         {
             //cool down wave spawner
             if (wave)
             {
-                timer += (float)gamestate.gametime.ElapsedGameTime.TotalSeconds;
+                timer += (float)gametime.ElapsedGameTime.TotalSeconds;
                 if (timer >= coolDown)
                 {
                     timer = 0;
