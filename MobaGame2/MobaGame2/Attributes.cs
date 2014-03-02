@@ -54,32 +54,35 @@ namespace MobaGame2
         public double attackSpeed;
         public int gold;
         public int goldpersec;
-        public Texture2D texture;
-        public string texturename;
+        //public Texture2D texture;
+        //public string texturename;
         public bool visible=true;
         public bool clickable=true;
         public bool alive = true;
         public bool team;               //determine which team an object belongs to
+        private int textureindex=9;
 
         public Attributes()
         {
-            texturename = "texture\\1x1";
+            //texturename = "texture\\1x1";
+
+
         }
 
 
         public void Draw(SpriteBatch spritebatch,Vector2 pos)
         {
-            if (pos != null && spritebatch != null && texture!=null)
+            //if (pos != null && spritebatch != null )
             {
                 int healthbarpercent = (int)(50* ((Health / maxhealth)));
                 //draw healh bars  going to need to fix these, find good ratios for them to display
-                spritebatch.Draw(texture, new Rectangle((int)pos.X, (int)pos.Y-20, 50, 5), Color.Black);
-                spritebatch.Draw(texture, new Rectangle((int)pos.X, (int)pos.Y-20, healthbarpercent, 5), Color.Red);
+                spritebatch.Draw(UI.textures[textureindex], new Rectangle((int)pos.X, (int)pos.Y-20, 50, 5), Color.Black);
+                spritebatch.Draw(UI.textures[textureindex], new Rectangle((int)pos.X, (int)pos.Y-20, healthbarpercent, 5), Color.Red);
 
                 int manabarpercent= (int)(50* ((mana/ maxmana)));
                 //draw healh bars  going to need to fix these, find good ratios for them to display
-                spritebatch.Draw(texture, new Rectangle((int)pos.X, (int)pos.Y-10, 50, 5), Color.Black);
-                spritebatch.Draw(texture, new Rectangle((int)pos.X, (int)pos.Y-10, manabarpercent, 5), Color.Blue);
+                spritebatch.Draw(UI.textures[textureindex], new Rectangle((int)pos.X, (int)pos.Y-10, 50, 5), Color.Black);
+                spritebatch.Draw(UI.textures[textureindex], new Rectangle((int)pos.X, (int)pos.Y-10, manabarpercent, 5), Color.Blue);
 
             }
         }

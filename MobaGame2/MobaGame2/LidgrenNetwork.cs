@@ -81,7 +81,7 @@ namespace MobaGame2
 
         
         }
-        public Object ListenMessage()
+        public GameState ListenMessage()
         {
             NetIncomingMessage inc;
             if (isServer)   //do server listening stuff
@@ -140,12 +140,12 @@ namespace MobaGame2
                             temp=DeserializeObject<object>(inc.Data);
 
 
-                            if (temp is Vector2)
+                            if (temp is GameState)
                             {
 
                                 GameIsRunning = true;
                                 inLobby = false;
-                                return (Vector2)temp;
+                                return (GameState)temp;
                             }
 
                             //string
@@ -170,7 +170,7 @@ namespace MobaGame2
                 }
 
             }
-            return new object();
+            return null;
         }
 
         //search the subnet for games 

@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace MobaGame2
 {
+    [Serializable]
     class FiddleSticks : NewChamp
     {
         public FiddleSticks(Map m,List<Ability> ga) : base(m,ga)

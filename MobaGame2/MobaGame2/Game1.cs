@@ -183,11 +183,11 @@ namespace MobaGame2
                     else
                     {
                         GameState temp;
-                        temp=(GameState)networking.ListenMessage();
-                        //Console.WriteLine("should be getting player state");
-                        //gstate.players[0].champ.position = (Vector2)networking.ListenMessage();
+                        temp=networking.ListenMessage();
                         if (temp != null)
-                            gstate = temp;
+                        {
+                                gstate = temp;
+                        }
                     }
 
 
