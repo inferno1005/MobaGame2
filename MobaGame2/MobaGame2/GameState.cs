@@ -89,7 +89,7 @@ namespace MobaGame2
 
             for(int i=0;i<4;i++)
                 bushes.Add(new Bush());
-            bushes[0].position = new Vector2(map.position.X + 4000, map.position.Y);
+            bushes[0].position = new Vector2(map.position.X + 4500, map.position.Y);
 
 
 

@@ -419,8 +419,8 @@ namespace MobaGame2
 
             //draw map
             spriteBatch.Draw(map.texture,
-                map.rect,
-                new Rectangle((int)map.position.X, (int)map.position.Y, map.texturewidth, map.textureheight),
+                map.rect,   
+                new Rectangle((int)map.position.X, (int)map.position.Y, map.texturewidth*20, map.textureheight*2),
                drawcolor);
 
             spriteBatch.End();
