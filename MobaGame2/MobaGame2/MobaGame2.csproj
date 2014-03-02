@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes.cs" />
+    <Compile Include="Bush.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Champ.cs" />
     <Compile Include="champs\FiddleSticks.cs" />

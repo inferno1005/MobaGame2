@@ -33,6 +33,7 @@ namespace MobaGame2
             keyboardState = Keyboard.GetState();
             mouseState = Mouse.GetState();
         }
+
         public static bool KeyPressed(Keys key)
         { return lastkeyboardState.IsKeyUp(key) && keyboardState.IsKeyDown(key); }
 

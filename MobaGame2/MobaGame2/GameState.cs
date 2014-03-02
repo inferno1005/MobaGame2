@@ -25,6 +25,7 @@ namespace MobaGame2
         public List<GameEntity> entities;
         public List<Ability> abilities;
         public List<Nexus> nexuses;
+        public List<Bush> bushes;
         private Map map;
 
         public GameState(Map map)
@@ -83,6 +84,18 @@ namespace MobaGame2
             #endregion
 
 
+            #region bushes
+            bushes = new List<Bush>();
+
+            for(int i=0;i<4;i++)
+                bushes.Add(new Bush());
+            bushes[0].position = new Vector2(map.position.X + 4000, map.position.Y);
+
+
+
+            #endregion
+
+
             #region players
             players = new List<Player>();
             players.Add(new Player());
@@ -131,6 +144,12 @@ namespace MobaGame2
             {
                 nexus.texture = Content.Load<Texture2D>(nexus.texturename);
             }
+            foreach (var bush in bushes)
+            {
+                bush.texture = Content.Load<Texture2D>(bush.texturename);
+            }
+
+
         }
 
         public void Draw(SpriteBatch spriteBatch, SpriteFont font, Color drawcolor)
@@ -153,6 +172,11 @@ namespace MobaGame2
             //draw abilities
             foreach (var ability in abilities)
                 ability.Draw(spriteBatch, drawcolor);
+
+
+            foreach (var bush in bushes)
+                bush.Draw(spriteBatch, drawcolor);
+                
 
 
         }
