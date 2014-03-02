@@ -73,6 +73,7 @@ namespace MobaGame2
             Content.RootDirectory = "Content";
             this.IsFixedTimeStep = false;
             networking = new LidgrenNetwork();
+            InactiveSleepTime = new TimeSpan(0);
         }
 
         protected override void Initialize()
@@ -167,7 +168,7 @@ namespace MobaGame2
 
                 if (gstate == null)
                 {
-                    gstate = new GameState(map);
+                    gstate = new GameState(map,gameTime);
                     gstate.LoadContent(Content);
                 }
 
@@ -241,7 +242,7 @@ namespace MobaGame2
                             //networking.EndSession();
                             UI.escMenuOpen = false;
                             gstate = null;
-                            gstate = new GameState(map);
+                            gstate = new GameState(map,gameTime);
                             gstate.LoadContent(Content);
                             break;
 

@@ -42,20 +42,27 @@ namespace MobaGame2
             this.abilities[0].texturename = "texture\\fireball";
             enemybase = ge;
         }
-        public void Agro(GameEntity target)
+        public bool Agro(GameEntity target)
         {
             if (this.attribute.range > (distance = Vector2.Distance(this.position, target.position)))
             {
+                //Console.WriteLine("SHOULD BE AGRO ");
+
                 FocusObject(target);
+                return true;
+            }
+            else
+            {
+                FocusObject(enemybase);
+                return false;
             }
         }
         public void Updater(Rectangle rect, GameTime gametime)
         {
             if (focus != null && !focus.attribute.alive)
             {
-                FocusObject(null);
+                    FocusObject(enemybase);
             }
-
 
 
 
@@ -73,6 +80,15 @@ namespace MobaGame2
             foreach (var ability in abilities)
             {
                 ability.Update(gametime);
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch, Color color)
+        {
+            if (this.attribute.visible)
+            {
+                spriteBatch.Draw(UI.minionTexture, this.rect, color);
+                attribute.Draw(spriteBatch,this.position);
             }
         }
 

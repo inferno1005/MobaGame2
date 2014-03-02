@@ -157,11 +157,17 @@ namespace MobaGame2
         //sets the focus for this object
         public void FocusObject(GameEntity f)
         {
-            focus = f;
-            if (null != focus)
+
+            if (f != null)
             {
-                direction = CalcDirection(focus.center);
+                    focus = f;
+                    direction = CalcDirection(focus.center);
             }
+            else
+            {
+                focus = null;
+            }
+
         }
 
     }

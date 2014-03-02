@@ -28,7 +28,7 @@ namespace MobaGame2
         public bool cast = false;
         public bool ghost = false;
         public bool castvisibile = true;
-        public Texture2D texture;
+        //public Texture2D texture;
         public Texture2D icon;
         public Vector2 iconSize = new Vector2(90, 90);
         public string texturename;
@@ -87,11 +87,11 @@ namespace MobaGame2
             {
                 if (focus != null && !ghost)
                 {
-                    Console.WriteLine("Should be applying damage!");
-                    Console.WriteLine(focus.attribute.Health);
+                    //Console.WriteLine("Should be applying damage!");
+                    //Console.WriteLine(focus.attribute.Health);
                     focus.attribute.Health -= this.physicalDamage;
-                    Console.WriteLine(this.physicalDamage);
-                    Console.WriteLine(focus.attribute.Health);
+                    //Console.WriteLine(this.physicalDamage);
+                    //Console.WriteLine(focus.attribute.Health);
                     ghost = true;
                 }
             }
@@ -101,7 +101,7 @@ namespace MobaGame2
         {
             if (this.attribute.visible)
             {
-                spriteBatch.Draw(this.texture, this.rect, color);
+                spriteBatch.Draw(UI.minionAbilityTexture, this.rect, color);
             }
         }
     }

@@ -34,6 +34,8 @@ namespace MobaGame2
         public static Texture2D mouseTexture;
         public static Texture2D background;
         public static List<Texture2D> ChampIcons;
+        public static Texture2D minionTexture;
+        public static Texture2D minionAbilityTexture;
 
 
         //fonts
@@ -178,6 +180,12 @@ namespace MobaGame2
 
             //fonts
             font= Content.Load<SpriteFont>("DefaultFont");
+
+
+            //minion texture
+            minionTexture = Content.Load<Texture2D>("texture\\minion");
+            minionAbilityTexture= Content.Load<Texture2D>("texture\\fireball");
+
         }
 
 

@@ -26,13 +26,15 @@ namespace MobaGame2
         public List<Ability> abilities;
         public List<Nexus> nexuses;
         public List<Bush> bushes;
-        private Map map;
+        public Map map;
+        public GameTime gametime;
 
-        public GameState(Map map)
+        public GameState(Map map,GameTime gtime)
         {
             map = new Map();
             this.map = map;
 
+            this.gametime = gtime;
 
             abilities = new List<Ability>();
 
@@ -83,18 +85,16 @@ namespace MobaGame2
             nexuses[1].attribute.team = true;
             #endregion
 
-
             #region bushes
             bushes = new List<Bush>();
 
-            for(int i=0;i<4;i++)
+            for(int i=0;i<1;i++)
                 bushes.Add(new Bush());
             bushes[0].position = new Vector2(map.position.X + 4500, map.position.Y);
 
 
 
             #endregion
-
 
             #region players
             players = new List<Player>();
@@ -106,14 +106,10 @@ namespace MobaGame2
 
             #endregion
 
-
             #region minions
             minions = new List<Minion>();
-            minions.Add(new Minion(towers[0], map, abilities));
+            ////minions.Add(new Minion(towers[0], map, abilities));
             #endregion
-
-
-
         }
 
         public void LoadContent(ContentManager Content)
@@ -129,11 +125,11 @@ namespace MobaGame2
                 }
             }
 
-            foreach (var Minion in minions)
-            {
-                Minion.texture = Content.Load<Texture2D>(Minion.texturename);
-                Minion.abilities[0].texture = Content.Load<Texture2D>(Minion.abilities[0].texturename);
-            }
+            //foreach (var Minion in minions)
+            //{
+                ////Minion.texture = Content.Load<Texture2D>(Minion.texturename);
+                ////Minion.abilities[0].texture = Content.Load<Texture2D>(Minion.abilities[0].texturename);
+            //}
 
             foreach (var tower in towers)
             {
@@ -160,7 +156,9 @@ namespace MobaGame2
 
             //draw minion 
             foreach (var minion in minions)
+            {
                 minion.Draw(spriteBatch, drawcolor);
+            }
 
             //tower
             foreach (var tower in towers)
@@ -223,18 +221,46 @@ namespace MobaGame2
             for (int i = 0; i < minions.Count; i++)
             {
 
+
                 this.minions[i].Updater(map.rect, gameTime);
 
                 if (!this.minions[i].attribute.alive)
                 {
                     this.minions.RemoveAt(i);
                 }
-                else
+                else 
                 {
-                    foreach (var player in this.players)
+
+                    //find first tower
+                    //then find minions
+                    //then find players
+                    //if none of those ,goto enemey base
+
+
+                    bool found = false;
+                    foreach (var tower in this.towers)
                     {
-                        this.minions[i].Agro(player.champ);
+                        if (!found && tower.attribute.team != minions[i].attribute.team)
+                        {
+                            found = this.minions[i].Agro(tower);
+                        }
                     }
+                    if (!found)
+                        foreach (var minion in this.minions)
+                        {
+                            if (!found && minion.attribute.team != minions[i].attribute.team)
+                            {
+                                found = this.minions[i].Agro(minion);
+                            }
+                        }
+                    if (!found)
+                        foreach (var player in this.players)
+                        {
+                            if (!found && player.champ.attribute.team != minions[i].attribute.team)
+                                found = this.minions[i].Agro(player.champ);
+                        }
+
+
                 }
 
             }
@@ -267,6 +293,7 @@ namespace MobaGame2
                     this.abilities.RemoveAt(i);
             }
 
+            MinionSpawner.Update(this);
 
         }
 

@@ -107,6 +107,7 @@
     <Compile Include="Map.cs" />
     <Compile Include="MathHelper.cs" />
     <Compile Include="Minion.cs" />
+    <Compile Include="MinionSpawner.cs" />
     <Compile Include="Networking.cs" />
     <Compile Include="NewChamp.cs" />
     <Compile Include="Nexus.cs" />

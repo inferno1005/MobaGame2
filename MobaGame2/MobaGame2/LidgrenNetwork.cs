@@ -101,7 +101,7 @@ namespace MobaGame2
                             break;
                         case NetIncomingMessageType.Data:
                             //Console.WriteLine("server got data!");
-                            Console.WriteLine(DeserializeObject<string>(inc.Data));
+                            //Console.WriteLine(DeserializeObject<string>(inc.Data));
 
                             break;
 
@@ -237,7 +237,7 @@ namespace MobaGame2
 
             sendMsg.Write(SerializeObject(Object));
 
-            Console.WriteLine(sendMsg.LengthBytes);
+            //Console.WriteLine(sendMsg.LengthBytes);
 
             if (isServer)
             {

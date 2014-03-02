@@ -83,7 +83,7 @@ namespace MobaGame2
                 this.focus.Distance(this.position)< this.attribute.range && //if in range
                 !this.abilities[0].cast) //if timer is good
             {
-                Console.WriteLine("{2}range checker {0} < {1}", focus.distance ,this.attribute.range,focus.texturename);
+                //Console.WriteLine("{2}range checker {0} < {1}", focus.distance ,this.attribute.range,focus.texturename);
                 this.abilities[0].cast = true;
                 this.abilities[0].position= this.position;
                 this.abilities[0].focus= this.focus;
