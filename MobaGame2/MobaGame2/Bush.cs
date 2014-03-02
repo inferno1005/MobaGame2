@@ -22,18 +22,18 @@ namespace MobaGame2
 
         public Bush()
         {
-            this.texturename = "texture\\longbush";
             this.height = 100;
             this.width = 300;
             this.texturewidth = 1536;
             this.textureheight= 100;
+            this.textureindex = 5;
         }
 
         public void Draw(SpriteBatch spriteBatch,Color color)
         {
             if (this.attribute.visible)
             {
-                spriteBatch.Draw(this.texture, this.rect,  color);
+                spriteBatch.Draw(UI.textures[textureindex], this.rect,  color);
                 attribute.Draw(spriteBatch, this.position);
             }
         }

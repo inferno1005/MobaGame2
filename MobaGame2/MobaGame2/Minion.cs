@@ -20,7 +20,8 @@ namespace MobaGame2
         public Minion(GameEntity ge,Map m,List<Ability> ga) : base(m,ga)
         {
             this.Name = "Minion";
-            this.texturename = "texture\\Minion";
+            //this.texturename = "texture\\Minion";
+            this.textureindex = 2;
 
             this.height = 32;
             this.width = 32;
@@ -39,7 +40,7 @@ namespace MobaGame2
             this.abilities[0].physicalDamage = this.attribute.attackDamage;
             this.abilities[0].magicDamage = 0;
             this.abilities[0].coolDown = 3;
-            this.abilities[0].texturename = "texture\\fireball";
+            //this.abilities[0].texturename = "texture\\fireball";
             enemybase = ge;
         }
         public bool Agro(GameEntity target)
@@ -87,7 +88,7 @@ namespace MobaGame2
         {
             if (this.attribute.visible)
             {
-                spriteBatch.Draw(UI.minionTexture, this.rect, color);
+                spriteBatch.Draw(UI.textures[this.textureindex], this.rect, color);
                 attribute.Draw(spriteBatch,this.position);
             }
         }

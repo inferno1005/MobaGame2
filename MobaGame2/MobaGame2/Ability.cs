@@ -31,14 +31,16 @@ namespace MobaGame2
         //public Texture2D texture;
         public Texture2D icon;
         public Vector2 iconSize = new Vector2(90, 90);
-        public string texturename;
-        public string iconname;
+        //public string texturename;
+        //public string iconname;
+        
 
         public Ability()
         {
             this.width = 10;
             this.height = 10;
             this.attribute.speed = 10;
+            this.textureindex = 3;
         }
         public Ability(Ability copy)
         {
@@ -56,8 +58,8 @@ namespace MobaGame2
             timer = copy.timer;
             cast = true;
             ghost = false;
-            texture = copy.texture;
-            texturename = copy.texturename;
+            //texture = copy.texture;
+            //texturename = copy.texturename;
         }
         public void Update(GameTime gametime)
         {
@@ -101,7 +103,7 @@ namespace MobaGame2
         {
             if (this.attribute.visible)
             {
-                spriteBatch.Draw(UI.minionAbilityTexture, this.rect, color);
+                spriteBatch.Draw(UI.textures[this.textureindex], this.rect, color);
             }
         }
     }

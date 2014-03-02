@@ -16,6 +16,7 @@ namespace MobaGame2
 {
     class Champ :GameEntity
     {
+        /*
         public string Name;
         //public Attributes attributes;
         public List<Ability> abilities;
@@ -44,7 +45,6 @@ namespace MobaGame2
                     this.rotation,
                     new Vector2(this.width,this.height),
                     SpriteEffects.None,0);
-                 */
 
 
                 spriteBatch.Draw(this.texture, this.rect, color);
@@ -89,5 +89,6 @@ namespace MobaGame2
                 }
             }
         }
+*/
     }
 }

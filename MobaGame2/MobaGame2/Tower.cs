@@ -18,8 +18,9 @@ namespace MobaGame2
         public Tower(Map m,List<Ability> ga): base(m,ga)
         {
             this.Name = "Tower";
-            this.texturename = "texture\\tower";
+            //this.texturename = "texture\\tower";
             this.attribute.range = 300;
+            this.textureindex = 7;
 
 
             this.height = 132;
@@ -38,7 +39,7 @@ namespace MobaGame2
             this.abilities[0].physicalDamage = this.attribute.attackDamage;
             this.abilities[0].magicDamage = 0;
             this.abilities[0].coolDown = 1;
-            this.abilities[0].texturename = "texture\\fireball";
+            //this.abilities[0].texturename = "texture\\fireball";
  
         }
 

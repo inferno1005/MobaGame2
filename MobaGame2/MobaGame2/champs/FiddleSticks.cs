@@ -19,8 +19,9 @@ namespace MobaGame2
         public FiddleSticks(Map m,List<Ability> ga) : base(m,ga)
         {
             this.Name = "Fiddle Sticks";
-            this.texturename = "texture\\Fiddle-Pumpkin";
+            //this.texturename = "texture\\Fiddle-Pumpkin";
             //this.texturename = "FiddleSticksSquare";
+            this.textureindex = 8;
             this.height = 32;
             this.width = 64;
             this.attribute.range = 250;
@@ -47,8 +48,8 @@ namespace MobaGame2
 
 
 
-                this.abilities[i].texturename = "texture\\fireball";
-                this.abilities[i].iconname = "texture\\fireball";
+                //this.abilities[i].texturename = "texture\\fireball";
+                //this.abilities[i].iconname = "texture\\fireball";
             }
 
 
@@ -59,8 +60,9 @@ namespace MobaGame2
             this.abilities[1].magicDamage = 0;
             this.abilities[1].coolDown = 3;
             this.abilities[1].attribute.visible = false;
-            this.abilities[1].texturename = "texture\\fiddlesticks-terrify";
-            this.abilities[1].iconname = "texture\\fiddlesticks-terrify";
+            //this.abilities[1].texturename = "texture\\fiddlesticks-terrify";
+            //this.abilities[1].iconname = "texture\\fiddlesticks-terrify";
+            this.abilities[1].textureindex = 10;
 
             this.abilities[2].name = "Drain";
             this.abilities[2].attribute.range = this.attribute.range;
@@ -68,8 +70,9 @@ namespace MobaGame2
             this.abilities[2].magicDamage = 0;
             this.abilities[2].coolDown = 3;
             this.abilities[2].attribute.visible = false;
-            this.abilities[2].texturename = "texture\\fiddlesticks-drain";
-            this.abilities[2].iconname = "texture\\fiddlesticks-drain";
+            //this.abilities[2].texturename = "texture\\fiddlesticks-drain";
+            //this.abilities[2].iconname = "texture\\fiddlesticks-drain";
+            this.abilities[2].textureindex = 11;
 
             this.abilities[3].name = "Dark Wind";
             this.abilities[3].attribute.range = this.attribute.range;
@@ -77,8 +80,9 @@ namespace MobaGame2
             this.abilities[3].magicDamage = 0;
             this.abilities[3].coolDown = 3;
             this.abilities[3].attribute.visible = false;
-            this.abilities[3].texturename = "texture\\fiddlesticks-dark-wind";
-            this.abilities[3].iconname = "texture\\fiddlesticks-dark-wind";
+            //this.abilities[3].texturename = "texture\\fiddlesticks-dark-wind";
+            //this.abilities[3].iconname = "texture\\fiddlesticks-dark-wind";
+            this.abilities[3].textureindex = 12;
 
             this.abilities[4].name = "Crow Storm";
             this.abilities[4].attribute.range = this.attribute.range;
@@ -86,8 +90,9 @@ namespace MobaGame2
             this.abilities[4].magicDamage = 0;
             this.abilities[4].coolDown = 3;
             this.abilities[4].attribute.visible = false;
-            this.abilities[4].texturename = "texture\\fiddlesticks-crowstorm";
-            this.abilities[4].iconname = "texture\\fiddlesticks-crowstorm";
+            //this.abilities[4].texturename = "texture\\fiddlesticks-crowstorm";
+            //this.abilities[4].iconname = "texture\\fiddlesticks-crowstorm";
+            this.abilities[4].textureindex = 13;
 
             this.abilities[5].name = "Heal";
             this.abilities[5].attribute.range = this.attribute.range;
@@ -98,7 +103,8 @@ namespace MobaGame2
             this.abilities[5].attribute.visible = false; 
             this.abilities[5].manaCost = 0;
             //this.abilities[4].texturename = "texture\\fiddlesticks-crowstorm";
-            this.abilities[5].iconname = "texture\\Heal";
+            //this.abilities[5].iconname = "texture\\Heal";
+            this.abilities[5].textureindex = 14;
 
 
             this.abilities[6].name = "Clarity";
@@ -110,12 +116,8 @@ namespace MobaGame2
             this.abilities[6].attribute.visible = false; 
             this.abilities[6].manaCost = -100;
             //this.abilities[4].texturename = "texture\\fiddlesticks-crowstorm";
-            this.abilities[6].iconname = "texture\\Clarity";
-
-
-
-
-
+            //this.abilities[6].iconname = "texture\\Clarity";
+            this.abilities[6].textureindex = 15;
 
             this.attribute.maxmana= 1000;
             this.attribute.mana= 1000;

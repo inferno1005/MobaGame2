@@ -69,10 +69,10 @@ namespace MobaGame2
                     this.rotation,
                     new Vector2(this.width,this.height),
                     SpriteEffects.None,0);
-                 */
+         */
 
 
-                spriteBatch.Draw(this.texture, this.rect, color);
+                spriteBatch.Draw(UI.textures[this.textureindex], this.rect, color);
                 attribute.Draw(spriteBatch, this.position);
             }
         }
@@ -115,6 +115,7 @@ namespace MobaGame2
                 Ability temp = new Ability(this.abilities[activeability]);
                 temp.position = this.position;
                 temp.focus = this.focus;
+                temp.textureindex = this.abilities[activeability].textureindex;
 
                 globalabilities.Add(temp);
             }

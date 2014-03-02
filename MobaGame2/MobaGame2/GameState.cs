@@ -114,6 +114,7 @@ namespace MobaGame2
 
         public void LoadContent(ContentManager Content)
         {
+            /*
             foreach (var Player in players)
             {
                 Player.champ.texture = Content.Load<Texture2D>(Player.champ.texturename);
@@ -144,6 +145,7 @@ namespace MobaGame2
             {
                 bush.texture = Content.Load<Texture2D>(bush.texturename);
             }
+             */
 
 
         }

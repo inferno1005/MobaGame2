@@ -99,7 +99,7 @@ namespace MobaGame2
 
             //ui
             UI.SetPos(SCREENWIDTH, SCREENHEIGHT);
-            UI.ChampIcons = new List<Texture2D>();
+            //UI.ChampIcons = new List<Texture2D>();
 
 
             //game state
@@ -124,7 +124,7 @@ namespace MobaGame2
 
             #region textures
 
-            map.texture = Content.Load<Texture2D>(map.texturename);
+            //map.texture = Content.Load<Texture2D>(map.texturename);
 
             UI.LoadContent(Content);
 
@@ -385,7 +385,7 @@ namespace MobaGame2
             UI.Draw(spriteBatch, gstate.players[0], Input.MousePosition, gameTime);
 
             //draw pointer to be drawn last so its over top everything
-            spriteBatch.Draw(UI.mouseTexture, Input.MousePosition - new Vector2(5, 5), Color.White);
+            spriteBatch.Draw(UI.textures[0], Input.MousePosition - new Vector2(5, 5), Color.White);
 
             spriteBatch.End();
             #endregion
@@ -419,7 +419,7 @@ namespace MobaGame2
                 );
 
             //draw map
-            spriteBatch.Draw(map.texture,
+            spriteBatch.Draw(UI.textures[5],
                 map.rect,   
                 new Rectangle((int)map.position.X, (int)map.position.Y, map.texturewidth*20, map.textureheight*2),
                drawcolor);
