@@ -8,10 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-//using Microsoft.Xna.Framework.Net;
 using Lidgren.Network;
-
-
 
 
 namespace MobaGame2
@@ -51,11 +48,7 @@ namespace MobaGame2
         //Texture2D mouseTexture;
         Texture2D lightmask;
 
-        //buffer
-        String buffer;
-
         Color drawcolor;
-
 
         bool GameStarted = false;
         #endregion
@@ -434,9 +427,8 @@ namespace MobaGame2
             #endregion
 
 
-            gstate.Update(gameTime);
-
-            // TODO: Add your update logic here
+            if(!gstate.GameOver)
+                gstate.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -547,55 +539,6 @@ namespace MobaGame2
 
 
             spriteBatch.End();
-            #endregion
-
-            //
-            #region minimap camera
-            /*
-            //draw based off camera location
-            spriteBatch.Begin(
-                //SpriteSortMode.BackToFront,
-                SpriteSortMode.Immediate,
-                BlendState.AlphaBlend,
-                null,
-                null,
-                null,
-                null,
-                //camera.calc_transformation(SCREENHEIGHT,SCREENWIDTH)
-                minimap.calc_transformation(SCREENHEIGHT, SCREENWIDTH)
-                );
-            //draw map
-            spriteBatch.Draw(map.texture, map.rect, Color.White);
-
-            //spriteBatch.End();
-
-
-
-            foreach(var player in players)
-                player.Draw(spriteBatch, font1);
-
-            //draw minion 
-            foreach(var minion in minions)
-                minion.Draw(spriteBatch);
-
-            spriteBatch.End();
-
-            */
-            #endregion
-            //
-
-
-
-            #region debug
-            /*
-            //spriteBatch.Begin();
-            spriteBatch.DrawString(font1, (camera.position.X - (Input.MousePosition).X).ToString() + " " + (camera.position.Y - (Input.MousePosition).Y).ToString() + buffer, new Vector2(0, 0), Color.White);
-            //spriteBatch.DrawString(font1, player1.champ.position.X.ToString() + " " + player1.champ.position.Y.ToString(), player1.champ.position-new Vector2(0,80), Color.White);
-            spriteBatch.DrawString(font1,
-                (player1.champ.position.X ).ToString() + " " + (  player1.champ.position.Y).ToString(),
-                (player1.champ.position- new Vector2(0, 80)), Color.White);
-            spriteBatch.End();
-             */
             #endregion
 
             GraphicsDevice.SetRenderTarget(null);
