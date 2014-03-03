@@ -104,6 +104,14 @@ namespace MobaGame2
                             }
                             break;
                         case NetIncomingMessageType.Data:
+                            object temp;
+
+                            temp = DeserializeObject<object>(inc.Data);
+
+                            if (temp is Player)
+                            {
+                                return temp;
+                            }
 
                             break;
 
@@ -156,8 +164,12 @@ namespace MobaGame2
                             {
                                 return temp;
                             }
+                            else if (temp is Player)
+                            {
+                                return temp;
+                            }
 
-                            //string
+                        //string
                             else if (temp is string)
                             {
                                 switch ((string)temp)

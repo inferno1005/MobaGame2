@@ -236,17 +236,37 @@ namespace MobaGame2
                     //should send gamestate to clients
                     if (networking.isServer)
                     {
-                        networking.ListenMessage();
+                        //listen for player update
+                        object temp;
+                        temp=networking.ListenMessage();
+                        if (temp != null)
+                        {
+                            if (temp is Player)
+                            {
+                                Console.WriteLine("GOT CLIENT PLAYER INFO");
+                                gstate.players[1]=(Player)temp;
+                            }
+                        }
+
                         networking.SendObject(gstate);
                     }
+
+                    //if client
                     else
                     {
+                        Player p;
+                        p = gstate.players[playerindex];
+
+                        networking.SendObject(p);
+
                         GameState temp;
                         temp=(GameState)networking.ListenMessage();
                         if (temp != null)
                         {
                                 gstate = temp;
                         }
+                        gstate.players[playerindex] = p;
+
                     }
 
 
