@@ -39,7 +39,7 @@ namespace MobaGame2
             for (int i = 0; i < 7; i++)
             {
                 this.abilities.Add(new Ability());
-                this.abilities[i].name = "Basic Attack";
+                //this.abilities[i].name = "Basic Attack";
                 this.abilities[i].attribute.range = this.attribute.range+2;
                 this.abilities[i].physicalDamage = this.attribute.attackDamage;
                 this.abilities[i].magicDamage = 0;
@@ -55,7 +55,7 @@ namespace MobaGame2
 
 
 
-            this.abilities[1].name = "Terrify";
+            //this.abilities[1].name = "Terrify";
             this.abilities[1].attribute.range = this.attribute.range;
             this.abilities[1].physicalDamage = this.attribute.attackDamage;
             this.abilities[1].magicDamage = 0;
@@ -65,7 +65,7 @@ namespace MobaGame2
             //this.abilities[1].iconname = "texture\\fiddlesticks-terrify";
             this.abilities[1].textureindex = 10;
 
-            this.abilities[2].name = "Drain";
+            //this.abilities[2].name = "Drain";
             this.abilities[2].attribute.range = this.attribute.range;
             this.abilities[2].physicalDamage = this.attribute.attackDamage;
             this.abilities[2].magicDamage = 0;
@@ -75,7 +75,7 @@ namespace MobaGame2
             //this.abilities[2].iconname = "texture\\fiddlesticks-drain";
             this.abilities[2].textureindex = 11;
 
-            this.abilities[3].name = "Dark Wind";
+            //this.abilities[3].name = "Dark Wind";
             this.abilities[3].attribute.range = this.attribute.range;
             this.abilities[3].physicalDamage = this.attribute.attackDamage;
             this.abilities[3].magicDamage = 0;
@@ -85,7 +85,7 @@ namespace MobaGame2
             //this.abilities[3].iconname = "texture\\fiddlesticks-dark-wind";
             this.abilities[3].textureindex = 12;
 
-            this.abilities[4].name = "Crow Storm";
+            //this.abilities[4].name = "Crow Storm";
             this.abilities[4].attribute.range = this.attribute.range;
             //this.abilities[4].physicalDamage = this.attribute.attackDamage;
             this.abilities[4].physicalDamage = 10000;
@@ -96,7 +96,7 @@ namespace MobaGame2
             //this.abilities[4].iconname = "texture\\fiddlesticks-crowstorm";
             this.abilities[4].textureindex = 13;
 
-            this.abilities[5].name = "Heal";
+            //this.abilities[5].name = "Heal";
             this.abilities[5].attribute.range = this.attribute.range;
             this.abilities[5].physicalDamage = -100;
             this.abilities[5].magicDamage = 0;
@@ -109,7 +109,7 @@ namespace MobaGame2
             this.abilities[5].textureindex = 14;
 
 
-            this.abilities[6].name = "Clarity";
+            //this.abilities[6].name = "Clarity";
             this.abilities[6].attribute.range = this.attribute.range;
             this.abilities[6].physicalDamage = 0;
             this.abilities[6].magicDamage = 0;

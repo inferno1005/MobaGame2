@@ -111,6 +111,10 @@ namespace MobaGame2
                             {
                                 return temp;
                             }
+                            else if (temp is Ability)
+                            {
+                                return temp;
+                            }
 
                             break;
 

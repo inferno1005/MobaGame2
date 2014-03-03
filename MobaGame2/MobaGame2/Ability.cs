@@ -17,7 +17,7 @@ namespace MobaGame2
     [Serializable]
     class Ability : GameEntity
     {
-        public string name;
+        //public string name;
         public double manaCost;
         public double healthCost;
         public double physicalDamage;
@@ -28,6 +28,8 @@ namespace MobaGame2
         public bool cast = false;
         public bool ghost = false;
         public bool castvisibile = true;
+        public int id;
+        public bool synced = true;
         //public Texture2D texture;
         //public Texture2D icon;
         public Vector2 iconSize = new Vector2(90, 90);
@@ -49,7 +51,7 @@ namespace MobaGame2
             this.height = 10;
             this.attribute.speed = 10;
 
-            name = copy.name;
+            //name = copy.name;
             manaCost = copy.manaCost;
             healthCost = copy.healthCost;
             physicalDamage = copy.physicalDamage;
@@ -89,11 +91,7 @@ namespace MobaGame2
             {
                 if (focus != null && !ghost)
                 {
-                    //Console.WriteLine("Should be applying damage!");
-                    //Console.WriteLine(focus.attribute.Health);
                     focus.attribute.Health -= this.physicalDamage;
-                    //Console.WriteLine(this.physicalDamage);
-                    //Console.WriteLine(focus.attribute.Health);
                     ghost = true;
                 }
             }

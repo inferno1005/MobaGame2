@@ -70,7 +70,7 @@ namespace MobaGame2
             graphics.PreferredBackBufferHeight = SCREENHEIGHT;
             graphics.PreferredBackBufferWidth = SCREENWIDTH;
             graphics.PreferMultiSampling = false;
-            graphics.IsFullScreen = true;
+            graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
             GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
@@ -264,7 +264,12 @@ namespace MobaGame2
                                 Player p=(Player)temp;
                                 gstate.players[p.id] = p;
                             }
+                            //else if (temp is Ability)
+                            //{
+                                //gstate.abilities.Add((Ability)temp);
+                            //}
                         }
+
 
                         networking.SendObject(gstate);
                     }
@@ -272,10 +277,21 @@ namespace MobaGame2
                     //if client
                     else
                     {
+                        //send player data
                         Player p;
                         p = gstate.players[playerindex];
                         p.id = playerindex;
                         networking.SendObject(p);
+
+                        //foreach (var ab in gstate.abilities)
+                        //{
+                            //if (!ab.synced)
+                            //{
+                                //ab.synced = true;
+                                //networking.SendObject(ab);
+                            //}
+                        //}
+
 
 
                         GameState temp;

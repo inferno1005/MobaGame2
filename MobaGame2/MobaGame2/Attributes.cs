@@ -60,6 +60,7 @@ namespace MobaGame2
         public bool clickable=true;
         public bool alive = true;
         public bool team;               //determine which team an object belongs to
+        public int owner;
         private int textureindex=9;
 
         public Attributes()

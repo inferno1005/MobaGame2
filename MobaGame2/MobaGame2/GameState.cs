@@ -24,6 +24,7 @@ namespace MobaGame2
         public List<Tower> towers;
         public List<GameEntity> entities;
         public List<Ability> abilities;
+        public List<Ability> newabilities;
         public List<Nexus> nexuses;
         public List<Bush> bushes;
         public Map map;
@@ -32,13 +33,18 @@ namespace MobaGame2
         public bool GameOver= false;
         //public GameTime gametime;
 
+        private Vector2 falsespawn;
+        private Vector2 truespawn;
+
         //public GameState(Map map,GameTime gtime)
         public GameState(Map map)
         {
             map = new Map();
             this.map = map;
 
-            //this.gametime = gtime;
+            //spawns
+            falsespawn = new Vector2(290, 290);
+            truespawn = new Vector2(map.width - 290, 290);
 
             abilities = new List<Ability>();
 
@@ -222,6 +228,21 @@ namespace MobaGame2
             foreach (var player in this.players)
             {
                 player.Update(this.map.rect, gameTime, this.abilities);
+                if (!player.champ.attribute.alive)
+                {
+                    if (player.champ.attribute.team == true)
+                    {
+                        player.champ.position = truespawn;
+                        player.champ.attribute.Health = player.champ.attribute.maxhealth;
+                    }
+                    else
+                    {
+                        player.champ.position = falsespawn;
+                        player.champ.attribute.Health = player.champ.attribute.maxhealth;
+                    }
+
+                    player.champ.attribute.alive = true;
+                }
             }
 
             for (int i = 0; i < minions.Count; i++)
@@ -328,8 +349,6 @@ namespace MobaGame2
 
         public void StartGame()
         {
-            Vector2 falsespawn= new Vector2(290, 290);
-            Vector2 truespawn= new Vector2(map.width-290, 290);
             if (!GameIsRunning)
             {
                 GameIsRunning = true;

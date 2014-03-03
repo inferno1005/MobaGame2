@@ -35,7 +35,7 @@ namespace MobaGame2
 
 
             this.abilities.Add(new Ability());
-            this.abilities[0].name = "Basic Attack";
+            //this.abilities[0].name = "Basic Attack";
             this.abilities[0].attribute.range = this.attribute.range;
             this.abilities[0].physicalDamage = this.attribute.attackDamage;
             this.abilities[0].magicDamage = 0;

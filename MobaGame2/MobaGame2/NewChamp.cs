@@ -23,6 +23,7 @@ namespace MobaGame2
 
         private Map map;
         protected List<Ability> globalabilities;
+        private int id; //adding this in at 3 am monday while half dead
 
         public NewChamp(Map m,List<Ability> ga)
         {
@@ -32,8 +33,10 @@ namespace MobaGame2
             globalabilities = ga;
         }
 
-        public void Updater(GameTime gametime)
+        public void Updater(GameTime gametime,int id)
         {
+
+            this.id = id;
             //make sure we arent attacking a dead thing
             if (focus!=null && !focus.attribute.alive)
             {
@@ -44,9 +47,10 @@ namespace MobaGame2
 
             BasicAttack();
 
-            if (this.attribute.health < 0)
-                this.attribute.alive = false;
+            //if (this.attribute.health < 0)
+                //this.attribute.alive = false;
 
+            //count down cooldowns
             foreach (var ability in abilities)
             {
                 ability.Update(gametime);
@@ -91,6 +95,8 @@ namespace MobaGame2
                 Ability temp = new Ability(this.abilities[0]); 
                 temp.position = this.position;
                 temp.focus = this.focus;
+                temp.id = this.id;
+                temp.synced = false;
 
 
                 globalabilities.Add(temp);
@@ -116,6 +122,7 @@ namespace MobaGame2
                 temp.position = this.position;
                 temp.focus = this.focus;
                 temp.textureindex = this.abilities[activeability].textureindex;
+                temp.synced = false;
 
                 globalabilities.Add(temp);
             }
@@ -134,6 +141,7 @@ namespace MobaGame2
                 temp.attribute.visible = this.abilities[activeability].castvisibile;
                 temp.position=this.position;
                 temp.focus = this;
+                temp.synced = false;
 
                 globalabilities.Add(temp);
 
