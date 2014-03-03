@@ -84,6 +84,7 @@ namespace MobaGame2
                     {
                         networking.SendObject("start game");
                         networking.GameIsRunning = true;
+                        gamestate.StartGame();
                     }
                 }
 

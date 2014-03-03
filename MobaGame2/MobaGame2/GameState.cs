@@ -325,5 +325,25 @@ namespace MobaGame2
 
 
         }
+
+        public void StartGame()
+        {
+            Vector2 falsespawn= new Vector2(290, 290);
+            Vector2 truespawn= new Vector2(map.width-290, 290);
+            if (!GameIsRunning)
+            {
+                GameIsRunning = true;
+
+                foreach (var player in players)
+                {
+                    if (player.champ.attribute.team == true)
+                    {
+                        player.champ.position = truespawn;
+                    }
+                    else
+                        player.champ.position = falsespawn;
+                }
+            }
+        }
     }
 }
