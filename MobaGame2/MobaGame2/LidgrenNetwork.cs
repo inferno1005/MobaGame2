@@ -92,24 +92,35 @@ namespace MobaGame2
                     {
                         case NetIncomingMessageType.DiscoveryRequest:
                             Console.WriteLine("got a discovery request");
-                            //create a response and write some example data to it
-                            NetOutgoingMessage response = server.CreateMessage();
-                            response.Write(ServerName);
 
-                            //send the response to the sender of the req
-                            server.SendDiscoveryResponse(response, inc.SenderEndPoint);
+                            //if game is running, dont bother sending a discovery response
+                            if(!GameIsRunning)
+                            {
+                                //create a response and write some example data to it
+                                NetOutgoingMessage response = server.CreateMessage();
+                                response.Write(ServerName);
+
+                                //send the response to the sender of the req
+                                server.SendDiscoveryResponse(response, inc.SenderEndPoint);
+                            }
                             break;
                         case NetIncomingMessageType.Data:
-                            //Console.WriteLine("server got data!");
-                            //Console.WriteLine(DeserializeObject<string>(inc.Data));
 
                             break;
 
                         case NetIncomingMessageType.ConnectionApproval:
-                            //clients.Add(inc.SenderEndPoint);
-                            inc.SenderConnection.Approve();
-                            Console.WriteLine("connection from {0}approved",inc.SenderEndPoint);
-                            //need to send world state from server to client
+                            //if game is already running, do not let new people join
+                            if (!GameIsRunning)
+                            {
+                                inc.SenderConnection.Approve();
+                                Console.WriteLine("connection from {0} approved", inc.SenderEndPoint);
+                            }
+
+                            else
+                            {
+                                inc.SenderConnection.Deny();
+                                Console.WriteLine("connection from {0} denied", inc.SenderEndPoint);
+                            }
                             break;
                     }
 
@@ -163,6 +174,16 @@ namespace MobaGame2
                                 }
                             }
                             break;
+                        //if the connection is approved 
+                        //join the lobby, and tell the server which team and the player name
+                        case NetIncomingMessageType.ConnectionApproval:
+                            inLobby = true;
+                            GameIsRunning = false;
+                            isServer = false;
+
+                            break;
+
+
 
                     }
 
@@ -295,6 +316,12 @@ namespace MobaGame2
                 client = null;
             }
             availsessions = null;
+        }
+
+        public int PlayerCount()
+        {
+            //plus one because the server is playing too
+            return server.ConnectionsCount + 1; 
         }
 
 

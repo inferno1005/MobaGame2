@@ -76,21 +76,16 @@ namespace MobaGame2
             //if pressed
             if (LeftMouseButton())
             {
-                //check if clicking ready
-                if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280 - 430, 200, 100, 20)))
-                {
-                    //make this player ready
-                }
-
                 //if clicking start game
                 if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280 - 230, 200, 100, 20)))
                 {
                     Console.WriteLine("clicked on start game");
-                    networking.SendObject("start game");
-                    networking.GameIsRunning = true;
+                    if (networking.isServer)
+                    {
+                        networking.SendObject("start game");
+                        networking.GameIsRunning = true;
+                    }
                 }
-                //check if clicking on champ icon that they want to play as
-
             }
 
 

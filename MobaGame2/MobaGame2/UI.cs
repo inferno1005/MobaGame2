@@ -30,16 +30,8 @@ namespace MobaGame2
         public static Vector2 menupos;
         static Vector2 menusize;
 
-        #region textures
         //textures
         public static List<Texture2D> textures=new List<Texture2D>();
-        //public static Texture2D mouseTexture;
-        //public static Texture2D background;
-        //public static Texture2D minionTexture;
-        //public static Texture2D minionAbilityTexture;
-        //public static Texture2D bushTexture;
-        //public static Texture2D mapTexture;
-        #endregion
 
 
         //fonts
@@ -183,11 +175,6 @@ namespace MobaGame2
             temp= Content.Load<Texture2D>("background");
             textures.Add(temp); // 1 background texture
 
-
-            //temp = Content.Load<Texture2D>("texture\\FiddlesticksSquare");
-            //for (int i = 0; i < 50; i++)
-                //ChampIcons.Add(temp);
-
             //minion texture
             temp= Content.Load<Texture2D>("texture\\minion");
             textures.Add(temp); // 2 minion texture texture
@@ -250,34 +237,47 @@ namespace MobaGame2
         public static void DrawTitleScreen(SpriteBatch spriteBatch,LidgrenNetwork networking)
         {
             spriteBatch.Begin();
-            spriteBatch.Draw(textures[1], new Rectangle(0,0,width,height), Color.White);
-            ///if (SignedInGamer.SignedInGamers.Count == 0)
-            ///{
-                //////networking.SignIn();
-            ///}
-            {
-                spriteBatch.DrawString(font, "Create New Lobby", new Vector2(width-530, 200), Color.White);
-                spriteBatch.DrawString(font, "Find a game", new Vector2(width-530, 250), Color.White);
-            }
+            spriteBatch.Draw(textures[1], new Rectangle(0, 0, width, height), Color.White);
+            spriteBatch.DrawString(font, "Create New Lobby", new Vector2(width - 530, 200), Color.White);
+            spriteBatch.DrawString(font, "Find a game", new Vector2(width - 530, 250), Color.White);
+
+            //mouse
             spriteBatch.Draw(textures[0], Input.MousePosition - new Vector2(5, 5), Color.White);
 
             spriteBatch.End();
         }
 
 
-        public static void DrawLobby(SpriteBatch spriteBatch, LidgrenNetwork networking)
+        public static void DrawLobby(SpriteBatch spriteBatch, LidgrenNetwork networking,GameState gamestate)
         {
             spriteBatch.Begin();
             spriteBatch.Draw(textures[1], new Rectangle(0,0,width,height), Color.White);
 
             spriteBatch.DrawString(font, "Lobby", new Vector2(width - 530, 200), Color.White);
 
-            int y = 0;
+
+            spriteBatch.DrawString(font, "Team 1", new Vector2(width - 530, 300), Color.White);
+            spriteBatch.DrawString(font, "join", new Vector2(width - 530,350), Color.White);
+
+            //need to chek for null because we may get into the draw function before we create the gamestate
+            if (gamestate != null)
+                for (int i = 0, j = 1; i < gamestate.players.Count; i++)
+                {
+                    if (gamestate.players[i].champ.attribute.team == false)
+                    {
+                        spriteBatch.DrawString(font, gamestate.players[i].name, new Vector2(width - 530, 350 + j * 50), Color.White);
+                        j++;
+                    }
+                }
+
+            spriteBatch.DrawString(font, "Team 2", new Vector2(width - 230, 300), Color.White);
+            spriteBatch.DrawString(font, "join", new Vector2(width - 230, 350), Color.White);
 
 
-            spriteBatch.DrawString(font, "Ready", new Vector2(width - 430,  200), Color.White);
+            //spriteBatch.DrawString(font, "Ready", new Vector2(width - 430,  200), Color.White);
             spriteBatch.DrawString(font, "Start", new Vector2(width - 230,  200), Color.White);
 
+            //mouse
             spriteBatch.Draw(textures[0], Input.MousePosition - new Vector2(5, 5), Color.White);
             spriteBatch.End();
         }

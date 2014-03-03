@@ -37,9 +37,11 @@ namespace MobaGame2
         int SCREENWIDTH = 1280;
 
 
-        //game objects
+        //game
         Camera camera;
         GameState gstate;
+        int playerindex = 0;
+
 
 
         //scene stuff
@@ -135,8 +137,7 @@ namespace MobaGame2
 
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
-            //networking.EndSession();
+            networking.EndSession();
         }
 
         protected override void Update(GameTime gameTime)
@@ -146,8 +147,35 @@ namespace MobaGame2
             if ((networking.isServer && !networking.GameIsRunning) || networking.inLobby)
             {
                 Input.HandleLobbyInput(networking);
-                //if (networking.isServer)
+
+                //both client and server listen for updates
                 networking.ListenMessage();
+
+                //if client
+                if (!networking.isServer)
+                {
+                    //send name
+                    //send team
+                    //get player index for gamestate
+
+
+                }
+                else
+                {
+                    //start a game start if there isnt one
+                    //need to start it before the game starts to setup players
+                    if (gstate == null)
+                    {
+                        gstate = new GameState(map);
+                        gstate.LoadContent(Content);
+                    }
+
+                    //if we get a new player
+                    //add them to the list of players
+                    //set the team
+                    //return to that ip the index of the player for the gamestate
+                }
+
             }
             else if (networking.searching)
             {
@@ -341,7 +369,7 @@ namespace MobaGame2
             //if in a lobby
             if (networking.isServer && !networking.GameIsRunning)
             {
-                UI.DrawLobby(spriteBatch, networking);
+                UI.DrawLobby(spriteBatch, networking,gstate);
             }
             //if looking for a session
             else if (networking.searching)
@@ -520,6 +548,8 @@ namespace MobaGame2
 
             GraphicsDevice.SetRenderTarget(null);
         }
+
+
 
 
     }
