@@ -27,6 +27,7 @@ namespace MobaGame2
         public List<Nexus> nexuses;
         public List<Bush> bushes;
         public Map map;
+        public bool GameIsRunning = false;
         //public GameTime gametime;
 
         //public GameState(Map map,GameTime gtime)

@@ -222,7 +222,7 @@ namespace MobaGame2
                 }
             }
             //in game
-            else if (networking.GameIsRunning)
+            else if (networking.GameIsRunning||gstate.GameIsRunning)
             {
 
                 if (gstate == null)
@@ -236,6 +236,7 @@ namespace MobaGame2
                     //should send gamestate to clients
                     if (networking.isServer)
                     {
+                        gstate.GameIsRunning = true;
                         //listen for player update
                         object temp;
                         temp=networking.ListenMessage();
