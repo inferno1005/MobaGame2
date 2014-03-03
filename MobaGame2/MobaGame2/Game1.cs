@@ -243,7 +243,7 @@ namespace MobaGame2
                         {
                             if (temp is Player)
                             {
-                                Console.WriteLine("GOT CLIENT PLAYER INFO");
+                                //Console.WriteLine("GOT CLIENT PLAYER INFO");
                                 gstate.players[1]=(Player)temp;
                             }
                         }
