@@ -27,6 +27,7 @@ namespace MobaGame2
             this.attribute.health = 10000;
             this.attribute.visionrange = 2000;
             this.textureindex = 6;
+            this.attribute.healthRegen = 0;
         }
 
         public void Draw(SpriteBatch spriteBatch,Color color)

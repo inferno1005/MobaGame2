@@ -69,88 +69,104 @@ namespace MobaGame2
             menusize = new Vector2(width - 80, height - 80);
         }
 
-        static public void Draw(SpriteBatch spritebatch,Player player,Vector2 mousepos,GameTime gametime)
+        static public void Draw(SpriteBatch spritebatch,Player player,Vector2 mousepos,GameTime gametime,bool gameover,bool winner)
         {
-            #region bars
-            int healthbarpercent = (int)(barwidth*((player.champ.attribute.Health / player.champ.attribute.maxhealth)));
-            int manabarpercent = (int)(barwidth*((player.champ.attribute.mana/ player.champ.attribute.maxmana)));
-
-            //draw healh bars  
-            spritebatch.Draw(textures[9], new Rectangle((int)healthpos.X, (int)healthpos.Y ,barwidth , 20), Color.Black);
-            spritebatch.Draw(textures[9],
-                new Rectangle(
-                    (int)healthpos.X,       //x
-                    (int)healthpos.Y ,      //y
-                    healthbarpercent,       //length
-                    20),                    //height
-                    Color.Red);             //color
-
-            //draw mana bars  
-            spritebatch.Draw(textures[9], new Rectangle((int)manapos.X, (int)manapos.Y ,barwidth , 20), Color.Black);
-            spritebatch.Draw(textures[9],
-                new Rectangle(
-                    (int)manapos.X,       //x
-                    (int)manapos.Y ,      //y
-                    manabarpercent,       //length
-                    20),                  //height
-                    Color.Blue);          //color
-
-
-
-            //draw near the percent of each bar to look nice
-            if (healthbarpercent > 100)
-                spritebatch.DrawString(font, ((int)(player.champ.attribute.Health)).ToString(), new Vector2(healthbarpercent + healthpos.X -55, healthpos.Y - 3), Color.White);
-            else
-                spritebatch.DrawString(font, ((int)(player.champ.attribute.Health)).ToString(), new Vector2(healthpos.X, healthpos.Y - 3), Color.White);
-
-            if(manabarpercent>100)
-                spritebatch.DrawString(font, ((int)player.champ.attribute.mana).ToString(), new Vector2(manabarpercent + manapos.X - 55, manapos.Y - 3), Color.White);
-            else
-                spritebatch.DrawString(font, ((int)player.champ.attribute.mana).ToString(), new Vector2( manapos.X, manapos.Y - 3), Color.White);
-            #endregion
-
-            #region abilities
-            Color color;
-
-            abilityPos=new Vector2(300,height-100);
-            //for(int i=0;i<player.champ.abilities.Count;i++)
-            for(int i=0;i<player.champ.abilities.Count;i++)
+            if (!gameover)
             {
-                if (player.champ.abilities[i].cast || !player.champ.attribute.alive)
-                    color = Color.Gray;
+                #region bars
+                int healthbarpercent = (int)(barwidth * ((player.champ.attribute.Health / player.champ.attribute.maxhealth)));
+                int manabarpercent = (int)(barwidth * ((player.champ.attribute.mana / player.champ.attribute.maxmana)));
+
+                //draw healh bars  
+                spritebatch.Draw(textures[9], new Rectangle((int)healthpos.X, (int)healthpos.Y, barwidth, 20), Color.Black);
+                spritebatch.Draw(textures[9],
+                    new Rectangle(
+                        (int)healthpos.X,       //x
+                        (int)healthpos.Y,      //y
+                        healthbarpercent,       //length
+                        20),                    //height
+                        Color.Red);             //color
+
+                //draw mana bars  
+                spritebatch.Draw(textures[9], new Rectangle((int)manapos.X, (int)manapos.Y, barwidth, 20), Color.Black);
+                spritebatch.Draw(textures[9],
+                    new Rectangle(
+                        (int)manapos.X,       //x
+                        (int)manapos.Y,      //y
+                        manabarpercent,       //length
+                        20),                  //height
+                        Color.Blue);          //color
+
+
+
+                //draw near the percent of each bar to look nice
+                if (healthbarpercent > 100)
+                    spritebatch.DrawString(font, ((int)(player.champ.attribute.Health)).ToString(), new Vector2(healthbarpercent + healthpos.X - 55, healthpos.Y - 3), Color.White);
                 else
+                    spritebatch.DrawString(font, ((int)(player.champ.attribute.Health)).ToString(), new Vector2(healthpos.X, healthpos.Y - 3), Color.White);
+
+                if (manabarpercent > 100)
+                    spritebatch.DrawString(font, ((int)player.champ.attribute.mana).ToString(), new Vector2(manabarpercent + manapos.X - 55, manapos.Y - 3), Color.White);
+                else
+                    spritebatch.DrawString(font, ((int)player.champ.attribute.mana).ToString(), new Vector2(manapos.X, manapos.Y - 3), Color.White);
+                #endregion
+
+                #region abilities
+                Color color;
+
+                abilityPos = new Vector2(300, height - 100);
+                //for(int i=0;i<player.champ.abilities.Count;i++)
+                for (int i = 0; i < player.champ.abilities.Count; i++)
                 {
-                    color = Color.White;
+                    if (player.champ.abilities[i].cast || !player.champ.attribute.alive)
+                        color = Color.Gray;
+                    else
+                    {
+                        color = Color.White;
+                    }
+
+
+                    spritebatch.Draw(textures[player.champ.abilities[i].textureindex],
+                    new Rectangle(
+                        (int)abilityPos.X + (int)(i * player.champ.abilities[i].iconSize.X),
+                        (int)abilityPos.Y,
+                         (int)player.champ.abilities[i].iconSize.X,
+                         (int)player.champ.abilities[i].iconSize.Y),
+                        color);
+                    abilityPos.X += 2;
                 }
 
+                #endregion
 
-                spritebatch.Draw(textures[player.champ.abilities[i].textureindex],
-                new Rectangle(
-                    (int)abilityPos.X + (int)(i * player.champ.abilities[i].iconSize.X),
-                    (int)abilityPos.Y,
-                     (int)player.champ.abilities[i].iconSize.X,
-                     (int)player.champ.abilities[i].iconSize.Y),
-                    color);
-            abilityPos.X += 2;
+
+                #region fps
+
+                float elapsed = (float)gametime.ElapsedGameTime.TotalSeconds;
+
+                framecount++;
+                timeSinceLastUpdate += elapsed;
+                if (timeSinceLastUpdate > updateInterval)
+                {
+                    fps = framecount / timeSinceLastUpdate;
+                    framecount = 0;
+                    timeSinceLastUpdate -= updateInterval;
+                }
+
+                spritebatch.DrawString(font, "FPS:" + ((int)fps).ToString(), new Vector2(width - 80, 10), Color.White);
+                #endregion
             }
-
-            #endregion
-
-            #region fps
-
-            float elapsed = (float)gametime.ElapsedGameTime.TotalSeconds;
-
-            framecount++;
-            timeSinceLastUpdate += elapsed;
-            if (timeSinceLastUpdate > updateInterval)
+            else
             {
-                fps = framecount / timeSinceLastUpdate;
-                framecount = 0;
-                timeSinceLastUpdate -= updateInterval;
+                if (player.champ.attribute.team == winner)
+                {
+                    spritebatch.Draw(textures[17], new Rectangle((int)menupos.X+150, (int)menupos.Y+150, (int)menusize.X-300, (int)menusize.Y-300), Color.White);
+                }
+                else
+                {
+                    spritebatch.Draw(textures[16], new Rectangle((int)menupos.X+150, (int)menupos.Y+150, (int)menusize.X-300, (int)menusize.Y-300), Color.White);
+                }
             }
 
-            spritebatch.DrawString(font, "FPS:"+((int)fps).ToString(), new Vector2(width - 80, 10), Color.White);
-            #endregion
 
             //draw options menu
             if (escMenuOpen)
@@ -228,7 +244,19 @@ namespace MobaGame2
 
             temp= Content.Load<Texture2D>( "texture\\Clarity" );
             textures.Add(temp); // 15  
+
+
+            temp= Content.Load<Texture2D>( "texture\\victory" );
+            textures.Add(temp); // 16  
+
+            temp= Content.Load<Texture2D>( "texture\\defeat" );
+            textures.Add(temp); // 17  
+
+
             #endregion
+
+
+
 
         }
 

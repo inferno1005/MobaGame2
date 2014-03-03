@@ -1,11 +1,3 @@
-
-/*
- *  Todo 
- *   research gametime so the game is consistent
- *   add targeting game ents 
- */
-
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -85,7 +77,7 @@ namespace MobaGame2
             graphics.PreferredBackBufferHeight = SCREENHEIGHT;
             graphics.PreferredBackBufferWidth = SCREENWIDTH;
             graphics.PreferMultiSampling = false;
-            graphics.IsFullScreen = false;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             GraphicsDevice.SamplerStates[1] = SamplerState.LinearClamp;
@@ -230,14 +222,7 @@ namespace MobaGame2
                         }
                     }
 
-
-
                     networking.SendObject(gstate);
-
-                    //if we get a new player
-                    //add them to the list of players
-                    //set the team
-                    //return to that ip the index of the player for the gamestate
                 }
 
             }
@@ -274,6 +259,8 @@ namespace MobaGame2
                     if (networking.isServer)
                     {
                         gstate.GameIsRunning = true;
+
+
                         //listen for player update
                         object temp;
                         temp=networking.ListenMessage();
@@ -281,7 +268,6 @@ namespace MobaGame2
                         {
                             if (temp is Player)
                             {
-                                //Console.WriteLine("GOT CLIENT PLAYER INFO");
                                 Player p=(Player)temp;
                                 gstate.players[p.id] = p;
                             }
@@ -501,7 +487,7 @@ namespace MobaGame2
             #region interface
             spriteBatch.Begin();
 
-            UI.Draw(spriteBatch, gstate.players[playerindex], Input.MousePosition, gameTime);
+            UI.Draw(spriteBatch, gstate.players[playerindex], Input.MousePosition, gameTime,gstate.GameOver,gstate.Winner);
 
             //draw pointer to be drawn last so its over top everything
             spriteBatch.Draw(UI.textures[0], Input.MousePosition - new Vector2(5, 5), Color.White);

@@ -87,7 +87,8 @@ namespace MobaGame2
 
             this.abilities[4].name = "Crow Storm";
             this.abilities[4].attribute.range = this.attribute.range;
-            this.abilities[4].physicalDamage = this.attribute.attackDamage;
+            //this.abilities[4].physicalDamage = this.attribute.attackDamage;
+            this.abilities[4].physicalDamage = 10000;
             this.abilities[4].magicDamage = 0;
             this.abilities[4].coolDown = 3;
             this.abilities[4].attribute.visible = false;

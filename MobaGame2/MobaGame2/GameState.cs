@@ -28,6 +28,8 @@ namespace MobaGame2
         public List<Bush> bushes;
         public Map map;
         public bool GameIsRunning = false;
+        public bool Winner = false;
+        public bool GameOver= false;
         //public GameTime gametime;
 
         //public GameState(Map map,GameTime gtime)
@@ -295,6 +297,17 @@ namespace MobaGame2
                 this.abilities[i].Update(gameTime);
                 if (this.abilities[i].ghost)
                     this.abilities.RemoveAt(i);
+            }
+
+            foreach (var nexus in nexuses)
+            {
+                nexus.Update(map.rect);
+                if (!nexus.attribute.alive)
+                {
+                    GameOver = true;
+                    Winner = nexus.attribute.team;
+                }
+
             }
 
             MinionSpawner.Update(this,gameTime);
