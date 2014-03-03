@@ -172,9 +172,9 @@ namespace MobaGame2
                                 }
                             }
 
+                            //get client index for players
                             else if (temp is int)
                             {
-                                Console.WriteLine("temp is an int, trying to return it");
                                 return temp;
                             }
                             break;

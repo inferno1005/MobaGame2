@@ -100,7 +100,7 @@ namespace MobaGame2
             #region players
             players = new List<Player>();
             players.Add(new Player());
-            players[0].name = "inferno1005";
+            players[0].name = "1";
 
             players[0].champ = new FiddleSticks(map, abilities);
             players[0].champ.attribute.team = false;
