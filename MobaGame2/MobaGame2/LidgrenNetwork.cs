@@ -309,13 +309,13 @@ namespace MobaGame2
                 if (server.ConnectionsCount > 0)
                 {
                     //Console.WriteLine("sending message");
-                    server.SendMessage(sendMsg, server.Connections, NetDeliveryMethod.ReliableOrdered, 0);
+                    server.SendMessage(sendMsg, server.Connections, NetDeliveryMethod.Unreliable, 0);
                     //server.FlushSendQueue();
                 }
             }
             else
             {
-                client.SendMessage(sendMsg, NetDeliveryMethod.ReliableOrdered,0);
+                client.SendMessage(sendMsg, NetDeliveryMethod.Unreliable,0);
                 //client.FlushSendQueue();
             }
 
