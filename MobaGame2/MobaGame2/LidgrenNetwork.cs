@@ -44,7 +44,6 @@ namespace MobaGame2
 
 
         public List<AvailableSessions> availsessions;
-        //public List<NetConnection> clients;
         public string ServerName;
         public bool isServer = false;
         public bool searching= false;

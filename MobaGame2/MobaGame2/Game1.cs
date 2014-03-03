@@ -139,6 +139,7 @@ namespace MobaGame2
             networking.EndSession();
         }
 
+        //this code is just a mess....
         protected override void Update(GameTime gameTime)
         {
             Input.Update();
@@ -155,22 +156,48 @@ namespace MobaGame2
                 //if client
                 if (!networking.isServer)
                 {
-                    //has not been asigned a player yet
                     if (temp != null)
                     {
+                        //0 is the server, we dont have an index yet
+                        //we need to listen for one
                         if (playerindex == 0)
                         {
                             if (temp is int)
                             {
                                 playerindex = (int)temp;
-
-                                Console.WriteLine(playerindex);
                             }
                         }
+                        //if we are geting a gamestate
                         if (temp is GameState)
                         {
-                            gstate = (GameState)temp;
+                            //if we are ready to run the lobby
+                            //if we have a playerindex for the client
+                            //and our gamestate is not empty
+                            if (playerindex != 0 && gstate != null)
+                            {
+
+                                //update the server with client choice
+                                Player p;
+                                p = gstate.players[playerindex];
+                                p.id = playerindex;
+                                networking.SendObject(p);
+
+                                //update this gstate with other player info
+                                gstate = (GameState)temp;
+
+                                //reset this player 
+                                gstate.players[playerindex] = p;
+                            }
+
+                            else
+                            {
+                                gstate = (GameState)temp;
+                            }
+
                         }
+
+
+
                     }
                 }
                 //if server
@@ -190,6 +217,20 @@ namespace MobaGame2
                         gstate.AddNewPlayer();
                         networking.SendObject(gstate.players.Count-1); //send the index to the new player
                     }
+
+                    //object temp;
+                    temp = networking.ListenMessage();
+                    if (temp != null)
+                    {
+                        if (temp is Player)
+                        {
+                            //Console.WriteLine("GOT CLIENT PLAYER INFO");
+                            Player p = (Player)temp;
+                            gstate.players[p.id] = p;
+                        }
+                    }
+
+
 
                     networking.SendObject(gstate);
 
@@ -242,7 +283,7 @@ namespace MobaGame2
                             {
                                 //Console.WriteLine("GOT CLIENT PLAYER INFO");
                                 Player p=(Player)temp;
-                                gstate.players[p.id]=(Player)temp;
+                                gstate.players[p.id] = p;
                             }
                         }
 
@@ -255,8 +296,8 @@ namespace MobaGame2
                         Player p;
                         p = gstate.players[playerindex];
                         p.id = playerindex;
-
                         networking.SendObject(p);
+
 
                         GameState temp;
                         temp=(GameState)networking.ListenMessage();
