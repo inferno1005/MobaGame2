@@ -352,7 +352,7 @@ namespace MobaGame2
 
         public int PlayerCount()
         {
-            return server.ConnectionsCount + 1; 
+            return server.ConnectionsCount+1; 
         }
 
 

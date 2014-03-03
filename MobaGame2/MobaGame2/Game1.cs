@@ -160,17 +160,24 @@ namespace MobaGame2
                     //get player index for gamestate
 
                     //has not been asigned a player yet
-                    if (playerindex == 0)
+                    if (temp != null)
                     {
-                        if (temp is int)
+                        if (playerindex == 0)
                         {
-                            if (temp != null)
+                            if (temp is int)
+                            {
                                 playerindex = (int)temp;
 
-                            Console.WriteLine(playerindex);
+                                Console.WriteLine(playerindex);
+                            }
+                        }
+                        if (temp is GameState)
+                        {
+                            gstate = (GameState)temp;
                         }
                     }
                 }
+                //if server
                 else
                 {
                     //start a game start if there isnt one
@@ -179,7 +186,16 @@ namespace MobaGame2
                     {
                         gstate = new GameState(map);
                         gstate.LoadContent(Content);
+
                     }
+                    //if we have a new networked player, add to the gamstate of players
+                    if (networking.PlayerCount() != gstate.players.Count)
+                    {
+                        gstate.AddNewPlayer();
+                        networking.SendObject(gstate.players.Count-1); //send the index to the new player
+                    }
+
+                    networking.SendObject(gstate);
 
                     //if we get a new player
                     //add them to the list of players
@@ -557,7 +573,7 @@ namespace MobaGame2
                 camera.calc_transformation(1, 1)
                 );
 
-            gstate.DrawVision(spriteBatch, Color.White, lightmask);
+            gstate.DrawVision(spriteBatch, Color.White, lightmask,playerindex);
 
             spriteBatch.End();
             #endregion

@@ -182,12 +182,12 @@ namespace MobaGame2
 
         }
 
-        public void DrawVision(SpriteBatch spriteBatch, Color drawcolor, Texture2D lightmask)
+        public void DrawVision(SpriteBatch spriteBatch, Color drawcolor, Texture2D lightmask,int playerindex)
         {
             foreach (var player in players)
             {
                 if (player.champ.attribute.alive &&
-                    players[0].champ.attribute.team==player.champ.attribute.team)
+                    players[playerindex].champ.attribute.team==player.champ.attribute.team)
 
                     spriteBatch.Draw(lightmask, player.champ.visionrect, Color.White);
             }
@@ -195,19 +195,19 @@ namespace MobaGame2
             //draw minion 
             foreach (var minion in minions)
             {
-                if (players[0].champ.attribute.team == minion.attribute.team)
+                if (players[playerindex].champ.attribute.team == minion.attribute.team)
                     spriteBatch.Draw(lightmask, minion.visionrect, Color.White);
             }
 
             foreach (var tower in towers)
             {
-                if (players[0].champ.attribute.team == tower.attribute.team)
+                if (players[playerindex].champ.attribute.team == tower.attribute.team)
                     spriteBatch.Draw(lightmask, tower.visionrect, Color.White);
             }
             foreach (var nexus in nexuses)
             {
 
-                if (players[0].champ.attribute.team == nexus.attribute.team)
+                if (players[playerindex].champ.attribute.team == nexus.attribute.team)
                     spriteBatch.Draw(lightmask, nexus.visionrect, Color.White);
             }
 
@@ -300,5 +300,16 @@ namespace MobaGame2
 
         }
 
+
+        public void AddNewPlayer()
+        {
+            players.Add(new Player());
+            players.Last().name = players.Count.ToString();
+
+            players.Last().champ = new FiddleSticks(map, abilities);
+            players.Last().champ.attribute.team = false;
+
+
+        }
     }
 }
