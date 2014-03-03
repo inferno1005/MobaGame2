@@ -71,7 +71,7 @@ namespace MobaGame2
             return false;
         }
 
-        public static void HandleLobbyInput(LidgrenNetwork networking)
+        public static void HandleLobbyInput(LidgrenNetwork networking,int playerindex,GameState gamestate)
         {
             //if pressed
             if (LeftMouseButton())
@@ -86,7 +86,25 @@ namespace MobaGame2
                         networking.GameIsRunning = true;
                     }
                 }
+
+                //if clicking join team 1
+                if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280 - 530, 350, 100, 20)))
+                {
+                    Console.WriteLine("joined team 1");
+                    gamestate.players[playerindex].champ.attribute.team = false;
+                }
+                //if clicking join team 2
+                if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280 - 230, 350, 100, 20)))
+                {
+                    Console.WriteLine("joined team 2");
+                    gamestate.players[playerindex].champ.attribute.team = true;
+                }
+
+
+
             }
+
+
 
 
             //if esc or back button

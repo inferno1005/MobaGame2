@@ -126,8 +126,7 @@ namespace MobaGame2
 
             #region textures
 
-            //map.texture = Content.Load<Texture2D>(map.texturename);
-
+            //load all textures for the ui
             UI.LoadContent(Content);
 
             //lightmask = Content.Load<Texture2D>("texture\\lightmask");
@@ -144,12 +143,14 @@ namespace MobaGame2
         {
             Input.Update();
 
+            //lobby
             if ((networking.isServer && !networking.GameIsRunning) || networking.inLobby)
             {
-                Input.HandleLobbyInput(networking);
+                Input.HandleLobbyInput(networking,playerindex,gstate);
 
                 //both client and server listen for updates
-                networking.ListenMessage();
+                object temp;
+                temp=networking.ListenMessage();
 
                 //if client
                 if (!networking.isServer)
@@ -158,7 +159,17 @@ namespace MobaGame2
                     //send team
                     //get player index for gamestate
 
+                    //has not been asigned a player yet
+                    if (playerindex == 0)
+                    {
+                        if (temp is int)
+                        {
+                            if (temp != null)
+                                playerindex = (int)temp;
 
+                            Console.WriteLine(playerindex);
+                        }
+                    }
                 }
                 else
                 {
@@ -177,6 +188,8 @@ namespace MobaGame2
                 }
 
             }
+
+            //searching for session
             else if (networking.searching)
             {
                 // Handle the available sessions input here...
@@ -184,6 +197,7 @@ namespace MobaGame2
                 Input.HandleAvailableSessionsInput(networking);
                 networking.ListenMessage();
             }
+            //title screen
             else if (!networking.GameIsRunning)
             {
                 if (Input.HandleTitleScreenInput(networking, GameStarted))
@@ -191,6 +205,7 @@ namespace MobaGame2
                     Exit();
                 }
             }
+            //in game
             else if (networking.GameIsRunning)
             {
 
@@ -211,7 +226,7 @@ namespace MobaGame2
                     else
                     {
                         GameState temp;
-                        temp=networking.ListenMessage();
+                        temp=(GameState)networking.ListenMessage();
                         if (temp != null)
                         {
                                 gstate = temp;
@@ -239,12 +254,12 @@ namespace MobaGame2
                 {
 
                     //prefer plays over other objects, because they can kill you!
-                    gstate.players[0].champ.FocusObject(Input.FindUnderMouse(camera, gstate));
+                    gstate.players[playerindex].champ.FocusObject(Input.FindUnderMouse(camera, gstate));
 
-                    if (gstate.players[0].champ.focus == null)
+                    if (gstate.players[playerindex].champ.focus == null)
                         if (MathHelper.ClickedOn(Input.MousePosition + camera.position, map.rect))
                         {
-                            gstate.players[0].champ.direction = gstate.players[0].champ.CalcDirection(Input.MousePosition + camera.position);
+                            gstate.players[playerindex].champ.direction = gstate.players[playerindex].champ.CalcDirection(Input.MousePosition + camera.position);
                             //players[0].champ.FocusObject(null);
 
                         }
@@ -288,55 +303,55 @@ namespace MobaGame2
             //center camera to champ and follow
             if (Input.KeyHeld(Keys.Space))
             {
-                camera.Center(gstate.players[0].champ.center);
+                camera.Center(gstate.players[playerindex].champ.center);
             }
 
             //debug respawn and insta kill
             if (Input.KeyPressed(Keys.K))
             {
-                if (gstate.players[0].champ.attribute.alive == true)
-                    gstate.players[0].champ.attribute.alive = false;
+                if (gstate.players[playerindex].champ.attribute.alive == true)
+                    gstate.players[playerindex].champ.attribute.alive = false;
                 else
                 {
-                    gstate.players[0].champ.attribute.alive = true;
-                    gstate.players[0].champ.attribute.Health = gstate.players[0].champ.attribute.maxhealth;
+                    gstate.players[playerindex].champ.attribute.alive = true;
+                    gstate.players[playerindex].champ.attribute.Health = gstate.players[playerindex].champ.attribute.maxhealth;
                 }
 
             }
 
             if (Input.KeyPressed(Keys.Q))
             {
-                gstate.players[0].champ.activeability = 1;
+                gstate.players[playerindex].champ.activeability = 1;
 
-                gstate.players[0].champ.FocusObject(Input.FindUnderMouse(camera, gstate));
-                gstate.players[0].champ.ability();
+                gstate.players[playerindex].champ.FocusObject(Input.FindUnderMouse(camera, gstate));
+                gstate.players[playerindex].champ.ability();
             }
             if (Input.KeyPressed(Keys.W))
             {
-                gstate.players[0].champ.activeability = 2;
-                gstate.players[0].champ.FocusObject(Input.FindUnderMouse(camera, gstate));
-                gstate.players[0].champ.ability();
+                gstate.players[playerindex].champ.activeability = 2;
+                gstate.players[playerindex].champ.FocusObject(Input.FindUnderMouse(camera, gstate));
+                gstate.players[playerindex].champ.ability();
             }
             if (Input.KeyPressed(Keys.E))
             {
-                gstate.players[0].champ.activeability = 3;
-                gstate.players[0].champ.FocusObject(Input.FindUnderMouse(camera, gstate));
-                gstate.players[0].champ.ability();
+                gstate.players[playerindex].champ.activeability = 3;
+                gstate.players[playerindex].champ.FocusObject(Input.FindUnderMouse(camera, gstate));
+                gstate.players[playerindex].champ.ability();
             }
             if (Input.KeyPressed(Keys.R))
             {
-                gstate.players[0].champ.activeability = 4;
-                gstate.players[0].champ.ability();
+                gstate.players[playerindex].champ.activeability = 4;
+                gstate.players[playerindex].champ.ability();
             }
             if (Input.KeyPressed(Keys.D))
             {
-                gstate.players[0].champ.activeability = 5;
-                gstate.players[0].champ.Spell();
+                gstate.players[playerindex].champ.activeability = 5;
+                gstate.players[playerindex].champ.Spell();
             }
             if (Input.KeyPressed(Keys.F))
             {
-                gstate.players[0].champ.activeability = 6;
-                gstate.players[0].champ.Spell();
+                gstate.players[playerindex].champ.activeability = 6;
+                gstate.players[playerindex].champ.Spell();
             }
 
             //display menu
@@ -367,7 +382,8 @@ namespace MobaGame2
         protected override void Draw(GameTime gameTime)
         {
             //if in a lobby
-            if (networking.isServer && !networking.GameIsRunning)
+            //if (networking.isServer && !networking.GameIsRunning)
+            if ((networking.isServer && !networking.GameIsRunning) || networking.inLobby)
             {
                 UI.DrawLobby(spriteBatch, networking,gstate);
             }
@@ -409,7 +425,7 @@ namespace MobaGame2
             #region interface
             spriteBatch.Begin();
 
-            UI.Draw(spriteBatch, gstate.players[0], Input.MousePosition, gameTime);
+            UI.Draw(spriteBatch, gstate.players[playerindex], Input.MousePosition, gameTime);
 
             //draw pointer to be drawn last so its over top everything
             spriteBatch.Draw(UI.textures[0], Input.MousePosition - new Vector2(5, 5), Color.White);
@@ -426,7 +442,7 @@ namespace MobaGame2
             GraphicsDevice.Clear(Color.Gray);
 
             //if player is alive draw normaly, otherwise dray grayed out
-            if (gstate.players[0].champ.attribute.alive)
+            if (gstate.players[playerindex].champ.attribute.alive)
                 drawcolor = Color.White;
             else
                 drawcolor = Color.Gray;

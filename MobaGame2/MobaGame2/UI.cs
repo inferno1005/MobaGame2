@@ -256,6 +256,7 @@ namespace MobaGame2
             spriteBatch.DrawString(font, "Lobby", new Vector2(width - 530, 200), Color.White);
 
 
+            //team 1
             spriteBatch.DrawString(font, "Team 1", new Vector2(width - 530, 300), Color.White);
             spriteBatch.DrawString(font, "join", new Vector2(width - 530,350), Color.White);
 
@@ -270,8 +271,21 @@ namespace MobaGame2
                     }
                 }
 
+            //team 2
             spriteBatch.DrawString(font, "Team 2", new Vector2(width - 230, 300), Color.White);
             spriteBatch.DrawString(font, "join", new Vector2(width - 230, 350), Color.White);
+
+            if (gamestate != null)
+                for (int i = 0, j = 1; i < gamestate.players.Count; i++)
+                {
+                    if (gamestate.players[i].champ.attribute.team == true)
+                    {
+                        spriteBatch.DrawString(font, gamestate.players[i].name, new Vector2(width - 230, 350 + j * 50), Color.White);
+                        j++;
+                    }
+                }
+
+ 
 
 
             //spriteBatch.DrawString(font, "Ready", new Vector2(width - 430,  200), Color.White);

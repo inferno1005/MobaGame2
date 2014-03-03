@@ -81,7 +81,7 @@ namespace MobaGame2
 
         
         }
-        public GameState ListenMessage()
+        public object ListenMessage()
         {
             NetIncomingMessage inc;
             if (isServer)   //do server listening stuff
@@ -96,7 +96,6 @@ namespace MobaGame2
                             //if game is running, dont bother sending a discovery response
                             if(!GameIsRunning)
                             {
-                                //create a response and write some example data to it
                                 NetOutgoingMessage response = server.CreateMessage();
                                 response.Write(ServerName);
 
@@ -113,6 +112,7 @@ namespace MobaGame2
                             if (!GameIsRunning)
                             {
                                 inc.SenderConnection.Approve();
+                                NetOutgoingMessage msg = server.CreateMessage();
                                 Console.WriteLine("connection from {0} approved", inc.SenderEndPoint);
                             }
 
@@ -148,19 +148,17 @@ namespace MobaGame2
                         case NetIncomingMessageType.Data:
                             //Console.WriteLine("client got data!");
                             object temp;
-                            temp=DeserializeObject<object>(inc.Data);
+                            temp = DeserializeObject<object>(inc.Data);
 
 
+                            //if getting gamestate
                             if (temp is GameState)
                             {
-
-                                GameIsRunning = true;
-                                inLobby = false;
-                                return (GameState)temp;
+                                return temp;
                             }
 
                             //string
-                            if (temp is string)
+                            else if (temp is string)
                             {
                                 switch ((string)temp)
                                 {
@@ -173,18 +171,53 @@ namespace MobaGame2
                                         break;
                                 }
                             }
-                            break;
-                        //if the connection is approved 
-                        //join the lobby, and tell the server which team and the player name
-                        case NetIncomingMessageType.ConnectionApproval:
-                            inLobby = true;
-                            GameIsRunning = false;
-                            isServer = false;
 
+                            else if (temp is int)
+                            {
+                                Console.WriteLine("temp is an int, trying to return it");
+                                return temp;
+                            }
                             break;
 
 
+                        case NetIncomingMessageType.StatusChanged:
+                            switch (client.ConnectionStatus)
+                            {
+                                case NetConnectionStatus.Connected:
+                                    inLobby = true;
+                                    GameIsRunning = false;
+                                    isServer = false;
+                                    Console.WriteLine("connected");
+                                    break;
+                                case NetConnectionStatus.Disconnected:
+                                    Console.WriteLine("disconnected");
+                                    break;
 
+                                case NetConnectionStatus.RespondedConnect:
+                                    Console.WriteLine("responded connect");
+                                    break;
+
+                                case NetConnectionStatus.Disconnecting:
+                                    Console.WriteLine("disconnecting");
+                                    break;
+
+                                case NetConnectionStatus.InitiatedConnect:
+                                    Console.WriteLine("initiated connect");
+                                    break;
+
+                                case NetConnectionStatus.None:
+                                    Console.WriteLine("no status change");
+                                    break;
+
+                                case NetConnectionStatus.ReceivedInitiation:
+                                    Console.WriteLine("Received Initiation");
+                                    break;
+
+                                case NetConnectionStatus.RespondedAwaitingApproval:
+                                    Console.WriteLine("Responded Awaiting Approval");
+                                    break;
+                            }
+                            break;
                     }
 
                     client.Recycle(inc);
@@ -202,6 +235,7 @@ namespace MobaGame2
             cconf = new NetPeerConfiguration(GameName);
             cconf.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
             cconf.EnableMessageType(NetIncomingMessageType.Data);
+            cconf.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
 
             searching = true;
             client = new NetClient(cconf);
@@ -258,8 +292,6 @@ namespace MobaGame2
 
             sendMsg.Write(SerializeObject(Object));
 
-            //Console.WriteLine(sendMsg.LengthBytes);
-
             if (isServer)
             {
                 if (server.ConnectionsCount > 0)
@@ -271,7 +303,7 @@ namespace MobaGame2
             }
             else
             {
-                client.SendMessage(sendMsg, NetDeliveryMethod.ReliableOrdered);
+                client.SendMessage(sendMsg, NetDeliveryMethod.ReliableOrdered,0);
                 //client.FlushSendQueue();
             }
 
@@ -289,6 +321,7 @@ namespace MobaGame2
             lStream.Close();
             return lRet;
         }
+
         public static T DeserializeObject<T>(byte[] pData)
         {
             if (pData == null)
@@ -299,7 +332,6 @@ namespace MobaGame2
             lStream.Close();
             return (T)lRet;
         }
-
 
         public void EndSession()
         {
@@ -320,7 +352,6 @@ namespace MobaGame2
 
         public int PlayerCount()
         {
-            //plus one because the server is playing too
             return server.ConnectionsCount + 1; 
         }
 
