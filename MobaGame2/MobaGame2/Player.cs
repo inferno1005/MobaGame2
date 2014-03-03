@@ -23,6 +23,7 @@ namespace MobaGame2
         public int deaths;
         public int assists;
         public NewChamp champ;
+        public int id;
 
         public void Draw(SpriteBatch spritebatch, SpriteFont font,Color color)
         {

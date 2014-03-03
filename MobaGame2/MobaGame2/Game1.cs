@@ -155,10 +155,6 @@ namespace MobaGame2
                 //if client
                 if (!networking.isServer)
                 {
-                    //send name
-                    //send team
-                    //get player index for gamestate
-
                     //has not been asigned a player yet
                     if (temp != null)
                     {
@@ -245,7 +241,8 @@ namespace MobaGame2
                             if (temp is Player)
                             {
                                 //Console.WriteLine("GOT CLIENT PLAYER INFO");
-                                gstate.players[1]=(Player)temp;
+                                Player p=(Player)temp;
+                                gstate.players[p.id]=(Player)temp;
                             }
                         }
 
@@ -257,6 +254,7 @@ namespace MobaGame2
                     {
                         Player p;
                         p = gstate.players[playerindex];
+                        p.id = playerindex;
 
                         networking.SendObject(p);
 
