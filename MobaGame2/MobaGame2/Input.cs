@@ -140,7 +140,7 @@ namespace MobaGame2
             {
                 if (MathHelper.ClickedOn(Input.MousePosition + camera.position, player.champ.rect))
                 {
-                    if (gamestate.players[playerindex].champ.attribute.team != player.champ.attribute.team) ;
+                    if (gamestate.players[playerindex].champ.attribute.team != player.champ.attribute.team) 
                     {
                         //focus this player
                         return player.champ;
@@ -154,7 +154,7 @@ namespace MobaGame2
             {
                 if (MathHelper.ClickedOn(Input.MousePosition + camera.position, minion.rect))
                 {
-                    if (gamestate.players[playerindex].champ.attribute.team != minion.attribute.team) ;
+                    if (gamestate.players[playerindex].champ.attribute.team != minion.attribute.team) 
                     {
                         //focus this minion
                         return minion;
@@ -166,7 +166,7 @@ namespace MobaGame2
             {
                 if (MathHelper.ClickedOn(Input.MousePosition + camera.position, tower.rect))
                 {
-                    if (gamestate.players[playerindex].champ.attribute.team != tower.attribute.team) ;
+                    if (gamestate.players[playerindex].champ.attribute.team != tower.attribute.team) 
                     {
                         //focus this tower
                         return tower;
@@ -177,9 +177,10 @@ namespace MobaGame2
             {
                 if (MathHelper.ClickedOn(Input.MousePosition + camera.position, nexus.rect))
                 {
-                    if (gamestate.players[playerindex].champ.attribute.team != nexus.attribute.team)
+                    //focusing enemy nexus doesnt work, not doing any dev after demo, just commenting out to fix bug
+                    //can select both friendly and enemy nexus, but you can actually kill it and win now
+                    //if (gamestate.players[playerindex].champ.attribute.team != nexus.attribute.team)
                     {
-
                         //focus this nexus 
                         return nexus;
                     }

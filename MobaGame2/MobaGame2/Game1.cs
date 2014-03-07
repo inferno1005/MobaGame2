@@ -127,7 +127,6 @@ namespace MobaGame2
             networking.EndSession();
         }
 
-        //this code is just a mess....
         protected override void Update(GameTime gameTime)
         {
             Input.Update();

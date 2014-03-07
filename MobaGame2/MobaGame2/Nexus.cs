@@ -22,8 +22,8 @@ namespace MobaGame2
         {
             this.height = 256;
             this.width = 256;
-            this.attribute.maxhealth = 10000;
-            this.attribute.health = 10000;
+            this.attribute.maxhealth = 1000;
+            this.attribute.health = 1000;
             this.attribute.visionrange = 2000;
             this.textureindex = 6;
             this.attribute.healthRegen = 0;
