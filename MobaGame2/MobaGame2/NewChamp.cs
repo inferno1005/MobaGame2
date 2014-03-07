@@ -23,7 +23,7 @@ namespace MobaGame2
 
         private Map map;
         protected List<Ability> globalabilities;
-        private int id; //adding this in at 3 am monday while half dead
+        private int id;  //which player is playing this champ
 
         public NewChamp(Map m,List<Ability> ga)
         {
@@ -47,9 +47,6 @@ namespace MobaGame2
 
             BasicAttack();
 
-            //if (this.attribute.health < 0)
-                //this.attribute.alive = false;
-
             //count down cooldowns
             foreach (var ability in abilities)
             {
@@ -61,8 +58,8 @@ namespace MobaGame2
         {
             if (this.attribute.visible)
             {
+                //trying to get rotation working
                 /*
-                //so slow ;-;
                 this.rotation %= (float)Math.PI * 2 ;
                 this.rotation += (float)Math.PI / 2;
 
@@ -73,7 +70,7 @@ namespace MobaGame2
                     this.rotation,
                     new Vector2(this.width,this.height),
                     SpriteEffects.None,0);
-         */
+                 */
 
 
                 spriteBatch.Draw(UI.textures[this.textureindex], this.rect, color);
@@ -87,7 +84,7 @@ namespace MobaGame2
                 this.focus.Distance(this.position)< this.attribute.range && //if in range
                 !this.abilities[0].cast) //if timer is good
             {
-                //Console.WriteLine("{2}range checker {0} < {1}", focus.distance ,this.attribute.range,focus.texturename);
+                //spawn a new ability and add it to the list of global abilities
                 this.abilities[0].cast = true;
                 this.abilities[0].position= this.position;
                 this.abilities[0].focus= this.focus;
@@ -111,6 +108,7 @@ namespace MobaGame2
                 !this.abilities[activeability].cast  &&
                 this.abilities[activeability].manaCost<attribute.mana)
             {
+                //spawn a new ability and add it to the list of global abilities
                 this.attribute.mana -= this.abilities[activeability].manaCost;
                 this.abilities[activeability].cast = true;
                 this.abilities[activeability].position = this.position;
@@ -132,6 +130,7 @@ namespace MobaGame2
         {
             if (!this.abilities[activeability].cast)
             {
+                //spawn a new ability and add it to the list of global abilities
                 this.abilities[activeability].cast = true;
                 this.abilities[activeability].position = this.position;
                 this.attribute.mana -= this.abilities[activeability].manaCost;

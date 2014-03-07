@@ -9,7 +9,6 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-//using Microsoft.Xna.Framework.Net;
 using Lidgren.Network;
 
 
@@ -22,21 +21,18 @@ namespace MobaGame2
         public List<Player> players;
         public List<Minion> minions;
         public List<Tower> towers;
-        public List<GameEntity> entities;
         public List<Ability> abilities;
-        public List<Ability> newabilities;
         public List<Nexus> nexuses;
         public List<Bush> bushes;
         public Map map;
         public bool GameIsRunning = false;
         public bool Winner = false;
         public bool GameOver= false;
-        //public GameTime gametime;
 
+        //location of team spawn points
         private Vector2 falsespawn;
         private Vector2 truespawn;
 
-        //public GameState(Map map,GameTime gtime)
         public GameState(Map map)
         {
             map = new Map();
@@ -67,6 +63,7 @@ namespace MobaGame2
             towers[3].attribute.team = false;
 
 
+            //team 2
             towers[4].position = new Vector2(map.width - 1000,map.position.Y+150);
             towers[4].attribute.team = true;
 
@@ -84,6 +81,7 @@ namespace MobaGame2
             #endregion
 
             #region nexus
+            //one for each team
             nexuses = new List<Nexus>();
             nexuses.Add(new Nexus());
             nexuses.Add(new Nexus());
@@ -124,47 +122,16 @@ namespace MobaGame2
 
         public void LoadContent(ContentManager Content)
         {
-            /*
-            foreach (var Player in players)
-            {
-                Player.champ.texture = Content.Load<Texture2D>(Player.champ.texturename);
-                Player.champ.attribute.texture = Content.Load<Texture2D>(Player.champ.attribute.texturename);
-                for (int i = 0; i < 7; i++)
-                {
-                    Player.champ.abilities[i].texture = Content.Load<Texture2D>(Player.champ.abilities[i].texturename);
-                    Player.champ.abilities[i].icon = Content.Load<Texture2D>(Player.champ.abilities[i].iconname);
-                }
-            }
-
-            //foreach (var Minion in minions)
-            //{
-                ////Minion.texture = Content.Load<Texture2D>(Minion.texturename);
-                ////Minion.abilities[0].texture = Content.Load<Texture2D>(Minion.abilities[0].texturename);
-            //}
-
-            foreach (var tower in towers)
-            {
-                tower.texture = Content.Load<Texture2D>(tower.texturename);
-                tower.abilities[0].texture = Content.Load<Texture2D>(tower.abilities[0].texturename);
-            }
-            foreach (var nexus in nexuses)
-            {
-                nexus.texture = Content.Load<Texture2D>(nexus.texturename);
-            }
-            foreach (var bush in bushes)
-            {
-                bush.texture = Content.Load<Texture2D>(bush.texturename);
-            }
-             */
-
-
+            
         }
 
         public void Draw(SpriteBatch spriteBatch, SpriteFont font, Color drawcolor)
         {
             //draw players champs
             foreach (var player in players)
+            {
                 player.Draw(spriteBatch, font, drawcolor);
+            }
 
             //draw minion 
             foreach (var minion in minions)
@@ -174,27 +141,38 @@ namespace MobaGame2
 
             //tower
             foreach (var tower in towers)
+            {
                 tower.Draw(spriteBatch, drawcolor);
+            }
 
             foreach (var nexus in nexuses)
+            {
                 nexus.Draw(spriteBatch, drawcolor);
+            }
 
             //draw abilities
             foreach (var ability in abilities)
+            {
                 ability.Draw(spriteBatch, drawcolor);
+            }
 
 
+            //draw the bush
             foreach (var bush in bushes)
+            {
                 bush.Draw(spriteBatch, drawcolor);
+            }
                 
 
 
         }
 
+        //draw the vision of the object
         public void DrawVision(SpriteBatch spriteBatch, Color drawcolor, Texture2D lightmask,int playerindex)
         {
             foreach (var player in players)
             {
+                //if the player is alive and on the same team, gives local player vision
                 if (player.champ.attribute.alive &&
                     players[playerindex].champ.attribute.team==player.champ.attribute.team)
 
@@ -228,19 +206,23 @@ namespace MobaGame2
             foreach (var player in this.players)
             {
                 player.Update(this.map.rect, gameTime, this.abilities);
+                //respawn the player
                 if (!player.champ.attribute.alive)
                 {
+                    //respawn at true base
                     if (player.champ.attribute.team == true)
                     {
                         player.champ.position = truespawn;
-                        player.champ.attribute.Health = player.champ.attribute.maxhealth;
                     }
+                    //respawn at false base
                     else
                     {
                         player.champ.position = falsespawn;
-                        player.champ.attribute.Health = player.champ.attribute.maxhealth;
                     }
 
+                    //reset stats
+                    player.champ.attribute.Health = player.champ.attribute.maxhealth;
+                    player.champ.attribute.mana = player.champ.attribute.maxmana;
                     player.champ.attribute.alive = true;
                 }
             }
@@ -251,6 +233,7 @@ namespace MobaGame2
 
                 this.minions[i].Updater(map.rect, gameTime);
 
+                //if minion is dead, remove it
                 if (!this.minions[i].attribute.alive)
                 {
                     this.minions.RemoveAt(i);
@@ -302,6 +285,10 @@ namespace MobaGame2
                     this.towers.RemoveAt(i);
                 else
                 {
+                    //find minions first
+                    //the find players
+
+
                     foreach (var minion in this.minions)
                     {
                         this.towers[i].Agro(minion);
@@ -331,11 +318,13 @@ namespace MobaGame2
 
             }
 
+            //spawn minions are regular intervales
             MinionSpawner.Update(this,gameTime);
 
         }
 
 
+        //add a new player to the gamestate
         public void AddNewPlayer()
         {
             players.Add(new Player());
@@ -347,6 +336,7 @@ namespace MobaGame2
 
         }
 
+        //start the game, spawn all players at the correct spawn points
         public void StartGame()
         {
             if (!GameIsRunning)

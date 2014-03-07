@@ -1,4 +1,13 @@
-﻿using System;
+﻿
+//all this is for games for windows live networking, never got it to work
+//microsoft sets limits for what devs can do without paying for being able
+//to do stuff across xbox LIVE. System link connections are limited to 30 ms ping
+
+//refered to http://msdn.microsoft.com/en-us/library/bb975645(v=xnagamestudio.31).aspx
+//for most of the code, doesnt work just leaving it in to show there was an attempt to use it
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +20,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
-using Lidgren.Network;
+//using Lidgren.Network;
 
 
 

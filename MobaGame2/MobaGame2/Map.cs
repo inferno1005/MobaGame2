@@ -29,7 +29,6 @@ namespace MobaGame2
 
             this.height = 800;
             this.width =9700;
-            //texturename = "texture\\seamless_ground";
         }
     }
 }

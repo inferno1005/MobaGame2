@@ -18,15 +18,12 @@ namespace MobaGame2
     {
         public Tower(Map m,List<Ability> ga): base(m,ga)
         {
-            this.Name = "Tower";
-            //this.texturename = "texture\\tower";
             this.attribute.range = 300;
             this.textureindex = 7;
 
 
             this.height = 132;
             this.width = 132;
-            //this.position = new Vector2(100, 100);
             this.attribute.speed = 0;
             this.attribute.visionrange = 500;
             this.attribute.attackDamage=100;
@@ -35,13 +32,10 @@ namespace MobaGame2
 
 
             this.abilities.Add(new Ability());
-            //this.abilities[0].name = "Basic Attack";
             this.abilities[0].attribute.range = this.attribute.range;
             this.abilities[0].physicalDamage = this.attribute.attackDamage;
             this.abilities[0].magicDamage = 0;
             this.abilities[0].coolDown = 1;
-            //this.abilities[0].texturename = "texture\\fireball";
- 
         }
 
         public void Updater(Rectangle rect, GameTime gametime)
@@ -58,7 +52,6 @@ namespace MobaGame2
 
             if (this.attribute.health < 0)
             {
-                Console.WriteLine("tower is dead!");
                 this.attribute.alive = false;
                 this.attribute.clickable = false;
                 this.attribute.visible= false;

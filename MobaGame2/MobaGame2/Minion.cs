@@ -21,7 +21,6 @@ namespace MobaGame2
         public Minion(GameEntity ge,Map m,List<Ability> ga) : base(m,ga)
         {
             this.Name = "Minion";
-            //this.texturename = "texture\\Minion";
             this.textureindex = 2;
 
             this.height = 32;
@@ -36,20 +35,17 @@ namespace MobaGame2
 
 
             this.abilities.Add(new Ability());
-            //this.abilities[0].name = "Basic Attack";
             this.abilities[0].attribute.range = this.attribute.range;
             this.abilities[0].physicalDamage = this.attribute.attackDamage;
             this.abilities[0].magicDamage = 0;
             this.abilities[0].coolDown = 3;
-            //this.abilities[0].texturename = "texture\\fireball";
             enemybase = ge;
         }
         public bool Agro(GameEntity target)
         {
             if (this.attribute.range > (distance = Vector2.Distance(this.position, target.position)))
             {
-                //Console.WriteLine("SHOULD BE AGRO ");
-
+                //if we target a non base object return true
                 FocusObject(target);
                 return true;
             }
@@ -74,7 +70,6 @@ namespace MobaGame2
 
             if (this.attribute.health < 0)
             {
-                Console.WriteLine("Minion is dead!");
                 this.attribute.alive = false;
                 this.attribute.clickable = false;
                 this.attribute.visible= false;

@@ -33,8 +33,6 @@ namespace MobaGame2
 
         //drawing
         public float rotation=0;        //rotation to draw this texture in
-        //public Texture2D texture;       //default texture  for this object
-        //public string texturename;      //texture name for this object
         public int textureindex;
         public Color color=Color.White; //default color for this object, usually white
 
@@ -43,7 +41,7 @@ namespace MobaGame2
         public GameEntity focus;        //the focus of this object
 
         //last hit
-        public GameEntity lasthit;      //keeps track of who hit this entity last to give credit
+        //public GameEntity lasthit;      //keeps track of who hit this entity last to give credit
 
 
 

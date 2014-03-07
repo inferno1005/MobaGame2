@@ -17,7 +17,6 @@ namespace MobaGame2
     [Serializable]
     class Ability : GameEntity
     {
-        //public string name;
         public double manaCost;
         public double healthCost;
         public double physicalDamage;
@@ -30,11 +29,7 @@ namespace MobaGame2
         public bool castvisibile = true;
         public int id;
         public bool synced = true;
-        //public Texture2D texture;
-        //public Texture2D icon;
         public Vector2 iconSize = new Vector2(90, 90);
-        //public string texturename;
-        //public string iconname;
         
 
         public Ability()
@@ -46,12 +41,10 @@ namespace MobaGame2
         }
         public Ability(Ability copy)
         {
-
             this.width = 10;
             this.height = 10;
             this.attribute.speed = 10;
 
-            //name = copy.name;
             manaCost = copy.manaCost;
             healthCost = copy.healthCost;
             physicalDamage = copy.physicalDamage;
@@ -60,8 +53,6 @@ namespace MobaGame2
             timer = copy.timer;
             cast = true;
             ghost = false;
-            //texture = copy.texture;
-            //texturename = copy.texturename;
         }
         public void Update(GameTime gametime)
         {
@@ -79,11 +70,9 @@ namespace MobaGame2
             //move
             if (focus != null)
             {
-                //Console.WriteLine("Should be moving!");
                 direction = CalcDirection(focus.center);
                 distance -= this.attribute.speed;
                 position += ((float)(this.attribute.speed) * direction);
-                //Console.WriteLine(position);
             }
 
             //we have hit the target , we should apply damage and remove this casted ability 

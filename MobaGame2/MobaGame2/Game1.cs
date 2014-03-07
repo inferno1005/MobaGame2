@@ -21,7 +21,7 @@ namespace MobaGame2
         SpriteBatch spriteBatch;
         LidgrenNetwork networking;
 
-        //screen
+        //screen res
         int SCREENHEIGHT = 720;
         int SCREENWIDTH = 1280;
 
@@ -29,7 +29,7 @@ namespace MobaGame2
         //game
         Camera camera;
         GameState gstate;
-        int playerindex = 0;
+        int playerindex = 0;  //the index of this local player in the gamestate
 
 
 
@@ -40,16 +40,17 @@ namespace MobaGame2
         //Shader
         Effect fogeffect;
 
-
-        //Camera minimap;
+        //the map to play on
         Map map;
 
 
         //Texture2D mouseTexture;
         Texture2D lightmask;
 
+        //color to draw currently
         Color drawcolor;
 
+        //if the game is started
         bool GameStarted = false;
         #endregion
 
@@ -60,7 +61,11 @@ namespace MobaGame2
             Content.RootDirectory = "Content";
             this.IsFixedTimeStep = false;
             networking = new LidgrenNetwork();
-            InactiveSleepTime = new TimeSpan(0);
+
+            //ensure when game window is not focused to not slow down the game,
+            //need this for debugging networking on a single computer
+            InactiveSleepTime = new TimeSpan(0);    
+
         }
 
         protected override void Initialize()
@@ -77,7 +82,7 @@ namespace MobaGame2
             this.Window.Title = "Moba";
             #endregion
 
-            //fog
+            //fog of war
             fogeffect = Content.Load<Effect>("lighting");
             var pp = GraphicsDevice.PresentationParameters;
             mainscene = new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight);
@@ -86,7 +91,6 @@ namespace MobaGame2
 
             //ui
             UI.SetPos(SCREENWIDTH, SCREENHEIGHT);
-            //UI.ChampIcons = new List<Texture2D>();
 
 
             //game state
@@ -114,7 +118,6 @@ namespace MobaGame2
             //load all textures for the ui
             UI.LoadContent(Content);
 
-            //lightmask = Content.Load<Texture2D>("texture\\lightmask");
             lightmask = Content.Load<Texture2D>("texture\\whitemask");
             #endregion
         }
@@ -141,9 +144,10 @@ namespace MobaGame2
                 //if client
                 if (!networking.isServer)
                 {
+                    //if we got a valid message
                     if (temp != null)
                     {
-                        //0 is the server, we dont have an index yet
+                        //playerindex 0 is the server, we dont have an index yet
                         //we need to listen for one
                         if (playerindex == 0)
                         {
@@ -152,6 +156,7 @@ namespace MobaGame2
                                 playerindex = (int)temp;
                             }
                         }
+
                         //if we are geting a gamestate
                         if (temp is GameState)
                         {
@@ -170,7 +175,7 @@ namespace MobaGame2
                                 //update this gstate with other player info
                                 gstate = (GameState)temp;
 
-                                //reset this player 
+                                //reset this local player 
                                 gstate.players[playerindex] = p;
                             }
 
@@ -180,7 +185,6 @@ namespace MobaGame2
                             }
 
                         }
-
 
 
                     }
@@ -207,14 +211,15 @@ namespace MobaGame2
                     temp = networking.ListenMessage();
                     if (temp != null)
                     {
+                        //got player info from client
                         if (temp is Player)
                         {
-                            //Console.WriteLine("GOT CLIENT PLAYER INFO");
                             Player p = (Player)temp;
                             gstate.players[p.id] = p;
                         }
                     }
 
+                    //send to all clients the gamestate
                     networking.SendObject(gstate);
                 }
 
@@ -224,22 +229,22 @@ namespace MobaGame2
             else if (networking.searching)
             {
                 // Handle the available sessions input here...
-                //Input.HandleLobbyInput(networking);
                 Input.HandleAvailableSessionsInput(networking);
-                networking.ListenMessage();
+                networking.ListenMessage(); //listen for responses of our seach
             }
             //title screen
             else if (!networking.GameIsRunning)
             {
+                //can return whether or not to exit the game
                 if (Input.HandleTitleScreenInput(networking, GameStarted))
                 {
-                    Exit();
+                    Exit(); 
                 }
             }
             //in game
             else if (networking.GameIsRunning||gstate.GameIsRunning)
             {
-
+                //ensure we have a gamestate
                 if (gstate == null)
                 {
                     gstate = new GameState(map);
@@ -248,7 +253,7 @@ namespace MobaGame2
 
                 if (gstate != null)
                 {
-                    //should send gamestate to clients
+                    //if server
                     if (networking.isServer)
                     {
                         gstate.GameIsRunning = true;
@@ -259,18 +264,16 @@ namespace MobaGame2
                         temp=networking.ListenMessage();
                         if (temp != null)
                         {
+                            //if player info, set it
                             if (temp is Player)
                             {
                                 Player p=(Player)temp;
                                 gstate.players[p.id] = p;
                             }
-                            //else if (temp is Ability)
-                            //{
-                                //gstate.abilities.Add((Ability)temp);
-                            //}
                         }
 
 
+                        //send the gamestate
                         networking.SendObject(gstate);
                     }
 
@@ -283,23 +286,14 @@ namespace MobaGame2
                         p.id = playerindex;
                         networking.SendObject(p);
 
-                        //foreach (var ab in gstate.abilities)
-                        //{
-                            //if (!ab.synced)
-                            //{
-                                //ab.synced = true;
-                                //networking.SendObject(ab);
-                            //}
-                        //}
-
-
-
+                        //get the gamestate from the server
                         GameState temp;
                         temp=(GameState)networking.ListenMessage();
                         if (temp != null)
                         {
                                 gstate = temp;
                         }
+                        //put out player info back into the gamestate, fully trust clients
                         gstate.players[playerindex] = p;
 
                     }
@@ -308,7 +302,6 @@ namespace MobaGame2
                     GameUpdate(gameTime);
                 }
             }
-            //player.lastState = currentState;
             base.Update(gameTime);
         }
 
@@ -317,23 +310,26 @@ namespace MobaGame2
             #region controls
             //right button selects and targets, if not on anything but map, moves there
             #region mouse
-            //if menu is not open
+            //if escape menu is not open handle gameplay input
             if (!UI.escMenuOpen)
             {
                 //right click
-                if (Input.RightMouseButton() && gstate.players[0].champ.attribute.alive)
+                if (Input.RightMouseButton() && gstate.players[playerindex].champ.attribute.alive)
                 {
-
+                    //find an object under the mouse
                     //prefer plays over other objects, because they can kill you!
-                    gstate.players[playerindex].champ.FocusObject(Input.FindUnderMouse(camera, gstate));
+                    gstate.players[playerindex].champ.FocusObject(Input.FindUnderMouse(camera, gstate,playerindex));
 
+                    //if we didnt find anything under the mouse
                     if (gstate.players[playerindex].champ.focus == null)
+                    {
+                        //check and see if we clicked on the map
                         if (MathHelper.ClickedOn(Input.MousePosition + camera.position, map.rect))
                         {
+                            //if we did, we want to move to that location on the map
                             gstate.players[playerindex].champ.direction = gstate.players[playerindex].champ.CalcDirection(Input.MousePosition + camera.position);
-                            //players[0].champ.FocusObject(null);
-
                         }
+                    }
                 }
             }
 
@@ -349,10 +345,7 @@ namespace MobaGame2
                             UI.escMenuOpen = false;
                             gstate = null;
                             return; //return so that we dont try to update a null game
-                            break;
                         case 2:
-                            //networking.GameIsRunning = false;
-                            //networking.EndSession();
                             UI.escMenuOpen = false;
                             gstate = null;
                             gstate = new GameState(map);
@@ -390,35 +383,42 @@ namespace MobaGame2
 
             }
 
+            //keyboard q
             if (Input.KeyPressed(Keys.Q))
             {
                 gstate.players[playerindex].champ.activeability = 1;
 
-                gstate.players[playerindex].champ.FocusObject(Input.FindUnderMouse(camera, gstate));
+                gstate.players[playerindex].champ.FocusObject(Input.FindUnderMouse(camera, gstate,playerindex));
                 gstate.players[playerindex].champ.ability();
             }
+
+            //keyboard w
             if (Input.KeyPressed(Keys.W))
             {
                 gstate.players[playerindex].champ.activeability = 2;
-                gstate.players[playerindex].champ.FocusObject(Input.FindUnderMouse(camera, gstate));
+                gstate.players[playerindex].champ.FocusObject(Input.FindUnderMouse(camera, gstate,playerindex));
                 gstate.players[playerindex].champ.ability();
             }
+            //keyboard e
             if (Input.KeyPressed(Keys.E))
             {
                 gstate.players[playerindex].champ.activeability = 3;
-                gstate.players[playerindex].champ.FocusObject(Input.FindUnderMouse(camera, gstate));
+                gstate.players[playerindex].champ.FocusObject(Input.FindUnderMouse(camera, gstate,playerindex));
                 gstate.players[playerindex].champ.ability();
             }
+            //keyboard r
             if (Input.KeyPressed(Keys.R))
             {
                 gstate.players[playerindex].champ.activeability = 4;
                 gstate.players[playerindex].champ.ability();
             }
+            //keyboard d
             if (Input.KeyPressed(Keys.D))
             {
                 gstate.players[playerindex].champ.activeability = 5;
                 gstate.players[playerindex].champ.Spell();
             }
+            //keyboard f
             if (Input.KeyPressed(Keys.F))
             {
                 gstate.players[playerindex].champ.activeability = 6;
@@ -439,10 +439,12 @@ namespace MobaGame2
             #endregion
 
             #region camera
+            //move the camera based on the mouse location
             camera.ScreenBorderMove(Input.MousePosition);
             #endregion
 
 
+            //if the game is not over, update it
             if(!gstate.GameOver)
                 gstate.Update(gameTime);
 
@@ -452,7 +454,6 @@ namespace MobaGame2
         protected override void Draw(GameTime gameTime)
         {
             //if in a lobby
-            //if (networking.isServer && !networking.GameIsRunning)
             if ((networking.isServer && !networking.GameIsRunning) || networking.inLobby)
             {
                 UI.DrawLobby(spriteBatch, networking,gstate);
@@ -462,10 +463,12 @@ namespace MobaGame2
             {
                 UI.DrawAvailableSessions(spriteBatch, networking);
             }
+            //if on the title menu
             else if (!networking.GameIsRunning)
             {
                 UI.DrawTitleScreen(spriteBatch, networking);
             }
+            //if in the game
             else if (networking.GameIsRunning)
             {
                 if (gstate != null)
@@ -479,8 +482,10 @@ namespace MobaGame2
 
         protected void DrawMain(GameTime gameTime)
         {
+            //draw main sprites and map
             DrawGame(gameTime);
 
+            //draw the fog of war over the top of the main draw
             DrawFog(gameTime);
 
             GraphicsDevice.Clear(Color.Black);
@@ -492,6 +497,7 @@ namespace MobaGame2
             spriteBatch.End();
 
 
+            //draw the interface, free of fog of war
             #region interface
             spriteBatch.Begin();
 
@@ -507,7 +513,6 @@ namespace MobaGame2
 
         protected void DrawGame(GameTime gameTime)
         {
-            //GraphicsDevice.Clear(Color.CornflowerBlue);
             GraphicsDevice.SetRenderTarget(mainscene);
             GraphicsDevice.Clear(Color.Gray);
 
@@ -520,18 +525,16 @@ namespace MobaGame2
             #region game camera
             //draw based off camera location
             spriteBatch.Begin(
-                //SpriteSortMode.BackToFront,
                 SpriteSortMode.Immediate,
                 BlendState.AlphaBlend,
                 SamplerState.LinearWrap,
                 DepthStencilState.Default,
                 RasterizerState.CullNone,
                 null,
-                //camera.calc_transformation(SCREENHEIGHT,SCREENWIDTH)
                 camera.calc_transformation(1, 1)
                 );
 
-            //draw map
+            //draw map tiled
             spriteBatch.Draw(UI.textures[5],
                 map.rect,   
                 new Rectangle((int)map.position.X, (int)map.position.Y, map.texturewidth*20, map.textureheight*2),
@@ -539,18 +542,18 @@ namespace MobaGame2
 
             spriteBatch.End();
 
+            //draw everything else normally
             spriteBatch.Begin(
-                //SpriteSortMode.BackToFront,
                             SpriteSortMode.Immediate,
                             BlendState.AlphaBlend,
                             null,
                             null,
                             null,
                             null,
-                //camera.calc_transformation(SCREENHEIGHT,SCREENWIDTH)
                             camera.calc_transformation(1, 1)
                     );
 
+            //draw the state of the game
             gstate.Draw(spriteBatch, UI.font, drawcolor);
 
 
@@ -578,6 +581,7 @@ namespace MobaGame2
                 camera.calc_transformation(1, 1)
                 );
 
+            //draw every objects vision
             gstate.DrawVision(spriteBatch, Color.White, lightmask,playerindex);
 
             spriteBatch.End();

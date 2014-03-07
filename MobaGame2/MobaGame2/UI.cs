@@ -30,8 +30,8 @@ namespace MobaGame2
         public static Vector2 menupos;
         static Vector2 menusize;
 
-        //textures
-        public static List<Texture2D> textures=new List<Texture2D>();
+        //stores all the textures for the game
+        public static List<Texture2D> textures = new List<Texture2D>();
 
 
         //fonts
@@ -48,28 +48,30 @@ namespace MobaGame2
         private static float framecount = 0;
 
 
-        static public void SetPos(int w,int h)
+        //setup so we know the height and width of the screen and we can calc  bars and menus
+        static public void SetPos(int w, int h)
         {
 
-            width=w;
-            height=h;
+            width = w;
+            height = h;
 
-            healthpos=new Vector2(300,height-50-100);
-            manapos=new Vector2(300,height-25-100);
+            healthpos = new Vector2(300, height - 50 - 100);
+            manapos = new Vector2(300, height - 25 - 100);
 
 
-            abilityPos=new Vector2(300,height-100);
+            abilityPos = new Vector2(300, height - 100);
 
 
             healthStringPos = new Vector2(500, 0) + healthpos;
-            manaStringPos= new Vector2(500, 0) + manapos;
+            manaStringPos = new Vector2(500, 0) + manapos;
             barwidth = width / 2;
 
-            menupos = new Vector2(40,  40);
+            menupos = new Vector2(40, 40);
             menusize = new Vector2(width - 80, height - 80);
         }
 
-        static public void Draw(SpriteBatch spritebatch,Player player,Vector2 mousepos,GameTime gametime,bool gameover,bool winner)
+        //draws the main game
+        static public void Draw(SpriteBatch spritebatch, Player player, Vector2 mousepos, GameTime gametime, bool gameover, bool winner)
         {
             if (!gameover)
             {
@@ -99,7 +101,7 @@ namespace MobaGame2
 
 
 
-                //draw near the percent of each bar to look nice
+                //draw text near the percent of each bar to look nice
                 if (healthbarpercent > 100)
                     spritebatch.DrawString(font, ((int)(player.champ.attribute.Health)).ToString(), new Vector2(healthbarpercent + healthpos.X - 55, healthpos.Y - 3), Color.White);
                 else
@@ -115,7 +117,6 @@ namespace MobaGame2
                 Color color;
 
                 abilityPos = new Vector2(300, height - 100);
-                //for(int i=0;i<player.champ.abilities.Count;i++)
                 for (int i = 0; i < player.champ.abilities.Count; i++)
                 {
                     if (player.champ.abilities[i].cast || !player.champ.attribute.alive)
@@ -138,7 +139,6 @@ namespace MobaGame2
 
                 #endregion
 
-
                 #region fps
 
                 float elapsed = (float)gametime.ElapsedGameTime.TotalSeconds;
@@ -157,13 +157,15 @@ namespace MobaGame2
             }
             else
             {
+                //if our team wins, show victory texture
                 if (player.champ.attribute.team == winner)
                 {
-                    spritebatch.Draw(textures[17], new Rectangle((int)menupos.X+150, (int)menupos.Y+150, (int)menusize.X-300, (int)menusize.Y-300), Color.White);
+                    spritebatch.Draw(textures[17], new Rectangle((int)menupos.X + 150, (int)menupos.Y + 150, (int)menusize.X - 300, (int)menusize.Y - 300), Color.White);
                 }
+                //if our team loses, show the defeat texture
                 else
                 {
-                    spritebatch.Draw(textures[16], new Rectangle((int)menupos.X+150, (int)menupos.Y+150, (int)menusize.X-300, (int)menusize.Y-300), Color.White);
+                    spritebatch.Draw(textures[16], new Rectangle((int)menupos.X + 150, (int)menupos.Y + 150, (int)menusize.X - 300, (int)menusize.Y - 300), Color.White);
                 }
             }
 
@@ -177,79 +179,80 @@ namespace MobaGame2
             }
         }
 
+        //load every texture and font
         static public void LoadContent(ContentManager Content)
         {
             Texture2D temp;
 
             //fonts
-            font= Content.Load<SpriteFont>("DefaultFont");
+            font = Content.Load<SpriteFont>("DefaultFont");
 
             #region textures
             temp = Content.Load<Texture2D>("texture\\pointer");
             textures.Add(temp); // 0 mouse texture
 
-            temp= Content.Load<Texture2D>("background");
+            temp = Content.Load<Texture2D>("background");
             textures.Add(temp); // 1 background texture
 
             //minion texture
-            temp= Content.Load<Texture2D>("texture\\minion");
+            temp = Content.Load<Texture2D>("texture\\minion");
             textures.Add(temp); // 2 minion texture texture
 
-            temp= Content.Load<Texture2D>("texture\\fireball");
+            temp = Content.Load<Texture2D>("texture\\fireball");
             textures.Add(temp); // 3 default attack texture
 
             //bush
-            temp= Content.Load<Texture2D>("texture\\longbush");
+            temp = Content.Load<Texture2D>("texture\\longbush");
             textures.Add(temp); // 4  bush texture 
 
             //map
-            temp= Content.Load<Texture2D>("texture\\seamless_ground");
+            temp = Content.Load<Texture2D>("texture\\seamless_ground");
             textures.Add(temp); // 5  map texture
 
             //nexus
 
-            temp= Content.Load<Texture2D>( "texture\\Nexus" );
+            temp = Content.Load<Texture2D>("texture\\Nexus");
             textures.Add(temp); // 6  nexus texture
 
 
-            temp= Content.Load<Texture2D>( "texture\\tower" );
+            temp = Content.Load<Texture2D>("texture\\tower");
             textures.Add(temp); // 7  tower texture
 
 
-            temp= Content.Load<Texture2D>( "texture\\Fiddle-Pumpkin" );
+            temp = Content.Load<Texture2D>("texture\\Fiddle-Pumpkin");
             textures.Add(temp); // 8  fiddle sticks champ texture
 
 
-            temp= Content.Load<Texture2D>( "texture\\1x1" );
+            temp = Content.Load<Texture2D>("texture\\1x1");
             textures.Add(temp); // 9  super small texture
 
-            temp= Content.Load<Texture2D>( "texture\\fiddlesticks-terrify" );
+            temp = Content.Load<Texture2D>("texture\\fiddlesticks-terrify");
             textures.Add(temp); // 10  
 
-            temp= Content.Load<Texture2D>( "texture\\fiddlesticks-drain" );
+            temp = Content.Load<Texture2D>("texture\\fiddlesticks-drain");
             textures.Add(temp); // 11  
 
 
-            temp= Content.Load<Texture2D>( "texture\\fiddlesticks-dark-wind" );
+            temp = Content.Load<Texture2D>("texture\\fiddlesticks-dark-wind");
             textures.Add(temp); // 12  
 
 
-            temp= Content.Load<Texture2D>( "texture\\fiddlesticks-crowstorm" );
+            temp = Content.Load<Texture2D>("texture\\fiddlesticks-crowstorm");
             textures.Add(temp); // 13  
 
 
-            temp= Content.Load<Texture2D>( "texture\\Heal" );
+            temp = Content.Load<Texture2D>("texture\\Heal");
             textures.Add(temp); // 14  
 
 
-            temp= Content.Load<Texture2D>( "texture\\Clarity" );
+            temp = Content.Load<Texture2D>("texture\\Clarity");
             textures.Add(temp); // 15  
 
 
-            temp= Content.Load<Texture2D>( "texture\\victory" );
+            temp = Content.Load<Texture2D>("texture\\victory");
             textures.Add(temp); // 16  
 
-            temp= Content.Load<Texture2D>( "texture\\defeat" );
+            temp = Content.Load<Texture2D>("texture\\defeat");
             textures.Add(temp); // 17  
 
 
@@ -261,8 +264,7 @@ namespace MobaGame2
         }
 
 
-
-        public static void DrawTitleScreen(SpriteBatch spriteBatch,LidgrenNetwork networking)
+        public static void DrawTitleScreen(SpriteBatch spriteBatch, LidgrenNetwork networking)
         {
             spriteBatch.Begin();
             spriteBatch.Draw(textures[1], new Rectangle(0, 0, width, height), Color.White);
@@ -276,17 +278,17 @@ namespace MobaGame2
         }
 
 
-        public static void DrawLobby(SpriteBatch spriteBatch, LidgrenNetwork networking,GameState gamestate)
+        public static void DrawLobby(SpriteBatch spriteBatch, LidgrenNetwork networking, GameState gamestate)
         {
             spriteBatch.Begin();
-            spriteBatch.Draw(textures[1], new Rectangle(0,0,width,height), Color.White);
+            spriteBatch.Draw(textures[1], new Rectangle(0, 0, width, height), Color.White);
 
             spriteBatch.DrawString(font, "Lobby", new Vector2(width - 530, 200), Color.White);
 
 
             //team 1
             spriteBatch.DrawString(font, "Team 1", new Vector2(width - 530, 300), Color.White);
-            spriteBatch.DrawString(font, "join", new Vector2(width - 530,350), Color.White);
+            spriteBatch.DrawString(font, "join", new Vector2(width - 530, 350), Color.White);
 
             //need to chek for null because we may get into the draw function before we create the gamestate
             if (gamestate != null)
@@ -313,11 +315,10 @@ namespace MobaGame2
                     }
                 }
 
- 
 
 
-            //spriteBatch.DrawString(font, "Ready", new Vector2(width - 430,  200), Color.White);
-            spriteBatch.DrawString(font, "Start", new Vector2(width - 230,  200), Color.White);
+
+            spriteBatch.DrawString(font, "Start", new Vector2(width - 230, 200), Color.White);
 
             //mouse
             spriteBatch.Draw(textures[0], Input.MousePosition - new Vector2(5, 5), Color.White);
@@ -328,46 +329,19 @@ namespace MobaGame2
         public static void DrawAvailableSessions(SpriteBatch spriteBatch, LidgrenNetwork networking)
         {
             spriteBatch.Begin();
-            spriteBatch.Draw(textures[1], new Rectangle(0,0,width,height), Color.White);
+            spriteBatch.Draw(textures[1], new Rectangle(0, 0, width, height), Color.White);
             spriteBatch.DrawString(font, "Available Sessions", new Vector2(width - 530, 200), Color.White);
 
             for (int i = 0, y = 100; i < networking.availsessions.Count; i++, y += 100)
             {
                 spriteBatch.DrawString(font, networking.availsessions[i].name, new Vector2(width - 530, 300), Color.White);
             }
- 
+
 
 
             spriteBatch.Draw(textures[0], Input.MousePosition - new Vector2(5, 5), Color.White);
             spriteBatch.End();
         }
-
-        /*
-        private static void DisplayChampSelect(SpriteBatch spriteBatch, int x,int y)
-        {
-            int lastwidth=0;
-            int lastheight=0;
-
-
-
-            //spriteBatch.Begin();
-            for (int i = 0; i < ChampIcons.Count; i++)
-            {
-                spriteBatch.Draw(ChampIcons[i], new Rectangle(x + lastwidth, y + lastheight, 50, 50), Color.White);
-                spriteBatch.DrawString(font,i.ToString(), new Vector2(x + lastwidth, y + lastheight), Color.White);
-                if ((i+1) % 10 == 0) 
-                {
-                    lastwidth = 0;
-                    lastheight += 50;
-                }
-                else
-                {
-                    lastwidth += 50;
-                }
-            }
-            //spriteBatch.End();
-        }
-         * */
 
     }
 }

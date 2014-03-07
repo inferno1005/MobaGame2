@@ -21,7 +21,6 @@ namespace MobaGame2
         static public float timer = 0f;
         static public float cooldowntimer { get { return coolDown - timer; } }
         static private bool wave=false;
-        static private bool firstwavewait=true;
 
         static public void Update(GameState gamestate,GameTime gametime)
         {
@@ -39,8 +38,6 @@ namespace MobaGame2
             {
                 wave = true;
 
-                Console.WriteLine("SPAWNING MINION WAVE");
-
                 //true team
                 for (int i = 0; i < 10; i++)
                 {
@@ -49,7 +46,6 @@ namespace MobaGame2
                     gamestate.minions.Last().attribute.team = true;
                 }
 
-
                 //false team
                 for (int i = 0; i < 10; i++)
                 {
@@ -57,7 +53,6 @@ namespace MobaGame2
                     gamestate.minions.Last().position = new Vector2( 700 + 256, 200+i*20);
                     gamestate.minions.Last().attribute.team = false;
                 }
-                Console.WriteLine("TOTAL MINIONS = {0}", gamestate.minions.Count);
             }
         }
 

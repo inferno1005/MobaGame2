@@ -58,9 +58,7 @@ namespace MobaGame2
                 //if finding session
                 if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280 - 530, 250, 100, 20)))
                 {
-                    //networking.ConnectToHost();
-                    //networking.FindGame();
-                    networking.ConnectToClint();
+                    networking.FindGame();
                 }
             }
             if (KeyPressed(Keys.Escape))
@@ -79,7 +77,6 @@ namespace MobaGame2
                 //if clicking start game
                 if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280 - 230, 200, 100, 20)))
                 {
-                    Console.WriteLine("clicked on start game");
                     if (networking.isServer)
                     {
                         networking.SendObject("start game");
@@ -91,13 +88,11 @@ namespace MobaGame2
                 //if clicking join team 1
                 if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280 - 530, 350, 100, 20)))
                 {
-                    Console.WriteLine("joined team 1");
                     gamestate.players[playerindex].champ.attribute.team = false;
                 }
                 //if clicking join team 2
                 if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280 - 230, 350, 100, 20)))
                 {
-                    Console.WriteLine("joined team 2");
                     gamestate.players[playerindex].champ.attribute.team = true;
                 }
 
@@ -113,17 +108,6 @@ namespace MobaGame2
             {
                 networking.EndSession();
             }
-        }
-
-        public static Champ SelectChamp(int x, int y, List<Champ> champs)
-        {
-            if (LeftMouseButton())
-            {
-                //click on the grid and select champ
-                //return champs[i];
-            }
-            return null;
-
         }
 
         public static void HandleAvailableSessionsInput(LidgrenNetwork networking)
@@ -143,24 +127,21 @@ namespace MobaGame2
                     if (LeftMouseButton())
                         if (MathHelper.ClickedOn(MousePosition, new Rectangle(1280 - 530, y + 200, 100, 20)))
                         {
-                            Console.WriteLine("joining server!");
                             networking.ConnectToHost(networking.availsessions[i].ip);
                             networking.searching = false;
                             networking.inLobby = true;
-                            //networking.SendObject("inferno1005");
                         }
                 }
         }
 
-        public static GameEntity FindUnderMouse(Camera camera, GameState gamestate)
+        public static GameEntity FindUnderMouse(Camera camera, GameState gamestate,int playerindex)
         {
             foreach (var player in gamestate.players)
             {
                 if (MathHelper.ClickedOn(Input.MousePosition + camera.position, player.champ.rect))
                 {
-                    if (gamestate.players[0].champ.attribute.team != player.champ.attribute.team) ;
+                    if (gamestate.players[playerindex].champ.attribute.team != player.champ.attribute.team) ;
                     {
-                        Console.WriteLine("FOCUSED CHAMP");
                         //focus this player
                         return player.champ;
                     }
@@ -173,9 +154,9 @@ namespace MobaGame2
             {
                 if (MathHelper.ClickedOn(Input.MousePosition + camera.position, minion.rect))
                 {
-                    if (gamestate.players[0].champ.attribute.team != minion.attribute.team) ;
+                    if (gamestate.players[playerindex].champ.attribute.team != minion.attribute.team) ;
                     {
-                        Console.WriteLine("FOCUSED minion");
+                        //focus this minion
                         return minion;
                     }
                 }
@@ -185,9 +166,9 @@ namespace MobaGame2
             {
                 if (MathHelper.ClickedOn(Input.MousePosition + camera.position, tower.rect))
                 {
-                    if (gamestate.players[0].champ.attribute.team != tower.attribute.team) ;
+                    if (gamestate.players[playerindex].champ.attribute.team != tower.attribute.team) ;
                     {
-                        Console.WriteLine("FOCUSED tower");
+                        //focus this tower
                         return tower;
                     }
                 }
@@ -196,8 +177,12 @@ namespace MobaGame2
             {
                 if (MathHelper.ClickedOn(Input.MousePosition + camera.position, nexus.rect))
                 {
-                    if (gamestate.players[0].champ.attribute.team != nexus.attribute.team)
+                    if (gamestate.players[playerindex].champ.attribute.team != nexus.attribute.team)
+                    {
+
+                        //focus this nexus 
                         return nexus;
+                    }
                 }
             }
             return null;
@@ -215,16 +200,5 @@ namespace MobaGame2
             }
             return 0;
         }
-
-        /*
-        public static string GetKeyboardString()
-        {
-            string temp="";
-
-
-            if(KeyPressed(Keys.Enter))
-                return temp;
-        }
-         */
     }
 }

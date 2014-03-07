@@ -20,7 +20,6 @@ namespace MobaGame2
     {
         public Nexus()
         {
-            //this.texturename = "texture\\Nexus";
             this.height = 256;
             this.width = 256;
             this.attribute.maxhealth = 10000;
@@ -34,21 +33,6 @@ namespace MobaGame2
         {
             if (this.attribute.visible)
             {
-                /*
-                //so slow ;-;
-                this.rotation %= (float)Math.PI * 2 ;
-                this.rotation += (float)Math.PI / 2;
-
-                spriteBatch.Draw(this.texture,
-                    new Rectangle((int)this.center.X,(int)this.center.Y,(int)this.width,(int)this.height),
-                    null,
-                    this.color,
-                    this.rotation,
-                    new Vector2(this.width,this.height),
-                    SpriteEffects.None,0);
-                 */
-
-
                 spriteBatch.Draw(UI.textures[this.textureindex], this.rect, color);
                 attribute.Draw(spriteBatch, this.position);
             }

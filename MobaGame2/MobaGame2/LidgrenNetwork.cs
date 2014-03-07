@@ -1,9 +1,5 @@
 ﻿//todo 
-//add connection handshake, doesnt seem reliable
-//figure out why things are so slow, consider not sending updates as often, 
-//may be flodding the network sending 60 packets every second 
-
-
+//add connection handshake, doesnt seem reliable,if the packet is dropped
 
 using System;
 using System.Collections.Generic;
@@ -66,8 +62,6 @@ namespace MobaGame2
             sconf.EnableMessageType(NetIncomingMessageType.DiscoveryRequest );
             sconf.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             sconf.EnableMessageType(NetIncomingMessageType.Data);
-            //sconf.AutoFlushSendQueue = true;
-            //sconf.AutoFlushSendQueue = false;
 
             isServer = true;
             Console.WriteLine("HOSTING GAME");
@@ -89,12 +83,14 @@ namespace MobaGame2
                 {
                     switch (inc.MessageType)
                     {
+                            //listens for a peer discovery request
                         case NetIncomingMessageType.DiscoveryRequest:
                             Console.WriteLine("got a discovery request");
 
                             //if game is running, dont bother sending a discovery response
                             if(!GameIsRunning)
                             {
+                                //create a message
                                 NetOutgoingMessage response = server.CreateMessage();
                                 response.Write(ServerName);
 
@@ -102,15 +98,22 @@ namespace MobaGame2
                                 server.SendDiscoveryResponse(response, inc.SenderEndPoint);
                             }
                             break;
+                            //listens for data
                         case NetIncomingMessageType.Data:
+
+
                             object temp;
 
+                            //deserialize the data
                             temp = DeserializeObject<object>(inc.Data);
 
+                            //if its player info return
                             if (temp is Player)
                             {
                                 return temp;
                             }
+
+                            //if its ability info return
                             else if (temp is Ability)
                             {
                                 return temp;
@@ -118,6 +121,7 @@ namespace MobaGame2
 
                             break;
 
+                            //if a client is wanting to join send response
                         case NetIncomingMessageType.ConnectionApproval:
                             //if game is already running, do not let new people join
                             if (!GameIsRunning)
@@ -157,7 +161,9 @@ namespace MobaGame2
 
 
                         case NetIncomingMessageType.Data:
-                            //Console.WriteLine("client got data!");
+
+
+
                             object temp;
                             temp = DeserializeObject<object>(inc.Data);
 
@@ -182,6 +188,7 @@ namespace MobaGame2
                                         inLobby = false;
                                         break;
                                     case "end game":
+                                        inLobby = false;
                                         GameIsRunning = false;
                                         break;
                                 }
@@ -195,15 +202,18 @@ namespace MobaGame2
                             break;
 
 
+                            //if the status of the client changes
                         case NetIncomingMessageType.StatusChanged:
                             switch (client.ConnectionStatus)
                             {
+                                    //if connected to server
                                 case NetConnectionStatus.Connected:
                                     inLobby = true;
                                     GameIsRunning = false;
                                     isServer = false;
                                     Console.WriteLine("connected");
                                     break;
+                                    //if disconnected from server
                                 case NetConnectionStatus.Disconnected:
                                     Console.WriteLine("disconnected");
                                     break;
@@ -275,20 +285,19 @@ namespace MobaGame2
         }
 
         //client connect to known ip:port
-        public void ConnectToClint()
+        //this was used for testing across the internet
+        public void ConnectToIP(string IP)
         {
             cconf = new NetPeerConfiguration(GameName);
             cconf.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
             cconf.EnableMessageType(NetIncomingMessageType.Data);
-            Console.WriteLine("SHOULD BE CONNECTING TO  65.36.105.18 @ port 8080");
 
-            //searching = true;
             client = new NetClient(cconf);
 
             client.Start();
 
-            client.Connect("65.36.105.18", 8080); 
-            //client.Connect("192.168.1.118", 8080); 
+            //client.Connect("192.168.1.118", 8080);  
+            client.Connect(IP, 8080);  
 
 
             searching = false;
@@ -307,24 +316,27 @@ namespace MobaGame2
 
             sendMsg.Write(SerializeObject(Object));
 
+            //if server 
             if (isServer)
             {
+                //and we have clients
                 if (server.ConnectionsCount > 0)
-                {
-                    //Console.WriteLine("sending message");
+                { 
+                    //send message to all clients
+                    //unreliable, UDP, faster, fine on lan
                     server.SendMessage(sendMsg, server.Connections, NetDeliveryMethod.Unreliable, 0);
-                    //server.FlushSendQueue();
                 }
             }
             else
             {
+                //send to server
                 client.SendMessage(sendMsg, NetDeliveryMethod.Unreliable,0);
-                //client.FlushSendQueue();
             }
 
         }
 
 
+        //takes any object and converts to binary stream
         private static byte[] SerializeObject(object pObjectToSerialize)
         {
             BinaryFormatter lFormatter = new BinaryFormatter();
@@ -337,6 +349,7 @@ namespace MobaGame2
             return lRet;
         }
 
+        //takes any binary stream and converts back to an object
         public static T DeserializeObject<T>(byte[] pData)
         {
             if (pData == null)
@@ -348,6 +361,7 @@ namespace MobaGame2
             return (T)lRet;
         }
 
+        //shut down the network session
         public void EndSession()
         {
             if (isServer)
@@ -365,6 +379,7 @@ namespace MobaGame2
             availsessions = null;
         }
 
+        //return the number of players on the server
         public int PlayerCount()
         {
             return server.ConnectionsCount+1; 

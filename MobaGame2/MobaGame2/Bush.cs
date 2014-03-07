@@ -18,16 +18,11 @@ namespace MobaGame2
     [Serializable]
     class Bush :GameEntity
     {
-        private int textureheight;
-        private int texturewidth;
-
         public Bush()
         {
             this.height = 100;
             this.width = 300;
-            this.texturewidth = 1536;
-            this.textureheight= 100;
-            this.textureindex = 5;
+            this.textureindex = 4;
         }
 
         public void Draw(SpriteBatch spriteBatch,Color color)
@@ -35,7 +30,6 @@ namespace MobaGame2
             if (this.attribute.visible)
             {
                 spriteBatch.Draw(UI.textures[textureindex], this.rect,  color);
-                attribute.Draw(spriteBatch, this.position);
             }
         }
 
